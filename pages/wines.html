@@ -1,2 +1,1060 @@
-<!-- TO BUILD: wines page -->
-<!-- See README.md for content notes and SEO targets -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wines – Free Run Cellars | Berrien Springs, MI</title>
+<meta name="description" content="Small-batch wines from Lake Michigan Shore and beyond. Whites, reds, and flights at Free Run Cellars in Berrien Springs, Michigan. Dry Riesling, Pinot Gris, Syrah, Lemberger and more.">
+<meta name="keywords" content="Free Run Cellars wines, Pinot Gris Michigan, Dry Riesling Lake Michigan Shore, Lemberger Michigan, small batch wines Berrien Springs, wine tasting Southwest Michigan">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --teal:      #537f71;
+  --teal-dk:   #3d6155;
+  --teal-lt:   #7aab9a;
+  --teal-pale: #eef4f1;
+  --black:     #0e0e0e;
+  --off-white: #f7f4f0;
+  --grey:      #787470;
+  --text:      #2c2c2c;
+  --nav-h:     74px;
+  --wine-red:  #6b2d3e;
+  --wine-rose: #c4687a;
+  --wine-white:#7a9e8e;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Jost',sans-serif; color:var(--text); background:var(--off-white); overflow-x:hidden; }
+a { text-decoration:none; color:inherit; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; inset:0 0 auto; z-index:900;
+  height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px;
+  transition:background .35s, box-shadow .35s;
+}
+nav.solid { background:rgba(255,255,255,.97); box-shadow:0 1px 0 rgba(0,0,0,.07); }
+.nav-logo { height:34px; transition:filter .35s; }
+nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
+.nav-links a {
+  font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.82); transition:color .2s;
+}
+nav.solid .nav-links a { color:var(--grey); }
+nav.solid .nav-links a:hover { color:var(--teal); }
+.nav-links a:hover { color:#fff; }
+.has-drop { position:relative; }
+.drop-menu {
+  display:none; position:absolute; top:calc(100% + 10px); left:50%;
+  transform:translateX(-50%);
+  background:#fff; border-radius:8px;
+  box-shadow:0 8px 28px rgba(0,0,0,.11);
+  padding:6px 0; min-width:180px; list-style:none;
+}
+.has-drop:hover .drop-menu { display:block; }
+.drop-menu li a {
+  display:block; padding:10px 18px;
+  font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--grey) !important;
+}
+.drop-menu li a:hover { color:var(--teal) !important; background:var(--teal-pale); }
+.nav-cta {
+  background:var(--teal); color:#fff !important;
+  padding:9px 18px; border-radius:4px;
+  font-size:10px !important; letter-spacing:2px !important;
+  transition:background .2s !important;
+}
+.nav-cta:hover { background:var(--teal-dk) !important; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger span { width:22px; height:1.5px; background:#fff; border-radius:2px; transition:background .3s; }
+nav.solid .hamburger span { background:var(--text); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; height:80vh; min-height:520px;
+  display:flex; align-items:flex-end; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1589r.jpeg');
+  background-size:cover; background-position:center 40%;
+  transform:scale(1.04);
+  animation:hZoom 14s ease-out forwards;
+}
+@keyframes hZoom { to { transform:scale(1); } }
+.hero-scrim {
+  position:absolute; inset:0;
+  background:linear-gradient(to top,
+    rgba(8,18,12,.92) 0%,
+    rgba(8,18,12,.4) 55%,
+    rgba(8,18,12,.1) 100%);
+}
+.hero-body {
+  position:relative; z-index:1;
+  padding:0 80px 80px; max-width:700px;
+  animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .25s both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.eyebrow {
+  display:flex; align-items:center; gap:12px;
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal-lt); margin-bottom:18px; font-weight:500;
+}
+.eyebrow::before { content:''; width:36px; height:1px; background:var(--teal-lt); }
+h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,6.5vw,86px); font-weight:300; font-style:italic;
+  color:#fff; line-height:1.0; letter-spacing:-.5px; margin-bottom:20px;
+}
+h1 em { font-style:normal; color:var(--teal-lt); }
+.hero-sub {
+  font-size:14px; font-weight:300; color:rgba(255,255,255,.58);
+  line-height:1.78; max-width:480px;
+}
+
+/* ── FILTER BAR ── */
+.filter-section {
+  background:#fff;
+  position:sticky; top:var(--nav-h); z-index:800;
+  border-bottom:1px solid rgba(83,127,113,.1);
+  padding:0 56px;
+  display:flex; align-items:center; gap:0;
+}
+.filter-btn {
+  background:transparent; border:none;
+  font-family:'Jost',sans-serif;
+  font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--grey); padding:20px 24px;
+  cursor:pointer; transition:color .2s;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+}
+.filter-btn:hover { color:var(--teal); }
+.filter-btn.active { color:var(--teal); border-bottom-color:var(--teal); }
+.filter-count {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:18px; height:18px; border-radius:50%;
+  background:var(--teal-pale); color:var(--teal);
+  font-size:9px; font-weight:700;
+  margin-left:6px; vertical-align:middle;
+}
+.filter-btn.active .filter-count { background:var(--teal); color:#fff; }
+
+/* ── SHARED ── */
+.s-label {
+  font-size:9px; font-weight:600; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.s-label::after { content:''; width:32px; height:1px; background:var(--teal); }
+h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,3vw,44px); font-weight:300; font-style:italic;
+  line-height:1.1; color:var(--black); margin-bottom:16px;
+}
+h2 em { font-style:normal; color:var(--teal); }
+h2.on-dark { color:#fff; }
+h2.on-dark em { color:var(--teal-lt); }
+.body-copy { font-size:14px; font-weight:300; line-height:1.85; color:var(--grey); }
+
+/* ── WINE LIST ── */
+.wine-section { padding:72px 56px; }
+.wine-section.whites { background:#fff; }
+.wine-section.reds   { background:var(--off-white); }
+
+.wine-section-inner { max-width:1100px; margin:0 auto; }
+
+.section-header {
+  display:flex; align-items:flex-end; justify-content:space-between;
+  margin-bottom:40px; padding-bottom:20px;
+  border-bottom:1px solid rgba(83,127,113,.12);
+  flex-wrap:wrap; gap:16px;
+}
+.section-title-wrap { }
+.section-color-bar {
+  width:4px; height:36px; border-radius:2px;
+  display:inline-block; vertical-align:middle; margin-right:14px;
+}
+.whites .section-color-bar { background:linear-gradient(to bottom, #d4e8c2, #a3c99a); }
+.reds   .section-color-bar { background:linear-gradient(to bottom, #c4687a, #6b2d3e); }
+.section-ava {
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--grey); font-weight:400;
+}
+
+.wine-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  gap:16px;
+}
+
+/* Wine card */
+.wine-card {
+  background:#fff;
+  border:1px solid rgba(83,127,113,.1);
+  border-radius:12px;
+  padding:24px 24px 20px;
+  display:flex; flex-direction:column;
+  transition:transform .25s, box-shadow .25s, border-color .25s;
+  position:relative; overflow:hidden;
+}
+.reds .wine-card { background:var(--off-white); }
+.reds .wine-card:hover { background:#fff; }
+.wine-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(83,127,113,.12);
+  border-color:rgba(83,127,113,.3);
+}
+.wine-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  border-radius:12px 12px 0 0;
+}
+.whites .wine-card::before { background:linear-gradient(90deg, #d4e8c2, #7aab9a); }
+.reds   .wine-card::before { background:linear-gradient(90deg, #c4687a, #6b2d3e); }
+.wine-card.rose::before    { background:linear-gradient(90deg, #e8a0b0, #c4687a); }
+
+.wine-card-top {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  margin-bottom:10px; gap:12px;
+}
+.wine-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:400; font-style:italic;
+  color:var(--black); line-height:1.1;
+}
+.wine-rs {
+  flex-shrink:0;
+  font-size:8px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  padding:4px 8px; border-radius:4px; margin-top:4px;
+  white-space:nowrap;
+}
+.rs-dry   { background:rgba(83,127,113,.1); color:var(--teal); }
+.rs-semi  { background:rgba(196,104,122,.1); color:#9e4d5e; }
+.rs-sweet { background:rgba(180,140,80,.12); color:#8a6a20; }
+
+.wine-tagline {
+  font-size:11px; font-weight:600; letter-spacing:.5px;
+  color:var(--teal); margin-bottom:14px; line-height:1.3;
+}
+
+.wine-notes {
+  display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; flex:1;
+}
+.wine-note-tag {
+  font-size:10px; color:var(--grey); font-weight:300;
+  background:rgba(83,127,113,.06);
+  border:1px solid rgba(83,127,113,.12);
+  border-radius:20px; padding:3px 10px;
+}
+
+.wine-card-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  padding-top:14px; border-top:1px solid rgba(83,127,113,.08);
+  margin-top:auto;
+}
+.wine-serving {
+  font-size:10px; letter-spacing:1px; text-transform:uppercase;
+  color:rgba(120,116,112,.5); font-weight:500;
+}
+.wine-flag {
+  display:flex; gap:6px;
+}
+.wine-flag-item {
+  font-size:9px; color:var(--grey); font-weight:300;
+  display:flex; align-items:center; gap:3px;
+}
+
+/* ── FLIGHTS ── */
+.flights-section {
+  background:var(--black); padding:80px 56px;
+}
+.flights-inner {
+  max-width:1100px; margin:0 auto;
+}
+.flights-header {
+  display:flex; align-items:flex-end; justify-content:space-between;
+  margin-bottom:40px; flex-wrap:wrap; gap:20px;
+}
+.flights-intro {
+  font-size:14px; font-weight:300; color:rgba(255,255,255,.45);
+  line-height:1.8; max-width:420px; margin-top:12px;
+}
+
+.flights-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.flight-card {
+  border-radius:12px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);
+  transition:border-color .25s, transform .25s;
+}
+.flight-card:hover { border-color:rgba(122,171,154,.3); transform:translateY(-4px); }
+
+.flight-card-top {
+  padding:28px 24px 20px;
+  position:relative;
+}
+.fc-dry   { background:linear-gradient(135deg, rgba(83,127,113,.18), rgba(83,127,113,.06)); }
+.fc-white { background:linear-gradient(135deg, rgba(122,158,142,.18), rgba(122,158,142,.06)); }
+.fc-sweet { background:linear-gradient(135deg, rgba(180,140,80,.18), rgba(180,140,80,.06)); }
+
+.flight-icon { font-size:28px; margin-bottom:12px; display:block; }
+.flight-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px; font-style:italic; font-weight:300;
+  color:#fff; margin-bottom:6px;
+}
+.flight-price {
+  font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--teal-lt); font-weight:600;
+}
+.flight-card-bottom {
+  padding:16px 24px 20px;
+  background:rgba(255,255,255,.03);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.flight-rec-label {
+  font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.3); margin-bottom:8px; font-weight:600;
+}
+.flight-rec-wines {
+  display:flex; flex-direction:column; gap:4px;
+}
+.flight-rec-wine {
+  font-size:12px; color:rgba(255,255,255,.55); font-weight:300;
+  display:flex; align-items:center; gap:8px;
+}
+.flight-rec-wine::before { content:'·'; color:var(--teal-lt); font-size:16px; line-height:1; }
+
+/* ── ONLINE ── */
+.online-section {
+  background:var(--off-white); padding:72px 56px;
+  text-align:center;
+}
+.online-inner { max-width:520px; margin:0 auto; }
+.online-section h2 { margin-bottom:14px; }
+.online-section .body-copy { margin-bottom:32px; }
+.btn-fill {
+  background:var(--teal); color:#fff;
+  padding:14px 32px; border-radius:4px;
+  font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  transition:background .22s, transform .22s, box-shadow .22s;
+  display:inline-block;
+}
+.btn-fill:hover { background:var(--teal-dk); transform:translateY(-2px); box-shadow:0 8px 22px rgba(83,127,113,.3); }
+.btn-line {
+  border:1px solid rgba(83,127,113,.35); color:var(--teal);
+  padding:14px 32px; border-radius:4px;
+  font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase;
+  transition:border-color .22s, background .22s; display:inline-block;
+  margin-left:10px;
+}
+.btn-line:hover { border-color:var(--teal); background:var(--teal-pale); }
+.online-note {
+  font-size:11px; color:var(--grey); font-style:italic;
+  margin-top:16px; font-weight:300;
+}
+
+/* ── COCKTAILS ── */
+.cocktails-section {
+  background:#fff; padding:80px 56px;
+  border-top:1px solid rgba(83,127,113,.1);
+}
+.cocktails-inner { max-width:1100px; margin:0 auto; }
+.cocktails-header { text-align:center; max-width:500px; margin:0 auto 48px; }
+.cocktails-header h2 { margin-bottom:12px; }
+
+.cocktail-grid {
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:16px; margin-bottom:24px;
+}
+.cocktail-card {
+  background:var(--off-white);
+  border:1px solid rgba(83,127,113,.12);
+  border-radius:12px; padding:26px 28px;
+  position:relative; overflow:hidden;
+  transition:transform .25s, box-shadow .25s, border-color .25s;
+}
+.cocktail-card:hover {
+  transform:translateY(-3px);
+  box-shadow:0 10px 28px rgba(83,127,113,.1);
+  border-color:rgba(83,127,113,.3);
+}
+.cocktail-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--teal-dk), var(--teal-lt));
+  border-radius:12px 12px 0 0;
+}
+.cocktail-card-top {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  margin-bottom:10px; gap:12px;
+}
+.cocktail-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px; font-style:italic; color:var(--black); line-height:1.15;
+}
+.cocktail-price {
+  font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  color:var(--teal); background:var(--teal-pale);
+  border:1px solid rgba(83,127,113,.2);
+  border-radius:4px; padding:4px 10px; flex-shrink:0; margin-top:3px;
+}
+.cocktail-base {
+  font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:8px; opacity:.7;
+}
+.cocktail-desc {
+  font-size:13px; color:var(--grey); line-height:1.7; font-weight:300;
+}
+.chambong-strip {
+  background:var(--black);
+  border-radius:10px; padding:18px 28px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:20px; flex-wrap:wrap;
+}
+.chambong-left { display:flex; align-items:center; gap:14px; }
+.chambong-icon { font-size:24px; }
+.chambong-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px; font-style:italic; color:#fff;
+}
+.chambong-sub { font-size:11px; color:rgba(255,255,255,.4); margin-top:2px; font-weight:300; }
+.chambong-prices { display:flex; gap:10px; }
+.chambong-price {
+  background:rgba(122,171,154,.12);
+  border:1px solid rgba(122,171,154,.25);
+  border-radius:6px; padding:8px 16px; text-align:center;
+}
+.chambong-price-val { font-size:16px; font-weight:600; color:var(--teal-lt); line-height:1; }
+.chambong-price-label { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.3); margin-top:3px; }
+
+/* ── FOOTER ── */
+.page-footer {
+  background:var(--black); color:rgba(255,255,255,.35);
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:28px 56px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; font-size:11px;
+}
+.footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.4; }
+.footer-links { display:flex; gap:20px; }
+.page-footer a:hover { color:#fff; }
+
+/* ── HIDDEN for filter ── */
+.wine-card.hidden { display:none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  nav { padding:0 24px; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .hero-body { padding:0 28px 64px; }
+  .filter-section { padding:0 24px; overflow-x:auto; }
+  .wine-section { padding:56px 28px; }
+  .wine-grid { grid-template-columns:1fr; }
+  .flights-section { padding:56px 28px; }
+  .flights-grid { grid-template-columns:1fr; }
+  .cocktails-section { padding:56px 28px; }
+  .cocktail-grid { grid-template-columns:1fr; }
+  .chambong-strip { flex-direction:column; align-items:flex-start; }
+  .online-section { padding:56px 28px; }
+  .cocktail-note { padding:40px 28px; }
+  .page-footer { padding:24px 28px; flex-direction:column; text-align:center; }
+  .footer-links { justify-content:center; }
+}
+@media (max-width:560px) {
+  .btn-line { margin-left:0; margin-top:10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <img class="nav-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/pages/about.html">Our Story</a></li>
+    <li><a href="/pages/wines.html" style="color:var(--teal-lt)">Wines</a></li>
+    <li class="has-drop">
+      <a href="#">Events ▾</a>
+      <ul class="drop-menu">
+        <li><a href="/pages/live-music-sundays.html">Live Music Sundays</a></li>
+        <li><a href="/pages/events-calendar.html">Events Calendar</a></li>
+        <li><a href="/pages/event-packages.html">Private Events</a></li>
+      </ul>
+    </li>
+    <li><a href="/gallery">Gallery</a></li>
+    <li><a href="/pages/contact.html">Visit Us</a></li>
+    <li><a href="/pages/reviews.html" class="nav-cta">Leave a Review</a></li>
+  </ul>
+  <div class="hamburger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-body">
+    <p class="eyebrow">The Wine List</p>
+    <h1>Small batch.<br><em>Big personality.</em></h1>
+    <p class="hero-sub">Curated wines from Lake Michigan Shore and beyond — whites, reds, and a few that defy easy description. Each one chosen because it earns its place on the list.</p>
+  </div>
+</section>
+
+<!-- FILTER -->
+<div class="filter-section" id="filterBar">
+  <button class="filter-btn active" data-filter="all">All Wines <span class="filter-count" id="countAll">15</span></button>
+  <button class="filter-btn" data-filter="white">Whites <span class="filter-count" id="countWhite">8</span></button>
+  <button class="filter-btn" data-filter="red">Reds <span class="filter-count" id="countRed">6</span></button>
+  <button class="filter-btn" data-filter="rose">Rosé <span class="filter-count" id="countRose">1</span></button>
+</div>
+
+<!-- WHITES -->
+<section class="wine-section whites" id="sectionWhites">
+  <div class="wine-section-inner">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <p class="s-label">
+          <span class="section-color-bar"></span>White Wines
+        </p>
+        <h2>Fresh, bright &<br><em>full of character</em></h2>
+      </div>
+      <span class="section-ava">Lake Michigan Shore AVA &amp; Beyond</span>
+    </div>
+    <div class="wine-grid" id="whitesGrid">
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Sur Lie Albariño</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Fresh, Flirty &amp; Fabulous</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Honeysuckle</span>
+          <span class="wine-note-tag">Almond Croissant</span>
+          <span class="wine-note-tag">White Peach</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Dry Riesling</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Tart, Tight &amp; Tempting</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Apple</span>
+          <span class="wine-note-tag">White Peach</span>
+          <span class="wine-note-tag">Limestone</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Pinot Gris</div>
+          <span class="wine-rs rs-dry">Off-Dry · RS 0.25%</span>
+        </div>
+        <div class="wine-tagline">Light, Zesty &amp; A Bit Cheeky</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Yellow Pear</span>
+          <span class="wine-note-tag">Lime Zest</span>
+          <span class="wine-note-tag">Slate</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🍇 Estate Grown</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Fusion</div>
+          <span class="wine-rs rs-dry">Off-Dry · RS 0.25%</span>
+        </div>
+        <div class="wine-tagline">Fresh, Fruity &amp; Fun as Hell</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Nectarine</span>
+          <span class="wine-note-tag">Limestone</span>
+          <span class="wine-note-tag">Green Apple</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Off-Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Pinot Blanc</div>
+          <span class="wine-rs rs-semi">Semi-Dry · RS 0.3%</span>
+        </div>
+        <div class="wine-tagline">Soft, Smooth &amp; A Little Sweet</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Apple</span>
+          <span class="wine-note-tag">Yellow Plum</span>
+          <span class="wine-note-tag">Honeydew</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌸 Semi-Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Semi-Dry Albariño</div>
+          <span class="wine-rs rs-semi">Semi-Dry · RS 2.5%</span>
+        </div>
+        <div class="wine-tagline">Sweet, Sultry &amp; Seductive</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">White Peach</span>
+          <span class="wine-note-tag">Honeysuckle</span>
+          <span class="wine-note-tag">Lemon</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌸 Semi-Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Mezzo</div>
+          <span class="wine-rs rs-sweet">Sweet · RS 3.5%</span>
+        </div>
+        <div class="wine-tagline">A Sweet Little Trouble-Maker</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Orange Blossom</span>
+          <span class="wine-note-tag">Lime</span>
+          <span class="wine-note-tag">Apple</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🍯 Sweet</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="white">
+        <div class="wine-card-top">
+          <div class="wine-name">Valvin Muscat</div>
+          <span class="wine-rs rs-sweet">Sweet · RS 5%</span>
+        </div>
+        <div class="wine-tagline">Sweet, Citrusy &amp; Just a Little Naughty</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Grapefruit</span>
+          <span class="wine-note-tag">Lemon</span>
+          <span class="wine-note-tag">Lime</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🍯 Sweet</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REDS -->
+<section class="wine-section reds" id="sectionReds">
+  <div class="wine-section-inner">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <p class="s-label">
+          <span class="section-color-bar"></span>Red Wines &amp; Rosé
+        </p>
+        <h2>Bold, brooding &<br><em>unapologetic</em></h2>
+      </div>
+      <span class="section-ava">Lake Michigan Shore AVA &amp; Beyond</span>
+    </div>
+    <div class="wine-grid" id="redsGrid">
+
+      <div class="wine-card rose" data-type="rose">
+        <div class="wine-card-top">
+          <div class="wine-name">Rosé</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Juicy, Sassy &amp; Seductive</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Strawberry</span>
+          <span class="wine-note-tag">Red Currant</span>
+          <span class="wine-note-tag">Kiwi</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌹 Rosé</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="red">
+        <div class="wine-card-top">
+          <div class="wine-name">Pinot Noir</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Smooth, Dark &amp; Mysterious</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Plum</span>
+          <span class="wine-note-tag">Fig</span>
+          <span class="wine-note-tag">Cedar</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="red">
+        <div class="wine-card-top">
+          <div class="wine-name">Syrah</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Big, Bold &amp; Badass</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Tomato</span>
+          <span class="wine-note-tag">Blackberry</span>
+          <span class="wine-note-tag">Cherry</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="red">
+        <div class="wine-card-top">
+          <div class="wine-name">Lemberger</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Smoky, Sexy &amp; Strong</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Leather</span>
+          <span class="wine-note-tag">Oak</span>
+          <span class="wine-note-tag">Chocolate</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="red">
+        <div class="wine-card-top">
+          <div class="wine-name">Meritage</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Smooth &amp; Seductive Blend</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Forest Floor</span>
+          <span class="wine-note-tag">Cherry</span>
+          <span class="wine-note-tag">Leather</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="red">
+        <div class="wine-card-top">
+          <div class="wine-name">Sangiovese Reserve</div>
+          <span class="wine-rs rs-dry">Dry · RS 0%</span>
+        </div>
+        <div class="wine-tagline">Italian Stallion in a Glass</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Sun-dried Tomato</span>
+          <span class="wine-note-tag">Cherry</span>
+          <span class="wine-note-tag">Oregano</span>
+          <span class="wine-note-tag">Tobacco</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🌿 Dry</span></div>
+        </div>
+      </div>
+
+      <div class="wine-card" data-type="red">
+        <div class="wine-card-top">
+          <div class="wine-name">Rosso</div>
+          <span class="wine-rs rs-semi">Semi-Sweet · RS 3%</span>
+        </div>
+        <div class="wine-tagline">A Little Sweet, A Little Naughty</div>
+        <div class="wine-notes">
+          <span class="wine-note-tag">Salal Berry</span>
+          <span class="wine-note-tag">Black Plum</span>
+          <span class="wine-note-tag">Sweet Tobacco</span>
+        </div>
+        <div class="wine-card-footer">
+          <span class="wine-serving">Glass · Bottle</span>
+          <div class="wine-flag"><span class="wine-flag-item">🍯 Semi-Sweet</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FLIGHTS -->
+<section class="flights-section">
+  <div class="flights-inner">
+    <div class="flights-header">
+      <div>
+        <p class="s-label lt" style="color:var(--teal-lt)">
+          Can't decide? <span style="width:32px;height:1px;background:var(--teal-lt);display:inline-block;vertical-align:middle;margin-left:10px;"></span>
+        </p>
+        <h2 class="on-dark">Try a <em>flight</em></h2>
+        <p class="flights-intro">Three wines, one theme. Flights are the best way to explore what Free Run has to offer — ask your server about today's seasonal wine cocktails too.</p>
+      </div>
+    </div>
+    <div class="flights-grid">
+
+      <div class="flight-card">
+        <div class="flight-card-top fc-dry">
+          <span class="flight-icon">🍷</span>
+          <div class="flight-name">Dry Red Flight</div>
+          <div class="flight-price">$18</div>
+        </div>
+        <div class="flight-card-bottom">
+          <div class="flight-rec-label">We recommend</div>
+          <div class="flight-rec-wines">
+            <span class="flight-rec-wine">Rosé</span>
+            <span class="flight-rec-wine">Lemberger</span>
+            <span class="flight-rec-wine">Meritage</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flight-card">
+        <div class="flight-card-top fc-white">
+          <span class="flight-icon">🥂</span>
+          <div class="flight-name">Dry White Flight</div>
+          <div class="flight-price">$15</div>
+        </div>
+        <div class="flight-card-bottom">
+          <div class="flight-rec-label">We recommend</div>
+          <div class="flight-rec-wines">
+            <span class="flight-rec-wine">Dry Riesling</span>
+            <span class="flight-rec-wine">Pinot Gris</span>
+            <span class="flight-rec-wine">Fusion</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flight-card">
+        <div class="flight-card-top fc-sweet">
+          <span class="flight-icon">🍯</span>
+          <div class="flight-name">Sweet Flight</div>
+          <div class="flight-price">$15</div>
+        </div>
+        <div class="flight-card-bottom">
+          <div class="flight-rec-label">We recommend</div>
+          <div class="flight-rec-wines">
+            <span class="flight-rec-wine">Mezzo</span>
+            <span class="flight-rec-wine">Valvin Muscat</span>
+            <span class="flight-rec-wine">Rosso</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- COCKTAILS -->
+<section class="cocktails-section">
+  <div class="cocktails-inner">
+    <div class="cocktails-header">
+      <p class="s-label center" style="justify-content:center;">
+        <span style="width:32px;height:1px;background:var(--teal);display:inline-block;margin-right:10px;vertical-align:middle;"></span>
+        Seasonal Wine Cocktails
+        <span style="width:32px;height:1px;background:var(--teal);display:inline-block;margin-left:10px;vertical-align:middle;"></span>
+      </p>
+      <h2 style="text-align:center;">Crafted in-house,<br><em>rotated with the seasons</em></h2>
+      <p class="body-copy" style="text-align:center;">Our wines meet a little creativity. Ask your server what's pouring today.</p>
+    </div>
+
+    <div class="cocktail-grid">
+
+      <div class="cocktail-card">
+        <div class="cocktail-card-top">
+          <div class="cocktail-name">Espress-No Regrets</div>
+          <div class="cocktail-price">$14</div>
+        </div>
+        <div class="cocktail-base">Pinot Gris · Honey Syrup · Coffee</div>
+        <div class="cocktail-desc">Wine and coffee walk into a bar — and never leave. Our crisp Pinot Gris and a touch of honey syrup, all crowned with a whisper of coffee-smoke inside a bubble.</div>
+      </div>
+
+      <div class="cocktail-card">
+        <div class="cocktail-card-top">
+          <div class="cocktail-name">Blood Orange Mule</div>
+          <div class="cocktail-price">$14</div>
+        </div>
+        <div class="cocktail-base">Mezzo · Blood Orange · Ginger Beer</div>
+        <div class="cocktail-desc">Our fizzy Mezzo sparkler meets fresh blood orange and a kick of ginger beer — a mule that's as refreshing as it is dramatic.</div>
+      </div>
+
+      <div class="cocktail-card">
+        <div class="cocktail-card-top">
+          <div class="cocktail-name">Lemberger Lemon Lift</div>
+          <div class="cocktail-price">$14</div>
+        </div>
+        <div class="cocktail-base">Lemberger · Honey · Fresh Lemon</div>
+        <div class="cocktail-desc">Our bold Lemberger meets a touch of honey and fresh lemon, balanced with a silky foam for a cocktail that's as vibrant as it is smooth.</div>
+      </div>
+
+      <div class="cocktail-card">
+        <div class="cocktail-card-top">
+          <div class="cocktail-name">Campfire Confessions</div>
+          <div class="cocktail-price">$15</div>
+        </div>
+        <div class="cocktail-base">Syrah · Hot Chocolate · Cacao Bitters</div>
+        <div class="cocktail-desc">Decadent hot chocolate stirs together with our rich Syrah and a dash of cacao bitters, topped with marshmallow. For the nights that deserve a little drama.</div>
+      </div>
+
+    </div>
+
+    <!-- Chambong -->
+    <div class="chambong-strip">
+      <div class="chambong-left">
+        <div class="chambong-icon">🍾</div>
+        <div>
+          <div class="chambong-title">Make it a Chambong</div>
+          <div class="chambong-sub">Upgrade any cocktail — because why not</div>
+        </div>
+      </div>
+      <div class="chambong-prices">
+        <div class="chambong-price">
+          <div class="chambong-price-val">$12</div>
+          <div class="chambong-price-label">For 1</div>
+        </div>
+        <div class="chambong-price">
+          <div class="chambong-price-val">$40</div>
+          <div class="chambong-price-label">For 4</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ONLINE -->
+<section class="online-section">
+  <div class="online-inner">
+    <p class="s-label" style="justify-content:center; margin-bottom:14px;">
+      <span style="width:32px;height:1px;background:var(--teal);display:inline-block;"></span>
+      &nbsp; Take a Bottle Home &nbsp;
+      <span style="width:32px;height:1px;background:var(--teal);display:inline-block;"></span>
+    </p>
+    <h2>Can't make it out?<br><em>We ship.</em></h2>
+    <p class="body-copy">A selection of Free Run wines is available online through our partners at Moersch Hospitality. Or better yet — come visit and pick your own.</p>
+    <div>
+      <a href="https://www.moerschhospitalitygroup.com" target="_blank" rel="noopener" class="btn-fill">Shop Online →</a>
+      <a href="/pages/contact.html" class="btn-line">Plan a Visit</a>
+    </div>
+    <p class="online-note">Must be 21+ to purchase. Available while supplies last.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <img class="footer-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/pages/about.html">Our Story</a>
+    <a href="/pages/events-calendar.html">Events</a>
+    <a href="/pages/contact.html">Visit Us</a>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
+addEventListener('scroll', onScroll, { passive:true });
+onScroll();
+
+// Mobile hamburger
+const burger = document.getElementById('burger');
+const links  = document.getElementById('navLinks');
+let open = false;
+burger.addEventListener('click', () => {
+  open = !open;
+  if (open) {
+    links.style.cssText = `
+      display:flex; flex-direction:column; position:fixed;
+      top:var(--nav-h); left:0; right:0; background:#fff;
+      padding:20px 28px 28px; gap:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.1); z-index:899;
+    `;
+    links.querySelectorAll('a').forEach(a => a.style.color = 'var(--grey)');
+  } else {
+    links.removeAttribute('style');
+  }
+});
+
+// Filter
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filter = btn.dataset.filter;
+
+  document.querySelectorAll('.wine-card').forEach(card => {
+    const type = card.dataset.type;
+    if (filter === 'all' || type === filter) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+
+  // Show/hide section headers based on visible cards
+  const whitesVisible = [...document.querySelectorAll('#whitesGrid .wine-card')].some(c => !c.classList.contains('hidden'));
+  const redsVisible   = [...document.querySelectorAll('#redsGrid .wine-card')].some(c => !c.classList.contains('hidden'));
+  document.getElementById('sectionWhites').style.display = whitesVisible ? '' : 'none';
+  document.getElementById('sectionReds').style.display   = redsVisible   ? '' : 'none';
+});
+
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.wine-card, .flight-card').forEach((el, i) => {
+  el.style.cssText += `opacity:0; transform:translateY(14px); transition:opacity .5s ${i*50}ms ease, transform .5s ${i*50}ms ease;`;
+  io.observe(el);
+});
+</script>
+</body>
+</html>

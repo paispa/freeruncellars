@@ -1,2 +1,581 @@
-<!-- TO BUILD: gallery page -->
-<!-- See README.md for content notes and SEO targets -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery – Free Run Cellars | Berrien Springs, MI</title>
+<meta name="description" content="Photos from Free Run Cellars — vineyard, pond, tasting room, and wine. A boutique winery in Berrien Springs, Michigan, 90 minutes from Chicago.">
+<meta name="keywords" content="Free Run Cellars photos, winery Berrien Springs Michigan, vineyard photos Southwest Michigan, wine tasting room photos">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --teal:      #537f71;
+  --teal-dk:   #3d6155;
+  --teal-lt:   #7aab9a;
+  --teal-pale: #eef4f1;
+  --black:     #0e0e0e;
+  --off-white: #f7f4f0;
+  --grey:      #787470;
+  --text:      #2c2c2c;
+  --nav-h:     74px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Jost',sans-serif; color:var(--text); background:var(--black); overflow-x:hidden; }
+a { text-decoration:none; color:inherit; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; inset:0 0 auto; z-index:900;
+  height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px;
+  transition:background .35s, box-shadow .35s;
+}
+nav.solid { background:rgba(10,10,10,.97); box-shadow:0 1px 0 rgba(255,255,255,.06); }
+.nav-logo { height:34px; filter:brightness(0) invert(1); }
+.nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
+.nav-links a {
+  font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.55); transition:color .2s;
+}
+.nav-links a:hover { color:#fff; }
+.has-drop { position:relative; }
+.drop-menu {
+  display:none; position:absolute; top:calc(100% + 10px); left:50%;
+  transform:translateX(-50%);
+  background:#1a1a1a; border-radius:8px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 8px 28px rgba(0,0,0,.5);
+  padding:6px 0; min-width:180px; list-style:none;
+}
+.has-drop:hover .drop-menu { display:block; }
+.drop-menu li a {
+  display:block; padding:10px 18px;
+  font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
+  color:rgba(255,255,255,.45) !important;
+}
+.drop-menu li a:hover { color:#fff !important; background:rgba(255,255,255,.05); }
+.nav-cta {
+  background:var(--teal); color:#fff !important;
+  padding:9px 18px; border-radius:4px;
+  font-size:10px !important; letter-spacing:2px !important;
+  transition:background .2s !important;
+}
+.nav-cta:hover { background:var(--teal-dk) !important; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger span { width:22px; height:1.5px; background:rgba(255,255,255,.7); border-radius:2px; }
+
+/* ── HEADER ── */
+.page-header {
+  padding:calc(var(--nav-h) + 72px) 56px 56px;
+  text-align:center;
+  animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .1s both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.eyebrow {
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal-lt); margin-bottom:16px; font-weight:500;
+}
+.eyebrow::before, .eyebrow::after { content:''; width:32px; height:1px; background:var(--teal-lt); }
+h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px,6vw,80px); font-weight:300; font-style:italic;
+  color:#fff; line-height:1.02; margin-bottom:16px;
+}
+h1 em { font-style:normal; color:var(--teal-lt); }
+.header-sub {
+  font-size:13px; font-weight:300; color:rgba(255,255,255,.38);
+  letter-spacing:.5px; line-height:1.7;
+}
+
+/* ── FILTER ── */
+.filter-bar {
+  display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+  padding:0 56px 48px;
+}
+.filter-btn {
+  background:transparent;
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.4);
+  font-family:'Jost',sans-serif;
+  font-size:9px; letter-spacing:2.5px; text-transform:uppercase; font-weight:600;
+  padding:9px 20px; border-radius:40px;
+  cursor:pointer; transition:all .22s ease;
+}
+.filter-btn:hover { border-color:var(--teal-lt); color:var(--teal-lt); }
+.filter-btn.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+
+/* ── MASONRY GRID ── */
+.gallery-wrap {
+  padding:0 24px 48px;
+  max-width:1400px; margin:0 auto;
+}
+
+.masonry {
+  columns:4 280px;
+  column-gap:12px;
+}
+
+.gallery-item {
+  break-inside:avoid;
+  margin-bottom:12px;
+  position:relative; overflow:hidden;
+  border-radius:8px;
+  cursor:pointer;
+  display:block;
+  animation:fadeUp .5s ease both;
+}
+
+.gallery-item img {
+  width:100%; display:block;
+  transition:transform .5s ease;
+}
+.gallery-item:hover img { transform:scale(1.04); }
+
+.gallery-item-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(8,18,12,.7) 0%, transparent 50%);
+  opacity:0; transition:opacity .3s ease;
+  display:flex; align-items:flex-end; padding:18px;
+}
+.gallery-item:hover .gallery-item-overlay { opacity:1; }
+.gallery-item-label {
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.7); font-weight:500;
+}
+
+/* hidden for filter */
+.gallery-item.hidden { display:none; }
+
+/* ── LIGHTBOX ── */
+.lightbox {
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.95);
+  align-items:center; justify-content:center;
+  padding:24px;
+  animation:lbIn .2s ease both;
+}
+@keyframes lbIn { from { opacity:0; } to { opacity:1; } }
+.lightbox.open { display:flex; }
+.lb-img {
+  max-width:90vw; max-height:88vh;
+  border-radius:6px;
+  object-fit:contain;
+  animation:lbImgIn .25s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes lbImgIn {
+  from { opacity:0; transform:scale(.96); }
+  to   { opacity:1; transform:scale(1); }
+}
+.lb-close {
+  position:fixed; top:20px; right:24px;
+  font-size:28px; color:rgba(255,255,255,.5);
+  cursor:pointer; transition:color .2s;
+  background:none; border:none; line-height:1;
+}
+.lb-close:hover { color:#fff; }
+.lb-prev, .lb-next {
+  position:fixed; top:50%; transform:translateY(-50%);
+  font-size:22px; color:rgba(255,255,255,.4);
+  cursor:pointer; transition:color .2s;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  border-radius:50%; width:48px; height:48px;
+  display:flex; align-items:center; justify-content:center;
+  user-select:none;
+}
+.lb-prev { left:16px; }
+.lb-next { right:16px; }
+.lb-prev:hover, .lb-next:hover { color:#fff; background:rgba(255,255,255,.12); }
+.lb-caption {
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.35); text-align:center; white-space:nowrap;
+}
+
+/* ── CTA ── */
+.gallery-cta {
+  background:var(--black); padding:72px 56px;
+  text-align:center;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.gallery-cta-inner { max-width:480px; margin:0 auto; }
+.gallery-cta h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,3.5vw,46px); font-weight:300; font-style:italic;
+  color:#fff; line-height:1.1; margin-bottom:14px;
+}
+.gallery-cta h2 em { font-style:normal; color:var(--teal-lt); }
+.gallery-cta p {
+  font-size:13px; font-weight:300; color:rgba(255,255,255,.38);
+  line-height:1.8; margin-bottom:32px;
+}
+.btn-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-fill {
+  background:var(--teal); color:#fff;
+  padding:14px 30px; border-radius:4px;
+  font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  transition:background .22s, transform .22s, box-shadow .22s; display:inline-block;
+}
+.btn-fill:hover { background:var(--teal-dk); transform:translateY(-2px); box-shadow:0 8px 22px rgba(83,127,113,.3); }
+.btn-line {
+  border:1px solid rgba(122,171,154,.3); color:var(--teal-lt);
+  padding:14px 30px; border-radius:4px;
+  font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase;
+  transition:border-color .22s, background .22s; display:inline-block;
+}
+.btn-line:hover { border-color:var(--teal-lt); background:rgba(122,171,154,.08); }
+
+/* ── FOOTER ── */
+.page-footer {
+  background:var(--black); color:rgba(255,255,255,.25);
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:28px 56px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; font-size:11px;
+}
+.footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.3; }
+.footer-links { display:flex; gap:20px; }
+.page-footer a:hover { color:rgba(255,255,255,.6); }
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  nav { padding:0 24px; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .page-header { padding:calc(var(--nav-h) + 48px) 28px 40px; }
+  .filter-bar { padding:0 28px 36px; }
+  .gallery-wrap { padding:0 12px 36px; }
+  .masonry { columns:2 180px; }
+  .gallery-cta { padding:56px 28px; }
+  .page-footer { padding:24px 28px; flex-direction:column; text-align:center; }
+  .footer-links { justify-content:center; }
+}
+@media (max-width:480px) {
+  .masonry { columns:2 140px; column-gap:8px; }
+  .gallery-item { margin-bottom:8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <img class="nav-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/pages/about.html">Our Story</a></li>
+    <li><a href="/pages/wines.html">Wines</a></li>
+    <li class="has-drop">
+      <a href="#">Events ▾</a>
+      <ul class="drop-menu">
+        <li><a href="/pages/live-music-sundays.html">Live Music Sundays</a></li>
+        <li><a href="/pages/events-calendar.html">Events Calendar</a></li>
+        <li><a href="/pages/event-packages.html">Private Events</a></li>
+      </ul>
+    </li>
+    <li><a href="/pages/gallery.html" style="color:#fff">Gallery</a></li>
+    <li><a href="/pages/contact.html">Visit Us</a></li>
+    <li><a href="/pages/reviews.html" class="nav-cta">Leave a Review</a></li>
+  </ul>
+  <div class="hamburger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <p class="eyebrow">Free Run Cellars</p>
+  <h1>Life at the <em>vineyard</em></h1>
+  <p class="header-sub">10062 Burgoyne Road · Berrien Springs, Michigan · 90 minutes from Chicago</p>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="vineyard">Vineyard</button>
+  <button class="filter-btn" data-filter="wines">Wines</button>
+  <button class="filter-btn" data-filter="grounds">Grounds &amp; Pond</button>
+  <button class="filter-btn" data-filter="events">Events &amp; Patio</button>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery-wrap">
+  <div class="masonry" id="masonryGrid">
+
+    <div class="gallery-item" data-cat="vineyard" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259838.jpeg" data-label="Vineyard · Golden Hour">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259838.jpeg" alt="Vineyard rows at golden hour" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Vineyard · Golden Hour</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1428.jpeg" data-label="Dry Riesling">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1428.jpeg" alt="Dry Riesling bottle and glass" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Dry Riesling</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="grounds" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/IMG_4007.jpeg" data-label="The Pond">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/IMG_4007.jpeg" alt="The pond at Free Run Cellars" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">The Pond</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="events" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-601.jpeg" data-label="Private Events">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-601.jpeg" alt="Farm tables with string lights" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Private Events</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="vineyard" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259783.jpeg" data-label="Pinot Gris Grapes">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259783.jpeg" alt="Grape clusters on the vine" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Pinot Gris Grapes</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="events" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1556.jpeg" data-label="The Patio">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1556.jpeg" alt="Outdoor patio with umbrellas" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">The Patio</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1589r.jpeg" data-label="Pinot Gris">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1589r.jpeg" alt="Pinot Gris on rope swing" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Pinot Gris</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="grounds" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/IMG_4029.jpeg" data-label="Turtle at the Pond">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/IMG_4029.jpeg" alt="Turtle at the pond" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Turtle at the Pond</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="vineyard" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259804.jpeg" data-label="The Vineyard">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259804.jpeg" alt="Vineyard rows" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">The Vineyard</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1578.jpeg" data-label="Wine Flight">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1578.jpeg" alt="Wine flight on tray" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Wine Flight</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="grounds" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259819.jpeg" data-label="Free Run Cellars Sign">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259819.jpeg" alt="Exterior sign at dusk" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Free Run Cellars</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-993.jpeg" data-label="Valvin Muscat">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-993.jpeg" alt="Valvin Muscat bottles" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Valvin Muscat</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="vineyard" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259847.jpeg" data-label="Vineyard Rows">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259847.jpeg" alt="Vineyard rows" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Vineyard Rows</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="events" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1547.jpeg" data-label="Tasting Room">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1547.jpeg" alt="Tasting room interior" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Tasting Room</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1592.jpeg" data-label="Wine in the Vines">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1592.jpeg" alt="Wine glass in vines" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Wine in the Vines</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="vineyard" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-994.jpeg" data-label="Harvest Ready">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-994.jpeg" alt="Ripe grape clusters" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Harvest Ready</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-32.jpeg" data-label="Wine Cocktail">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-32.jpeg" alt="Smoky wine cocktail" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Wine Cocktail</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="grounds" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-945.jpeg" data-label="Free Run Cellars">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-945.jpeg" alt="Exterior sign daytime" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Free Run Cellars</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1822.jpeg" data-label="Free Run Glass">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1822.jpeg" alt="Branded wine glass in vines" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Free Run Glass</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="vineyard" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259772.jpeg" data-label="The Barrel House">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259772.jpeg" alt="Barrel between orchard rows" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">The Barrel House</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-33.jpeg" data-label="Craft Cocktail">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-33.jpeg" alt="Cocktail with foam dome" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Craft Cocktail</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="grounds" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-989.jpeg" data-label="Stone Wall Sign">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-989.jpeg" alt="Sign on stone wall" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Stone Wall Sign</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1817.jpeg" data-label="In the Vines">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1817.jpeg" alt="Branded glass in vines" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">In the Vines</span></div>
+    </div>
+
+    <div class="gallery-item" data-cat="wines" data-src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1407.jpeg" data-label="Free Run Glass">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1407.jpeg" alt="Branded wine glass" loading="lazy">
+      <div class="gallery-item-overlay"><span class="gallery-item-label">Free Run Glass</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">✕</button>
+  <button class="lb-prev" id="lbPrev">‹</button>
+  <img class="lb-img" id="lbImg" src="" alt="">
+  <button class="lb-next" id="lbNext">›</button>
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
+
+<!-- CTA -->
+<section class="gallery-cta">
+  <div class="gallery-cta-inner">
+    <h2>Come see it<br>in <em>person</em></h2>
+    <p>Photos only go so far. The light through the vines on a Sunday afternoon, a glass in hand — that part you have to come and get yourself.</p>
+    <div class="btn-row">
+      <a href="/pages/contact.html" class="btn-fill">Plan Your Visit</a>
+      <a href="/pages/live-music-sundays.html" class="btn-line">Live Music Sundays</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <img class="footer-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/pages/about.html">Our Story</a>
+    <a href="/pages/wines.html">Wines</a>
+    <a href="/pages/contact.html">Visit Us</a>
+  </div>
+</footer>
+
+<script>
+// Nav
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
+addEventListener('scroll', onScroll, { passive:true });
+onScroll();
+
+// Hamburger
+const burger = document.getElementById('burger');
+const links  = document.getElementById('navLinks');
+let menuOpen = false;
+burger.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  if (menuOpen) {
+    links.style.cssText = `
+      display:flex; flex-direction:column; position:fixed;
+      top:var(--nav-h); left:0; right:0; background:#111;
+      padding:20px 28px 28px; gap:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.5); z-index:899;
+    `;
+  } else {
+    links.removeAttribute('style');
+  }
+});
+
+// Filter
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filter = btn.dataset.filter;
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.classList.toggle('hidden', filter !== 'all' && item.dataset.cat !== filter);
+  });
+});
+
+// Lightbox
+const items = () => [...document.querySelectorAll('.gallery-item:not(.hidden)')];
+let currentIdx = 0;
+
+function openLightbox(idx) {
+  const all = items();
+  if (!all[idx]) return;
+  currentIdx = idx;
+  const item = all[idx];
+  document.getElementById('lbImg').src = item.dataset.src;
+  document.getElementById('lbCaption').textContent = item.dataset.label || '';
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function navigate(dir) {
+  const all = items();
+  currentIdx = (currentIdx + dir + all.length) % all.length;
+  const item = all[currentIdx];
+  const img = document.getElementById('lbImg');
+  img.style.opacity = '0';
+  setTimeout(() => {
+    img.src = item.dataset.src;
+    document.getElementById('lbCaption').textContent = item.dataset.label || '';
+    img.style.opacity = '1';
+  }, 120);
+}
+
+document.querySelectorAll('.gallery-item').forEach((item, i) => {
+  item.addEventListener('click', () => {
+    const visibleItems = items();
+    const visibleIdx = visibleItems.indexOf(item);
+    openLightbox(visibleIdx);
+  });
+});
+
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbPrev').addEventListener('click', () => navigate(-1));
+document.getElementById('lbNext').addEventListener('click', () => navigate(1));
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+});
+
+// Keyboard nav
+addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') navigate(1);
+  if (e.key === 'ArrowLeft')  navigate(-1);
+  if (e.key === 'Escape')     closeLightbox();
+});
+
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05 });
+
+document.querySelectorAll('.gallery-item').forEach((el, i) => {
+  el.style.cssText += `opacity:0; transition:opacity .5s ${(i % 8) * 60}ms ease;`;
+  io.observe(el);
+});
+</script>
+</body>
+</html>

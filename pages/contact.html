@@ -1,2 +1,663 @@
-<!-- TO BUILD: contact page -->
-<!-- See README.md for content notes and SEO targets -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visit Us – Free Run Cellars | Berrien Springs, MI</title>
+<meta name="description" content="Plan your visit to Free Run Cellars in Berrien Springs, Michigan. Open Friday–Sunday. Live music every Sunday. 90 minutes from Chicago. Dogs and families welcome.">
+<meta name="keywords" content="Free Run Cellars hours, visit Free Run Cellars, winery Berrien Springs MI, directions Free Run Cellars, winery near Chicago">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --teal:      #537f71;
+  --teal-dk:   #3d6155;
+  --teal-lt:   #7aab9a;
+  --teal-pale: #eef4f1;
+  --black:     #0e0e0e;
+  --off-white: #f7f4f0;
+  --grey:      #787470;
+  --text:      #2c2c2c;
+  --nav-h:     74px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Jost',sans-serif; color:var(--text); background:var(--off-white); overflow-x:hidden; }
+a { text-decoration:none; color:inherit; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; inset:0 0 auto; z-index:900;
+  height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px;
+  transition:background .35s, box-shadow .35s;
+}
+nav.solid { background:rgba(255,255,255,.97); box-shadow:0 1px 0 rgba(0,0,0,.07); }
+.nav-logo { height:34px; transition:filter .35s; }
+nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
+.nav-links a {
+  font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.82); transition:color .2s;
+}
+nav.solid .nav-links a { color:var(--grey); }
+nav.solid .nav-links a:hover { color:var(--teal); }
+.nav-links a:hover { color:#fff; }
+.has-drop { position:relative; }
+.drop-menu {
+  display:none; position:absolute; top:calc(100% + 10px); left:50%;
+  transform:translateX(-50%);
+  background:#fff; border-radius:8px;
+  box-shadow:0 8px 28px rgba(0,0,0,.11);
+  padding:6px 0; min-width:180px; list-style:none;
+}
+.has-drop:hover .drop-menu { display:block; }
+.drop-menu li a {
+  display:block; padding:10px 18px;
+  font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--grey) !important;
+}
+.drop-menu li a:hover { color:var(--teal) !important; background:var(--teal-pale); }
+.nav-cta {
+  background:var(--teal); color:#fff !important;
+  padding:9px 18px; border-radius:4px;
+  font-size:10px !important; letter-spacing:2px !important;
+  transition:background .2s !important;
+}
+.nav-cta:hover { background:var(--teal-dk) !important; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger span { width:22px; height:1.5px; background:#fff; border-radius:2px; transition:background .3s; }
+nav.solid .hamburger span { background:var(--text); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; height:72vh; min-height:480px;
+  display:flex; align-items:flex-end; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259819.jpeg');
+  background-size:cover; background-position:center 60%;
+  transform:scale(1.04);
+  animation:hZoom 14s ease-out forwards;
+}
+@keyframes hZoom { to { transform:scale(1); } }
+.hero-scrim {
+  position:absolute; inset:0;
+  background:linear-gradient(to top,
+    rgba(8,18,12,.90) 0%,
+    rgba(8,18,12,.35) 55%,
+    rgba(8,18,12,.1) 100%);
+}
+.hero-body {
+  position:relative; z-index:1;
+  padding:0 80px 72px;
+  width:100%;
+  display:flex; align-items:flex-end; justify-content:space-between; gap:40px;
+  flex-wrap:wrap;
+  animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .2s both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.hero-left { }
+.eyebrow {
+  display:flex; align-items:center; gap:12px;
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal-lt); margin-bottom:16px; font-weight:500;
+}
+.eyebrow::before { content:''; width:36px; height:1px; background:var(--teal-lt); }
+h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px,6vw,80px); font-weight:300; font-style:italic;
+  color:#fff; line-height:1.02; letter-spacing:-.3px;
+}
+h1 em { font-style:normal; color:var(--teal-lt); }
+
+/* Quick hours pill in hero */
+.hero-hours {
+  display:flex; flex-direction:column; gap:8px;
+  align-self:flex-end; padding-bottom:4px;
+}
+.hours-pill {
+  display:flex; align-items:center; gap:12px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  backdrop-filter:blur(8px);
+  border-radius:8px; padding:12px 18px;
+  white-space:nowrap;
+}
+.hp-day { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.5); width:100px; }
+.hp-time { font-size:13px; color:#fff; font-weight:300; }
+.hp-note { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal-lt); margin-left:auto; padding-left:16px; }
+
+/* ── SHARED ── */
+.s-label {
+  font-size:9px; font-weight:600; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.s-label::after { content:''; width:32px; height:1px; background:var(--teal); }
+.s-label.lt { color:var(--teal-lt); }
+.s-label.lt::after { background:var(--teal-lt); }
+h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,3.2vw,46px); font-weight:300; font-style:italic;
+  line-height:1.1; color:var(--black); margin-bottom:18px;
+}
+h2 em { font-style:normal; color:var(--teal); }
+h2.on-dark { color:#fff; }
+h2.on-dark em { color:var(--teal-lt); }
+.body-copy { font-size:14px; font-weight:300; line-height:1.85; color:var(--grey); }
+.body-copy + .body-copy { margin-top:14px; }
+.body-copy.on-dark { color:rgba(255,255,255,.5); }
+
+/* ── MAIN CONTENT ── */
+.main-content {
+  background:#fff;
+  padding:88px 56px;
+}
+.main-inner {
+  max-width:1100px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:start;
+}
+
+/* ── HOURS CARD ── */
+.hours-card {
+  background:var(--off-white);
+  border-radius:14px; overflow:hidden;
+  border:1px solid rgba(83,127,113,.12);
+}
+.hours-card-header {
+  background:var(--teal); padding:22px 28px;
+  display:flex; align-items:center; gap:12px;
+}
+.hours-card-title {
+  font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#fff;
+}
+.hours-card-icon { font-size:18px; }
+.hours-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 28px;
+  border-bottom:1px solid rgba(83,127,113,.08);
+  transition:background .2s;
+}
+.hours-row:last-child { border-bottom:none; }
+.hours-row:hover { background:rgba(83,127,113,.04); }
+.hours-row.today { background:rgba(83,127,113,.07); }
+.hr-day { font-size:12px; font-weight:500; color:var(--text); letter-spacing:.5px; }
+.hr-time { font-size:12px; color:var(--grey); font-weight:300; }
+.hr-badge {
+  font-size:8px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  background:var(--teal); color:#fff; padding:3px 8px; border-radius:3px;
+  margin-left:8px;
+}
+.hr-badge.appt { background:var(--grey); }
+.hours-note {
+  padding:16px 28px;
+  font-size:11px; color:var(--grey); font-style:italic; font-weight:300;
+  border-top:1px solid rgba(83,127,113,.1); line-height:1.6;
+}
+
+/* ── DIRECTIONS CARD ── */
+.directions-card {
+  background:var(--black); border-radius:14px; overflow:hidden;
+  margin-top:20px;
+}
+.directions-card-inner { padding:28px; }
+.directions-title {
+  font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--teal-lt); margin-bottom:16px;
+}
+.address-block {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-style:italic; font-weight:300;
+  color:#fff; line-height:1.5; margin-bottom:20px;
+}
+.directions-meta {
+  display:flex; flex-direction:column; gap:8px; margin-bottom:24px;
+}
+.dm-item {
+  display:flex; align-items:center; gap:10px;
+  font-size:12px; color:rgba(255,255,255,.45); font-weight:300;
+}
+.dm-icon { font-size:14px; width:20px; text-align:center; }
+.btn-directions {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  width:100%; background:var(--teal); color:#fff;
+  padding:14px; border-radius:8px;
+  font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  transition:background .22s, transform .22s;
+}
+.btn-directions:hover { background:var(--teal-dk); transform:translateY(-2px); }
+
+/* ── RIGHT COLUMN ── */
+.contact-col { display:flex; flex-direction:column; gap:20px; }
+
+/* Contact methods */
+.contact-methods { display:flex; flex-direction:column; gap:12px; }
+.contact-method {
+  display:flex; align-items:center; gap:16px;
+  padding:18px 22px;
+  background:var(--off-white);
+  border:1px solid rgba(83,127,113,.12);
+  border-radius:10px;
+  transition:border-color .25s, transform .25s, box-shadow .25s;
+}
+.contact-method:hover { border-color:var(--teal); transform:translateY(-2px); box-shadow:0 8px 24px rgba(83,127,113,.1); }
+.cm-icon {
+  width:42px; height:42px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; flex-shrink:0;
+}
+.cm-icon.phone { background:rgba(83,127,113,.12); }
+.cm-icon.email { background:rgba(83,127,113,.12); }
+.cm-icon.instagram { background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+.cm-text { flex:1; }
+.cm-label { font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:3px; }
+.cm-value { font-size:14px; color:var(--text); font-weight:400; }
+.cm-sub { font-size:11px; color:var(--grey); font-weight:300; margin-top:2px; }
+.cm-arrow { font-size:16px; color:var(--grey); transition:transform .2s, color .2s; }
+.contact-method:hover .cm-arrow { transform:translateX(4px); color:var(--teal); }
+
+/* ── BEFORE YOU ARRIVE ── */
+.before-arrive {
+  background:var(--off-white);
+  border:1px solid rgba(83,127,113,.12);
+  border-radius:14px; overflow:hidden;
+}
+.ba-header {
+  padding:20px 24px 0;
+}
+.ba-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-style:italic; font-weight:300;
+  color:var(--black); margin-bottom:4px;
+}
+.ba-sub { font-size:11px; color:var(--grey); font-weight:300; margin-bottom:16px; }
+.ba-items { display:flex; flex-direction:column; }
+.ba-item {
+  display:flex; gap:16px; align-items:flex-start;
+  padding:18px 24px;
+  border-top:1px solid rgba(83,127,113,.08);
+  transition:background .2s;
+}
+.ba-item:hover { background:rgba(83,127,113,.04); }
+.ba-icon { font-size:22px; flex-shrink:0; margin-top:1px; }
+.ba-item-title { font-size:12px; font-weight:600; letter-spacing:.5px; color:var(--text); margin-bottom:4px; }
+.ba-item-text { font-size:12.5px; color:var(--grey); line-height:1.65; font-weight:300; }
+
+/* ── PHOTO STRIP ── */
+.photo-strip {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  height:320px; overflow:hidden;
+}
+.ps-item {
+  position:relative; overflow:hidden;
+}
+.ps-bg {
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+  transition:transform .6s ease;
+}
+.ps-item:hover .ps-bg { transform:scale(1.06); }
+.ps-item-1 .ps-bg { background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1556.jpeg'); }
+.ps-item-2 .ps-bg {
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/IMG_4029.jpeg');
+  background-position:center 60%;
+}
+.ps-item-3 .ps-bg { background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-31.jpeg'); }
+.ps-scrim {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(8,18,12,.5), transparent 60%);
+}
+.ps-label {
+  position:absolute; bottom:16px; left:16px;
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.65); font-weight:500;
+}
+
+/* ── BOTTOM CTA ── */
+.bottom-cta {
+  background:var(--black); padding:80px 56px;
+  text-align:center; position:relative; overflow:hidden;
+}
+.bottom-cta::before {
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(83,127,113,.1), transparent 60%);
+  pointer-events:none;
+}
+.bottom-cta-inner { max-width:520px; margin:0 auto; position:relative; z-index:1; }
+.bottom-cta h2 { margin-bottom:14px; }
+.bottom-cta .body-copy.on-dark { margin-bottom:32px; }
+.btn-fill {
+  background:var(--teal); color:#fff;
+  padding:14px 32px; border-radius:4px;
+  font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  transition:background .22s, transform .22s, box-shadow .22s;
+  display:inline-block;
+}
+.btn-fill:hover { background:var(--teal-dk); transform:translateY(-2px); box-shadow:0 8px 22px rgba(83,127,113,.3); }
+
+/* ── FOOTER ── */
+.page-footer {
+  background:var(--black); color:rgba(255,255,255,.35);
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:28px 56px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; font-size:11px;
+}
+.footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.4; }
+.footer-links { display:flex; gap:20px; }
+.page-footer a:hover { color:#fff; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  nav { padding:0 24px; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .hero-body { padding:0 28px 56px; flex-direction:column; align-items:flex-start; }
+  .hero-hours { width:100%; }
+  .hours-pill { justify-content:space-between; }
+  .main-content { padding:64px 28px; }
+  .main-inner { grid-template-columns:1fr; gap:40px; }
+  .photo-strip { grid-template-columns:1fr 1fr 1fr; height:220px; }
+  .bottom-cta { padding:64px 28px; }
+  .page-footer { padding:24px 28px; flex-direction:column; text-align:center; }
+  .footer-links { justify-content:center; }
+}
+@media (max-width:560px) {
+  .photo-strip { grid-template-columns:1fr; height:auto; }
+  .ps-item { height:200px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <img class="nav-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/pages/about.html">Our Story</a></li>
+    <li><a href="/wines">Wines</a></li>
+    <li class="has-drop">
+      <a href="#">Events ▾</a>
+      <ul class="drop-menu">
+        <li><a href="/pages/live-music-sundays.html">Live Music Sundays</a></li>
+        <li><a href="/pages/events-calendar.html">Events Calendar</a></li>
+        <li><a href="/pages/event-packages.html">Private Events</a></li>
+      </ul>
+    </li>
+    <li><a href="/gallery">Gallery</a></li>
+    <li><a href="/pages/contact.html" style="color:var(--teal-lt)">Visit Us</a></li>
+    <li><a href="/pages/reviews.html" class="nav-cta">Leave a Review</a></li>
+  </ul>
+  <div class="hamburger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-body">
+    <div class="hero-left">
+      <p class="eyebrow">Plan Your Visit</p>
+      <h1>Come find<br>us on <em>Burgoyne</em></h1>
+    </div>
+    <div class="hero-hours">
+      <div class="hours-pill">
+        <span class="hp-day">Friday</span>
+        <span class="hp-time">2:00 – 6:00 PM</span>
+      </div>
+      <div class="hours-pill">
+        <span class="hp-day">Saturday</span>
+        <span class="hp-time">12:00 – 7:00 PM</span>
+      </div>
+      <div class="hours-pill">
+        <span class="hp-day">Sunday</span>
+        <span class="hp-time">2:00 – 6:00 PM</span>
+        <span class="hp-note">♪ Live Music</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="main-content">
+  <div class="main-inner">
+
+    <!-- LEFT: Hours + Directions -->
+    <div>
+      <p class="s-label">Hours &amp; Location</p>
+      <h2>We're open<br><em>Friday through Sunday</em></h2>
+      <p class="body-copy" style="margin-bottom:28px;">Mon–Thu by appointment — just give us a call. Hours may vary seasonally so it's always worth a quick check before you make the drive.</p>
+
+      <div class="hours-card">
+        <div class="hours-card-header">
+          <span class="hours-card-icon">🕐</span>
+          <span class="hours-card-title">Tasting Room Hours</span>
+        </div>
+        <div class="hours-row">
+          <span class="hr-day">Monday – Thursday</span>
+          <span class="hr-time">By appointment <span class="hr-badge appt">Call ahead</span></span>
+        </div>
+        <div class="hours-row">
+          <span class="hr-day">Friday</span>
+          <span class="hr-time">2:00 – 6:00 PM</span>
+        </div>
+        <div class="hours-row">
+          <span class="hr-day">Saturday</span>
+          <span class="hr-time">12:00 – 7:00 PM</span>
+        </div>
+        <div class="hours-row">
+          <span class="hr-day">Sunday</span>
+          <span class="hr-time">2:00 – 6:00 PM <span class="hr-badge">♪ Live Music</span></span>
+        </div>
+        <div class="hours-note">Hours may vary — contact us to confirm, especially during holidays and off-season.</div>
+      </div>
+
+      <div class="directions-card">
+        <div class="directions-card-inner">
+          <div class="directions-title">Getting Here</div>
+          <div class="address-block">
+            10062 Burgoyne Road<br>
+            Berrien Springs, MI 49103
+          </div>
+          <div class="directions-meta">
+            <div class="dm-item"><span class="dm-icon">🚗</span> 90 minutes from Chicago</div>
+            <div class="dm-item"><span class="dm-icon">📍</span> Southwest Michigan · Lake Michigan Shore AVA</div>
+            <div class="dm-item"><span class="dm-icon">📞</span> <a href="tel:2698156885" style="color:rgba(255,255,255,.45)">(269) 815-6885</a></div>
+          </div>
+          <a href="https://maps.apple.com/?address=10062+Burgoyne+Road,+Berrien+Springs,+MI+49103&dirflg=d"
+             class="btn-directions" target="_blank" rel="noopener">
+            ↗ Get Directions
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Contact + Before You Arrive -->
+    <div class="contact-col">
+      <div>
+        <p class="s-label">Get in Touch</p>
+        <h2>We'd love to<br><em>hear from you</em></h2>
+        <p class="body-copy" style="margin-bottom:24px;">Whether you're planning a visit, asking about a private event, or just want to say hello — reach out any time.</p>
+      </div>
+
+      <div class="contact-methods">
+        <a href="tel:2698156885" class="contact-method">
+          <div class="cm-icon phone">📞</div>
+          <div class="cm-text">
+            <div class="cm-label">Phone</div>
+            <div class="cm-value">(269) 815-6885</div>
+            <div class="cm-sub">Mon–Thu by appointment</div>
+          </div>
+          <div class="cm-arrow">→</div>
+        </a>
+
+        <a href="/cdn-cgi/l/email-protection#86e5e9e8f2e7e5f2c6e0f4e5f1efe8e3a8e5e9ebb9f5f3e4ece3e5f2bbcee3eaeae9a6e0f4e9eba6c0f4e3e3a6d4f3e8a6c5e3eaeae7f4f5a6f1e3e4f5eff2e3" class="contact-method">
+          <div class="cm-icon email">✉️</div>
+          <div class="cm-text">
+            <div class="cm-label">Email</div>
+            <div class="cm-value"><span class="__cf_email__" data-cfemail="f99a96978d989a8db99f8b9a8e90979cd79a9694">[email&#160;protected]</span></div>
+            <div class="cm-sub">Opens your default mail app</div>
+          </div>
+          <div class="cm-arrow">→</div>
+        </a>
+
+        <a href="https://www.instagram.com/freeruncellars" target="_blank" rel="noopener" class="contact-method">
+          <div class="cm-icon instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </div>
+          <div class="cm-text">
+            <div class="cm-label">Instagram</div>
+            <div class="cm-value">@freeruncellars</div>
+            <div class="cm-sub">Follow for updates &amp; events</div>
+          </div>
+          <div class="cm-arrow">→</div>
+        </a>
+      </div>
+
+      <!-- Before you arrive -->
+      <div class="before-arrive">
+        <div class="ba-header">
+          <div class="ba-title">Before you arrive</div>
+          <div class="ba-sub">A few things worth knowing</div>
+        </div>
+        <div class="ba-items">
+          <div class="ba-item">
+            <div class="ba-icon">🐾</div>
+            <div>
+              <div class="ba-item-title">Dogs &amp; families welcome</div>
+              <div class="ba-item-text">Well-behaved dogs are welcome on the patio and grounds. Kids are welcome too — we have a play structure and plenty of open space to run around in.</div>
+            </div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">🍽</div>
+            <div>
+              <div class="ba-item-title">No outside food, please</div>
+              <div class="ba-item-text">We offer packaged snacks including crackers, cheese, meat sticks, chips, and kids' snacks. Non-alcoholic beverages are also available. Outside food is not permitted.</div>
+            </div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">🚗</div>
+            <div>
+              <div class="ba-item-title">Designated drivers</div>
+              <div class="ba-item-text">Non-alcoholic beverages are complimentary for designated drivers. We appreciate you looking out for your group.</div>
+            </div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">♪</div>
+            <div>
+              <div class="ba-item-title">Live music every Sunday</div>
+              <div class="ba-item-text">Live music runs 3:00–5:00 PM every Sunday, March through October. Half off glass pours from open bottles during the set. Always free admission.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO STRIP -->
+<div class="photo-strip">
+  <div class="ps-item ps-item-1">
+    <div class="ps-bg"></div>
+    <div class="ps-scrim"></div>
+    <div class="ps-label">The Patio</div>
+  </div>
+  <div class="ps-item ps-item-2">
+    <div class="ps-bg"></div>
+    <div class="ps-scrim"></div>
+    <div class="ps-label">The Pond</div>
+  </div>
+  <div class="ps-item ps-item-3">
+    <div class="ps-bg"></div>
+    <div class="ps-scrim"></div>
+    <div class="ps-label">Live Music Sundays</div>
+  </div>
+</div>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <div class="bottom-cta-inner">
+    <p class="s-label lt" style="justify-content:center;">See you soon</p>
+    <h2 class="on-dark">The best Sunday<br>you've had in a <em>while</em></h2>
+    <p class="body-copy on-dark">A glass of wine, live music on the patio, turtles at the pond, and nowhere you need to be. That's a Free Run Sunday.</p>
+    <a href="/pages/live-music-sundays.html" class="btn-fill">Live Music Sundays →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <img class="footer-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/pages/about.html">Our Story</a>
+    <a href="/pages/event-packages.html">Private Events</a>
+    <a href="/pages/reviews.html">Leave a Review</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Nav scroll
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
+addEventListener('scroll', onScroll, { passive:true });
+onScroll();
+
+// Mobile hamburger
+const burger = document.getElementById('burger');
+const links  = document.getElementById('navLinks');
+let open = false;
+burger.addEventListener('click', () => {
+  open = !open;
+  if (open) {
+    links.style.cssText = `
+      display:flex; flex-direction:column; position:fixed;
+      top:var(--nav-h); left:0; right:0; background:#fff;
+      padding:20px 28px 28px; gap:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.1); z-index:899;
+    `;
+    links.querySelectorAll('a').forEach(a => a.style.color = 'var(--grey)');
+  } else {
+    links.removeAttribute('style');
+  }
+});
+
+// Highlight today's hours row
+const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+const today = days[new Date().getDay()];
+document.querySelectorAll('.hours-row').forEach(row => {
+  const day = row.querySelector('.hr-day')?.textContent.toLowerCase() || '';
+  if (day.includes(today)) row.classList.add('today');
+});
+
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+d
