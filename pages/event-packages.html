@@ -1,2 +1,736 @@
-<!-- TO BUILD: event-packages page -->
-<!-- See README.md for content notes and SEO targets -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Private Events & Packages – Free Run Cellars | Berrien Springs, MI</title>
+<meta name="description" content="Host your wedding, celebration, or private event at Free Run Cellars in Berrien Springs, Michigan. Three event packages from $150. Vineyard setting, string lights, and small-batch wines. 90 minutes from Chicago.">
+<meta name="keywords" content="vineyard wedding Michigan, private events Berrien Springs, winery wedding Southwest Michigan, outdoor wedding venue near Chicago, vineyard event packages Michigan">
+
+<meta property="og:title" content="Private Events – Free Run Cellars">
+<meta property="og:description" content="Weddings, celebrations, and private gatherings at a boutique vineyard in Berrien Springs, MI.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --teal:      #537f71;
+  --teal-dk:   #3d6155;
+  --teal-lt:   #7aab9a;
+  --teal-pale: #eef4f1;
+  --black:     #0e0e0e;
+  --off-white: #f7f4f0;
+  --grey:      #787470;
+  --text:      #2c2c2c;
+  --nav-h:     74px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Jost',sans-serif; color:var(--text); background:var(--off-white); overflow-x:hidden; }
+a { text-decoration:none; color:inherit; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; inset:0 0 auto; z-index:900;
+  height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px;
+  transition:background .35s, box-shadow .35s;
+}
+nav.solid { background:rgba(255,255,255,.97); box-shadow:0 1px 0 rgba(0,0,0,.07); }
+.nav-logo { height:34px; transition:filter .35s; }
+nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
+.nav-links a {
+  font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.82); transition:color .2s;
+}
+nav.solid .nav-links a { color:var(--grey); }
+nav.solid .nav-links a:hover { color:var(--teal); }
+.nav-links a:hover { color:#fff; }
+.has-drop { position:relative; }
+.drop-menu {
+  display:none; position:absolute; top:calc(100% + 10px); left:50%;
+  transform:translateX(-50%);
+  background:#fff; border-radius:8px;
+  box-shadow:0 8px 28px rgba(0,0,0,.11);
+  padding:6px 0; min-width:180px; list-style:none;
+}
+.has-drop:hover .drop-menu { display:block; }
+.drop-menu li a {
+  display:block; padding:10px 18px;
+  font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--grey) !important;
+}
+.drop-menu li a:hover { color:var(--teal) !important; background:var(--teal-pale); }
+.nav-cta {
+  background:var(--teal); color:#fff !important;
+  padding:9px 18px; border-radius:4px;
+  font-size:10px !important; letter-spacing:2px !important;
+  transition:background .2s !important;
+}
+.nav-cta:hover { background:var(--teal-dk) !important; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger span { width:22px; height:1.5px; background:#fff; border-radius:2px; transition:background .3s; }
+nav.solid .hamburger span { background:var(--text); }
+
+/* ── BUTTONS ── */
+.btn-fill {
+  background:var(--teal); color:#fff;
+  padding:13px 30px; border-radius:4px;
+  font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  transition:background .22s, transform .22s, box-shadow .22s;
+  display:inline-block;
+}
+.btn-fill:hover { background:var(--teal-dk); transform:translateY(-2px); box-shadow:0 8px 22px rgba(83,127,113,.35); }
+.btn-line-dk {
+  border:1px solid rgba(83,127,113,.4); color:var(--teal);
+  padding:13px 30px; border-radius:4px;
+  font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase;
+  transition:border-color .22s, background .22s; display:inline-block;
+}
+.btn-line-dk:hover { border-color:var(--teal); background:var(--teal-pale); }
+
+/* ── SHARED ── */
+.s-label {
+  font-size:9px; font-weight:600; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.s-label::after { content:''; width:32px; height:1px; background:var(--teal); }
+.s-label.lt { color:var(--teal-lt); }
+.s-label.lt::after { background:var(--teal-lt); }
+.s-label.center { justify-content:center; }
+.s-label.center::after { display:none; }
+h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,3.8vw,54px); font-weight:300; font-style:italic;
+  line-height:1.1; color:var(--black); margin-bottom:18px;
+}
+h2 em { font-style:normal; color:var(--teal); }
+h2.on-dark { color:#fff; }
+h2.on-dark em { color:var(--teal-lt); }
+.body-copy { font-size:14.5px; font-weight:300; line-height:1.82; color:var(--grey); }
+.body-copy.on-dark { color:rgba(255,255,255,.52); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; height:92vh; min-height:560px;
+  display:flex; align-items:flex-end; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-199.jpeg');
+  background-size:cover; background-position:center 20%;
+  transform:scale(1.04);
+  animation:hZoom 14s ease-out forwards;
+}
+@keyframes hZoom { to { transform:scale(1); } }
+.hero-scrim {
+  position:absolute; inset:0;
+  background:linear-gradient(to top,
+    rgba(8,18,12,.88) 0%,
+    rgba(8,18,12,.3) 55%,
+    rgba(8,18,12,.08) 100%);
+}
+.hero-body {
+  position:relative; z-index:1;
+  padding:0 56px 80px; max-width:780px;
+  animation:fadeUp 1.1s cubic-bezier(.16,1,.3,1) .25s both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.eyebrow {
+  display:flex; align-items:center; gap:10px;
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal-lt); margin-bottom:18px;
+}
+.eyebrow::before { content:''; width:36px; height:1px; background:var(--teal-lt); }
+h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,6.5vw,88px); font-weight:300; font-style:italic;
+  color:#fff; line-height:1.02; letter-spacing:-.5px; margin-bottom:22px;
+}
+h1 em { font-style:normal; color:var(--teal-lt); }
+.hero-sub {
+  font-size:14px; font-weight:300; color:rgba(255,255,255,.65);
+  line-height:1.75; max-width:520px; margin-bottom:36px;
+}
+.btn-row { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-line-hero {
+  border:1px solid rgba(255,255,255,.35); color:#fff;
+  padding:13px 30px; border-radius:4px;
+  font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase;
+  transition:border-color .22s, background .22s; display:inline-block;
+}
+.btn-line-hero:hover { border-color:#fff; background:rgba(255,255,255,.08); }
+
+/* ── INTRO SPLIT ── */
+.intro { background:#fff; overflow:hidden; }
+.intro-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  max-width:1140px; margin:0 auto;
+  gap:0;
+}
+.intro-content { padding:88px 72px 88px 56px; }
+.intro-content .body-copy { margin-bottom:20px; }
+.intro-imgs {
+  display:grid; grid-template-rows:1fr 1fr;
+  min-height:560px;
+}
+.intro-img {
+  position:relative; overflow:hidden;
+}
+.intro-img-bg {
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+  transition:transform .6s ease;
+}
+.intro-img:hover .intro-img-bg { transform:scale(1.04); }
+.intro-img-1 .intro-img-bg {
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-716.jpeg');
+  background-position:center;
+}
+.intro-img-2 .intro-img-bg {
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-987.jpeg');
+  background-position:center 20%;
+}
+
+/* ── WHAT'S INCLUDED ── */
+.included { background:var(--off-white); padding:88px 56px; }
+.included-inner { max-width:1100px; margin:0 auto; }
+.included-header { text-align:center; max-width:520px; margin:0 auto 52px; }
+.included-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+.inc-card {
+  background:#fff; border-radius:10px; padding:28px 22px;
+  text-align:center;
+  border:1px solid rgba(83,127,113,.1);
+  transition:border-color .25s, transform .25s, box-shadow .25s;
+}
+.inc-card:hover { border-color:var(--teal); transform:translateY(-3px); box-shadow:0 10px 28px rgba(83,127,113,.1); }
+.inc-icon { font-size:28px; margin-bottom:14px; }
+.inc-title { font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--black); margin-bottom:8px; }
+.inc-text { font-size:12.5px; color:var(--grey); line-height:1.65; font-weight:300; }
+
+/* ── PACKAGES ── */
+.packages { background:#fff; padding:88px 56px; }
+.packages-inner { max-width:1100px; margin:0 auto; }
+.packages-header { text-align:center; max-width:480px; margin:0 auto 56px; }
+
+.pkg-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:20px; margin-bottom:32px;
+}
+
+.pkg-card {
+  border-radius:14px; overflow:hidden;
+  border:1px solid rgba(83,127,113,.15);
+  transition:transform .3s, box-shadow .3s;
+  display:flex; flex-direction:column;
+  background:#fff;
+}
+.pkg-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(83,127,113,.13); }
+.pkg-card.featured {
+  border-color:var(--teal);
+  box-shadow:0 8px 32px rgba(83,127,113,.15);
+}
+
+.pkg-img {
+  height:200px; position:relative; overflow:hidden;
+}
+.pkg-img-bg {
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+  transition:transform .5s ease;
+}
+.pkg-card:hover .pkg-img-bg { transform:scale(1.05); }
+.pkg-img-1 .pkg-img-bg {
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1556.jpeg');
+}
+.pkg-img-2 .pkg-img-bg {
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-589.jpeg');
+  background-position:center top;
+}.pkg-img-3 .pkg-img-bg {
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-985.jpeg');
+  background-position:center 20%;
+}
+
+.pkg-badge {
+  position:absolute; top:14px; left:14px;
+  background:var(--teal); color:#fff;
+  font-size:8px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  padding:5px 10px; border-radius:3px;
+}
+.pkg-badge.dark { background:var(--black); }
+
+.pkg-body { padding:28px 26px; flex:1; display:flex; flex-direction:column; }
+.pkg-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px; font-style:italic; color:var(--black); margin-bottom:4px;
+}
+.pkg-price {
+  font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--teal); font-weight:600; margin-bottom:16px;
+}
+.pkg-desc { font-size:13px; color:var(--grey); line-height:1.72; font-weight:300; flex:1; margin-bottom:20px; }
+
+.pkg-details { list-style:none; margin-bottom:24px; display:flex; flex-direction:column; gap:0; }
+.pkg-details li {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 0; border-bottom:1px solid rgba(0,0,0,.05);
+  font-size:12.5px; color:var(--text); font-weight:300;
+}
+.pkg-details li::before { content:'✓'; color:var(--teal); font-weight:700; font-size:11px; flex-shrink:0; }
+
+.pkg-cta {
+  display:block; text-align:center;
+  background:var(--teal-pale); color:var(--teal);
+  padding:12px; border-radius:6px;
+  font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  border:1px solid rgba(83,127,113,.2);
+  transition:background .2s, border-color .2s;
+}
+.pkg-cta:hover { background:var(--teal); color:#fff; border-color:var(--teal); }
+.pkg-card.featured .pkg-cta { background:var(--teal); color:#fff; }
+.pkg-card.featured .pkg-cta:hover { background:var(--teal-dk); }
+
+.pkg-note {
+  text-align:center; font-size:12px; color:var(--grey);
+  font-style:italic; font-weight:300; line-height:1.7;
+  max-width:500px; margin:0 auto;
+}
+
+/* ── PHOTO BREAK ── */
+.photo-break { height:420px; position:relative; overflow:hidden; }
+.photo-break-bg {
+  position:absolute; inset:0;
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-991.jpeg');
+  background-size:cover; background-position:center 40%;
+}
+.photo-break-scrim {
+  position:absolute; inset:0;
+  background:rgba(8,18,12,.52);
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;
+}
+.photo-break-text {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(26px,4vw,52px); font-style:italic; font-weight:300;
+  color:#fff; text-align:center; line-height:1.25;
+  text-shadow:0 2px 24px rgba(0,0,0,.4); padding:0 32px;
+}
+.photo-break-sub {
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:rgba(255,255,255,.45); text-align:center;
+}
+
+/* ── CATERER ── */
+.caterer { background:var(--off-white); padding:80px 56px; }
+.caterer-inner {
+  max-width:900px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:64px; align-items:center;
+}
+.caterer-img {
+  position:relative; height:380px; border-radius:10px; overflow:hidden;
+}
+.caterer-img-bg {
+  position:absolute; inset:0;
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-601.jpeg');
+  background-size:cover; background-position:center 30%;
+  transition:transform .6s ease;
+}
+.caterer-img:hover .caterer-img-bg { transform:scale(1.03); }
+.caterer-content .body-copy { margin-bottom:16px; }
+.caterer-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#fff; border:1px solid rgba(83,127,113,.2);
+  border-radius:6px; padding:12px 16px; margin-top:24px;
+  font-size:12px; color:var(--text); font-weight:400;
+}
+.caterer-tag strong { color:var(--teal); font-weight:600; }
+
+/* ── CONTACT ── */
+.contact-section { background:var(--black); padding:88px 56px; }
+.contact-inner {
+  max-width:860px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:start;
+}
+.contact-content { }
+.contact-content .body-copy.on-dark { margin-bottom:20px; }
+
+.contact-detail {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:16px 0; border-bottom:1px solid rgba(255,255,255,.07);
+}
+.contact-detail:first-of-type { border-top:1px solid rgba(255,255,255,.07); margin-top:28px; }
+.cd-icon { font-size:18px; flex-shrink:0; margin-top:2px; }
+.cd-label { font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--teal-lt); margin-bottom:4px; }
+.cd-text { font-size:13.5px; color:rgba(255,255,255,.65); line-height:1.6; font-weight:300; }
+.cd-text a { color:rgba(255,255,255,.65); transition:color .2s; }
+.cd-text a:hover { color:#fff; }
+
+/* Email CTA box */
+.email-box {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(122,171,154,.2);
+  border-radius:12px; padding:36px;
+}
+.email-box-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-style:italic; color:#fff;
+  margin-bottom:10px; line-height:1.2;
+}
+.email-box-sub {
+  font-size:13px; color:rgba(255,255,255,.45);
+  line-height:1.7; font-weight:300; margin-bottom:28px;
+}
+.email-display {
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:6px; padding:14px 18px;
+  font-size:14px; color:rgba(255,255,255,.7);
+  letter-spacing:.5px; margin-bottom:16px;
+  display:flex; align-items:center; gap:10px;
+}
+.email-display-icon { font-size:16px; opacity:.6; }
+.btn-email {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  width:100%; background:var(--teal); color:#fff;
+  padding:14px; border-radius:6px;
+  font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  transition:background .22s, transform .22s;
+  border:none; cursor:pointer;
+}
+.btn-email:hover { background:var(--teal-dk); transform:translateY(-2px); }
+.email-note {
+  font-size:11px; color:rgba(255,255,255,.25);
+  text-align:center; margin-top:12px; line-height:1.6;
+}
+
+/* ── FOOTER ── */
+.page-footer {
+  background:var(--black); color:rgba(255,255,255,.35);
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:28px 56px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; font-size:11px;
+}
+.page-footer a { transition:color .2s; }
+.page-footer a:hover { color:#fff; }
+.footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.4; }
+.footer-links { display:flex; gap:20px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  nav { padding:0 24px; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .hero-body { padding:0 28px 64px; }
+  .intro-inner { grid-template-columns:1fr; }
+  .intro-imgs { grid-template-rows:none; grid-template-columns:1fr 1fr; min-height:280px; }
+  .intro-content { padding:52px 28px; }
+  .included { padding:72px 28px; }
+  .included-grid { grid-template-columns:1fr 1fr; }
+  .packages { padding:72px 28px; }
+  .pkg-grid { grid-template-columns:1fr; max-width:480px; margin:0 auto 32px; }
+  .caterer { padding:64px 28px; }
+  .caterer-inner { grid-template-columns:1fr; gap:36px; }
+  .caterer-img { height:280px; }
+  .contact-section { padding:64px 28px; }
+  .contact-inner { grid-template-columns:1fr; gap:48px; }
+  .page-footer { padding:24px 28px; flex-direction:column; text-align:center; }
+  .footer-links { justify-content:center; }
+}
+@media (max-width:600px) {
+  .included-grid { grid-template-columns:1fr; }
+  .intro-imgs { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <img class="nav-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/about">Our Story</a></li>
+    <li><a href="/wines">Wines</a></li>
+    <li class="has-drop">
+      <a href="#">Events ▾</a>
+      <ul class="drop-menu">
+        <li><a href="/pages/live-music-sundays.html">Live Music Sundays</a></li>
+        <li><a href="/pages/events-calendar.html">Events Calendar</a></li>
+        <li><a href="/pages/event-packages.html">Private Events</a></li>
+      </ul>
+    </li>
+    <li><a href="/gallery">Gallery</a></li>
+    <li><a href="/contact">Visit Us</a></li>
+    <li><a href="/pages/reviews.html" class="nav-cta">Leave a Review</a></li>
+  </ul>
+  <div class="hamburger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-body">
+    <p class="eyebrow">Private Events · Weddings · Celebrations</p>
+    <h1>Your moment,<br>our <em>home</em></h1>
+    <p class="hero-sub">From intimate gatherings to full-day celebrations, Free Run Cellars is a canvas for the events that matter most. Vineyard views, string lights, and wines poured by the people who live here.</p>
+    <div class="btn-row">
+      <a href="#packages" class="btn-fill">See Packages</a>
+      <a href="#contact" class="btn-line-hero">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="intro-inner">
+    <div class="intro-content">
+      <p class="s-label">Why Free Run</p>
+      <h2>A setting that does<br>half the <em>work</em></h2>
+      <p class="body-copy">Some venues make you bring the magic. At Free Run, it's already here — four acres of Pinot Gris vines, a pond that catches the evening light, a stone patio strung with lights, and a team that genuinely wants your event to be unforgettable.</p>
+      <p class="body-copy">We host just two or three large events each year. That means when we say yes to your event, we mean it — you get our full attention, not a slot in a conveyor belt.</p>
+      <p class="body-copy">Whether you're planning a wedding, a milestone birthday, a rehearsal dinner, or a corporate gathering, we'll work with you to make it feel exactly right.</p>
+    </div>
+    <div class="intro-imgs">
+      <div class="intro-img intro-img-1"><div class="intro-img-bg"></div></div>
+      <div class="intro-img intro-img-2"><div class="intro-img-bg"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<section class="included">
+  <div class="included-inner">
+    <div class="included-header">
+      <p class="s-label center">Every Event Includes</p>
+      <h2 style="text-align:center;">The details that <em>matter</em></h2>
+    </div>
+    <div class="included-grid">
+      <div class="inc-card">
+        <div class="inc-icon">🍷</div>
+        <div class="inc-title">Our Wines</div>
+        <p class="inc-text">Small-batch wines from Lake Michigan Shore and beyond, poured by our team throughout your event.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon">🌿</div>
+        <div class="inc-title">The Grounds</div>
+        <p class="inc-text">Four acres of vineyard, manicured lawns, and a stone patio. Indoor space available for inclement weather.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon">✨</div>
+        <div class="inc-title">String Lights</div>
+        <p class="inc-text">The patio is strung with lights that make every evening event feel like a celebration from the moment guests arrive.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon">🤝</div>
+        <div class="inc-title">Personal Touch</div>
+        <p class="inc-text">Trish and Prashanth are hands-on hosts. You're not dealing with a faceless events team — you're working with the owners.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="packages" id="packages">
+  <div class="packages-inner">
+    <div class="packages-header">
+      <p class="s-label center">Event Packages</p>
+      <h2 style="text-align:center;">Find your <em>fit</em></h2>
+      <p class="body-copy" style="text-align:center;max-width:440px;margin:0 auto;">Three packages designed for different kinds of celebrations. Not sure which fits? Just reach out — we'll figure it out together.</p>
+    </div>
+
+    <div class="pkg-grid">
+
+      <!-- Roped Off -->
+      <div class="pkg-card">
+        <div class="pkg-img pkg-img-1">
+          <div class="pkg-img-bg"></div>
+          <div class="pkg-badge dark">Perfect for small groups</div>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-name">Roped Off</div>
+          <div class="pkg-price">From $150</div>
+          <p class="pkg-desc">Reserved seating for your group during regular business hours. The winery stays open — but your spot is yours.</p>
+          <ul class="pkg-details">
+            <li>Up to 25 guests</li>
+            <li>2 hours reserved seating</li>
+            <li>During business hours</li>
+            <li>Wine available by the glass</li>
+            <li>Ideal for birthdays & small celebrations</li>
+          </ul>
+          <a href="#contact" class="pkg-cta">Enquire Now</a>
+        </div>
+      </div>
+
+      <!-- After Hours -->
+      <div class="pkg-card featured">
+        <div class="pkg-img pkg-img-2">
+          <div class="pkg-img-bg"></div>
+          <div class="pkg-badge">Most Popular</div>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-name">After Hours</div>
+          <div class="pkg-price">From $300</div>
+          <p class="pkg-desc">The whole place is yours. After the doors close to the public, your event begins — just your group, the patio, and the vineyard.</p>
+          <ul class="pkg-details">
+            <li>25–75 guests</li>
+            <li>3 hours exclusive venue access</li>
+            <li>After regular closing time</li>
+            <li>Full patio & grounds</li>
+            <li>Ideal for milestone events & parties</li>
+          </ul>
+          <a href="#contact" class="pkg-cta">Enquire Now</a>
+        </div>
+      </div>
+
+      <!-- Wine All Day -->
+      <div class="pkg-card">
+        <div class="pkg-img pkg-img-3">
+          <div class="pkg-img-bg"></div>
+          <div class="pkg-badge dark">Weddings & large events</div>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-name">Wine All Day</div>
+          <div class="pkg-price">From $3,000</div>
+          <p class="pkg-desc">A full day, entirely yours. Closed to the public, the grounds are transformed for your celebration from morning to last light.</p>
+          <ul class="pkg-details">
+            <li>Up to 100 guests</li>
+            <li>Full day exclusive buyout</li>
+            <li>Closed to the public</li>
+            <li>Weddings, corporate & milestone events</li>
+            <li>Catering coordination available</li>
+          </ul>
+          <a href="#contact" class="pkg-cta">Enquire Now</a>
+        </div>
+      </div>
+
+    </div>
+    <p class="pkg-note">Weddings and large events are by conversation — every celebration is different and we want to get yours right. Reach out and let's talk.</p>
+  </div>
+</section>
+
+<!-- PHOTO BREAK -->
+<div class="photo-break">
+  <div class="photo-break-bg"></div>
+  <div class="photo-break-scrim">
+    <p class="photo-break-text">"Exchange vows among the vines"</p>
+    <p class="photo-break-sub">Free Run Cellars · Berrien Springs, Michigan</p>
+  </div>
+</div>
+
+<!-- CATERER -->
+<section class="caterer">
+  <div class="caterer-inner">
+    <div class="caterer-img"><div class="caterer-img-bg"></div></div>
+    <div class="caterer-content">
+      <p class="s-label">Food & Catering</p>
+      <h2>Great food,<br><em>sorted</em></h2>
+      <p class="body-copy">Outside catering is welcome at Free Run — and we have a preferred partner who knows the venue, understands the vibe, and delivers food that matches the occasion.</p>
+      <p class="body-copy">Our preferred caterer, Josh Bishop, has worked with us across multiple events this season and has tasting events in the works too. We're happy to make the introduction when you enquire.</p>
+      <div class="caterer-tag">
+        <span>🍽</span>
+        <span><strong>Preferred caterer available</strong> — ask us for an introduction when you get in touch</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div class="contact-content">
+      <p class="s-label lt">Get in Touch</p>
+      <h2 class="on-dark">Let's make<br>something <em>beautiful</em></h2>
+      <p class="body-copy on-dark">Tell us about your event — the date, the size, the feeling you're going for. We'll get back to you personally and take it from there.</p>
+
+      <div class="contact-detail">
+        <div class="cd-icon">📍</div>
+        <div>
+          <div class="cd-label">Location</div>
+          <div class="cd-text">10062 Burgoyne Road<br>Berrien Springs, MI 49103<br>90 minutes from Chicago</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="cd-icon">📞</div>
+        <div>
+          <div class="cd-label">Phone</div>
+          <div class="cd-text"><a href="tel:2698156885">(269) 815-6885</a></div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="cd-icon">🗓</div>
+        <div>
+          <div class="cd-label">Availability</div>
+          <div class="cd-text">We host a limited number of large events each year to make sure every one gets the attention it deserves. Enquire early for peak season dates.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="email-box">
+      <div class="email-box-title">Drop us a line</div>
+      <p class="email-box-sub">Tell us your date, guest count, and what you're celebrating. We'll take it from there — no forms, no automated replies, just a real conversation.</p>
+      <div class="email-display">
+        <span class="email-display-icon">✉</span>
+        <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f0c00011b0e0c1b2f091d0c1806010a410c0002">[email&#160;protected]</a></span>
+      </div>
+      <a href="/cdn-cgi/l/email-protection#4e2d21203a2f2d3a0e283c2d3927202b602d2123713d3b2c242b2d3a731e3c27382f3a2b6e0b382b203a6e0b203f3b273c376eaccedd6e083c2b2b6e1c3b206e0d2b22222f3c3d682c212a377306276e1a3c273d266e2f202a6e1e3c2f3d262f203a26626b7e0a6b7e0f6b7e0a6b7e0f0769236e27203a2b3c2b3d3a2b2a6e27206e26213d3a2720296e2f206e2b382b203a6e2f3a6e083c2b2b6e1c3b206e0d2b22222f3c3d606b7e0a6b7e0f6b7e0a6b7e0f0b382b203a6e3a373e2b746b7e0a6b7e0f0f3e3e3c213627232f3a2b6e2a2f3a2b746b7e0a6b7e0f093b2b3d3a6e2d213b203a746b7e0a6b7e0f0f20373a262720296e2b223d2b746b7e0a6b7e0f6b7e0a6b7e0f1a262f20253d6f" class="btn-email">
+        <span>✉</span> Open in Mail App
+      </a>
+      <p class="email-note">Opens your default mail app with the details pre-filled.<br>Or copy the address above and send from anywhere.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <img class="footer-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/pages/live-music-sundays.html">Live Music</a>
+    <a href="/pages/events-calendar.html">Events</a>
+    <a href="/cdn-cgi/l/email-protection#670408091306041327011504100e09024904080a">Contact</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Nav scroll
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('solid', scrollY > 50);
+addEventListener('scroll', onScroll, { passive:true });
+onScroll();
+
+// Mobile hamburger
+const burger = document.getElementById('burger');
+const links  = document.getElementById('navLinks');
+let open = false;
+burger.addEventListener('click', () => {
+  open = !open;
+  if (open) {
+    links.style.cssText = `
+      display:flex; flex-direction:column; position:fixed;
+      top:var(--nav-h); left:0; right:0; background:#fff;
+      padding:20px 28px 28px; gap:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.1); z-index:899;
+    `;
+    links.querySelectorAll('a').forEach(a => a.style.color = 'var(--grey)');
+  } else {
+    links.removeAttribu
