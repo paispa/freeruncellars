@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave a Review – Free Run Cellars</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #739885;
+    --sage-dark: #4e6e5d;
+    --sage-light: #a0b8a8;
+    --bg: #000000;
+    --bg2: #0a0a0a;
+    --text: #e8f0eb;
+    --muted: #4e6e5d;
+    --cream: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { height: 100%; }
+
+  body {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999;
+    overflow-y: auto !important;
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Ambient glow ── */
+  .ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(115,152,133,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(78,110,93,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 60%, rgba(78,110,93,0.06) 0%, transparent 50%);
+  }
+
+  /* ── Main content ── */
+  .main {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 520px;
+    padding: 36px 20px 100px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 10px;
+  }
+
+  /* ── Header ── */
+  .site-logo {
+    height: 38px;
+    filter: brightness(0) invert(1);
+    margin-bottom: 6px;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; font-style: italic;
+    color: var(--cream); text-align: center; letter-spacing: 1px;
+    line-height: 1.3;
+  }
+
+  .page-sub {
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 3px; text-transform: uppercase; text-align: center;
+  }
+
+  .divider {
+    width: 70px; height: 1px; margin: 8px 0;
+    background: linear-gradient(90deg, transparent, var(--sage), transparent);
+  }
+
+  /* ── Review card ── */
+  .review-card {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
+    border: 1px solid rgba(115,152,133,0.3);
+    border-radius: 16px;
+    padding: 24px 28px 20px;
+    position: relative; overflow: hidden;
+    margin: 6px 0;
+    animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .review-card::before {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%; height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--sage-dark), var(--sage), var(--sage-dark), transparent);
+  }
+
+  .quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px; line-height: 0.6;
+    color: rgba(115,152,133,0.2);
+    position: absolute; top: 18px; left: 20px;
+    user-select: none;
+  }
+
+  .review-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-style: italic; font-weight: 300;
+    line-height: 1.6; color: var(--cream);
+    position: relative; z-index: 1;
+    margin-bottom: 16px; padding-left: 8px;
+    min-height: 60px;
+    transition: opacity 0.4s ease;
+  }
+
+  .review-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .reviewer-name {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 1.5px; color: var(--sage);
+    text-transform: uppercase;
+  }
+
+  .reviewer-platform {
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase; margin-top: 2px;
+  }
+  .reviewer-platform.google { color: #4285f4; }
+  .reviewer-platform.yelp   { color: #d32323; }
+  .reviewer-platform.facebook { color: #1877f2; }
+
+  .stars {
+    font-size: 16px; color: var(--sage);
+    filter: drop-shadow(0 0 4px rgba(115,152,133,0.4));
+  }
+
+  /* Dots nav */
+  .review-dots {
+    display: flex; gap: 6px; justify-content: center;
+    margin: 4px 0;
+  }
+  .rdot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(115,152,133,0.25);
+    transition: background 0.3s; cursor: pointer;
+  }
+  .rdot.active { background: var(--sage); }
+
+  /* ── Platform buttons ── */
+  .cta-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-style: italic;
+    color: var(--sage); letter-spacing: 1px;
+    text-align: center; margin-top: 6px;
+  }
+
+  .platforms {
+    width: 100%;
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 4px;
+  }
+
+  .platform-btn {
+    width: 100%;
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    text-decoration: none; color: var(--text);
+    transition: all 0.25s ease; cursor: pointer;
+    position: relative; overflow: hidden;
+  }
+
+  .platform-btn::before {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.25s;
+  }
+
+  .platform-btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.14); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+  .platform-btn:hover::before { opacity: 1; }
+  .platform-btn:active { transform: translateY(0); }
+
+  .platform-btn.google::before  { background: radial-gradient(ellipse at left, rgba(66,133,244,0.10), transparent 70%); }
+  .platform-btn.yelp::before    { background: radial-gradient(ellipse at left, rgba(211,35,35,0.10), transparent 70%); }
+  .platform-btn.facebook::before{ background: radial-gradient(ellipse at left, rgba(24,119,242,0.10), transparent 70%); }
+
+  .platform-btn.google:hover   { border-color: rgba(66,133,244,0.4); }
+  .platform-btn.yelp:hover     { border-color: rgba(211,35,35,0.4); }
+  .platform-btn.facebook:hover { border-color: rgba(24,119,242,0.4); }
+
+  .platform-icon {
+    width: 38px; height: 38px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .platform-btn.google .platform-icon   { background: #fff; }
+  .platform-btn.yelp .platform-icon     { background: #d32323; }
+  .platform-btn.facebook .platform-icon { background: #1877f2; }
+
+  .platform-text { flex: 1; }
+  .platform-name { font-weight: 600; font-size: 14px; letter-spacing: 0.5px; color: var(--cream); }
+  .platform-sub  { font-size: 10px; color: var(--muted); letter-spacing: 0.3px; margin-top: 2px; }
+
+  .platform-arrow { font-size: 16px; color: var(--muted); transition: transform 0.2s, color 0.2s; }
+  .platform-btn:hover .platform-arrow { transform: translateX(4px); color: var(--sage); }
+
+  /* ── Footer note ── */
+  .footer-note {
+    font-size: 9px; color: rgba(78,110,93,0.45);
+    letter-spacing: 1.5px; text-align: center;
+    text-transform: uppercase; line-height: 1.8;
+    margin-top: 8px;
+  }
+
+  /* ── Ticker bar ── */
+  .ticker-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: rgba(0,0,0,0.92);
+    border-top: 1px solid rgba(115,152,133,0.2);
+    display: flex; align-items: center;
+    overflow: hidden; z-index: 10000;
+  }
+
+  .ticker-label {
+    background: linear-gradient(90deg, var(--sage-dark), var(--sage));
+    color: #000; font-size: 8px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 0 14px; height: 100%;
+    display: flex; align-items: center;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  .ticker-track {
+    display: flex; gap: 0;
+    animation: tickerMove 50s linear infinite;
+    flex-shrink: 0;
+  }
+
+  .ticker-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 24px; white-space: nowrap;
+    font-size: 11px; color: var(--muted);
+    border-right: 1px solid rgba(115,152,133,0.15);
+  }
+  .ti-stars { color: var(--sage); font-size: 10px; }
+  .ti-name  { color: var(--cream); font-weight: 600; font-size: 11px; }
+  .ti-text  { font-style: italic; }
+  .ti-plat  { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
+  .ti-plat.google   { color: #4285f4; }
+  .ti-plat.yelp     { color: #d32323; }
+  .ti-plat.facebook { color: #1877f2; }
+
+  @keyframes tickerMove {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<!-- ── Main card ── -->
+<div class="main">
+
+  <img class="site-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+
+  <div class="page-title">What our guests are saying</div>
+  <div class="page-sub">Free Run Cellars · Berrien Springs, MI</div>
+  <div class="divider"></div>
+
+  <!-- Rotating review card -->
+  <div class="review-card" id="reviewCard">
+    <div class="quote-mark">"</div>
+    <div class="review-text" id="reviewText"></div>
+    <div class="review-footer">
+      <div>
+        <div class="reviewer-name" id="reviewerName"></div>
+        <div class="reviewer-platform" id="reviewerPlatform"></div>
+      </div>
+      <div class="stars" id="reviewStars">★★★★★</div>
+    </div>
+  </div>
+
+  <div class="review-dots" id="reviewDots"></div>
+
+  <div class="cta-label">Enjoyed your visit? Share the love ✦</div>
+
+  <!-- Platform buttons with real links -->
+  <div class="platforms">
+
+    <a class="platform-btn google"
+       href="https://share.google/TY6eCFngF77FfCtBN"
+       target="_blank" rel="noopener">
+      <div class="platform-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+      </div>
+      <div class="platform-text">
+        <div class="platform-name">Google</div>
+        <div class="platform-sub">Leave a Google review</div>
+      </div>
+      <div class="platform-arrow">→</div>
+    </a>
+
+    <a class="platform-btn yelp"
+       href="https://www.yelp.com/biz/free-run-cellars-berrien-springs"
+       target="_blank" rel="noopener">
+      <div class="platform-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1.086 14.573c-.185.37-.59.56-.974.455l-2.133-.6c-.407-.114-.644-.532-.523-.936.047-.158.14-.296.27-.395l1.96-1.49c.315-.24.762-.18 1.003.135.06.08.1.17.12.265l.546 2.09c.1.39-.1.796-.27.476zm.424-5.21l-2.45-.01c-.408-.002-.737-.334-.735-.742.001-.158.053-.31.148-.434l1.306-1.696c.254-.33.727-.39 1.056-.135.085.065.154.148.202.244l1.16 2.272c.185.362.04.804-.325.986-.12.06-.25.087-.362.085v-.57zm5.58 4.137l-1.83 1.16c-.35.222-.813.118-1.034-.232-.057-.09-.09-.192-.096-.297l-.15-2.385c-.026-.408.283-.76.692-.786.16-.01.317.036.45.13l1.98 1.224c.337.208.44.65.23.986-.07.113-.167.2-.24.2zm.636-4.025l-2.32.73c-.39.123-.8-.094-.923-.484-.033-.108-.037-.22-.01-.33l.6-2.424c.1-.4.504-.644.903-.544.1.026.196.073.277.14l1.72 1.694c.294.29.298.765.008 1.06-.085.086-.185.148-.254.158z"/>
+        </svg>
+      </div>
+      <div class="platform-text">
+        <div class="platform-name">Yelp</div>
+        <div class="platform-sub">Write a Yelp review</div>
+      </div>
+      <div class="platform-arrow">→</div>
+    </a>
+
+    <a class="platform-btn facebook"
+       href="https://www.facebook.com/hashtag/freeruncellars"
+       target="_blank" rel="noopener">
+      <div class="platform-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </div>
+      <div class="platform-text">
+        <div class="platform-name">Facebook</div>
+        <div class="platform-sub">Recommend us on Facebook</div>
+      </div>
+      <div class="platform-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="footer-note">
+    Thank you for visiting · freeruncellars.com<br>
+    10062 Burgoyne Rd, Berrien Springs MI
+  </div>
+
+</div>
+
+<!-- ── Ticker bar ── -->
+<div class="ticker-bar">
+  <div class="ticker-label">✦ Reviews</div>
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<script>
+const reviews = [
+  { name: "Sarah M.",       text: "Absolutely magical afternoon. The wine was outstanding and the turtles by the pond made it feel like a storybook.",             platform: "Google",   stars: 5 },
+  { name: "Jake & Erin T.", text: "Hidden gem in Southwest Michigan. Small-batch wines that rival anything we've had in Napa. Warm staff, gorgeous setting.",     platform: "Yelp",     stars: 5 },
+  { name: "Denise R.",      text: "Brought the kids and the dog — everyone was welcome! The rosé was incredible and the vineyard views are beautiful.",           platform: "Facebook", stars: 5 },
+  { name: "Chris W.",       text: "We stumbled across this place on a Sunday drive and stayed three hours. Live music, incredible wine, pure Michigan magic.",     platform: "Google",   stars: 5 },
+  { name: "Marta L.",       text: "The small-batch wines here are genuinely special. Not a single bottle disappointed. The owners are passionate and it shows.",  platform: "Yelp",     stars: 5 },
+  { name: "Tom B.",         text: "Must-visit if you're near Berrien Springs. Relaxed atmosphere, exceptional wines, and some of the friendliest people around.", platform: "Google",   stars: 5 },
+  { name: "Lindsay K.",     text: "The best vibe of any winery I've visited in the Midwest. The pond, the turtles, the live music — it's all perfect.",          platform: "Facebook", stars: 5 },
+];
+
+let current = 0;
+let timer;
+
+function stars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
+function platClass(p) { return p.toLowerCase(); }
+
+function showReview(idx, animate = true) {
+  const r = reviews[idx];
+  const textEl = document.getElementById('reviewText');
+  if (animate) {
+    textEl.style.opacity = '0';
+    setTimeout(() => {
+      textEl.textContent = r.text;
+      textEl.style.opacity = '1';
+    }, 300);
+  } else {
+    textEl.textContent = r.text;
+  }
+  document.getElementById('reviewerName').textContent = r.name;
+  const plat = document.getElementById('reviewerPlatform');
+  plat.textContent = r.platform;
+  plat.className = 'reviewer-platform ' + platClass(r.platform);
+  document.getElementById('reviewStars').textContent = stars(r.stars);
+  // Update dots
+  document.querySelectorAll('.rdot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function buildDots() {
+  const wrap = document.getElementById('reviewDots');
+  wrap.innerHTML = reviews.map((_, i) =>
+    `<div class="rdot${i===0?' active':''}" onclick="jumpTo(${i})"></div>`
+  ).join('');
+}
+
+function jumpTo(idx) {
+  clearInterval(timer);
+  current = idx;
+  showReview(current);
+  startTimer();
+}
+
+function startTimer() {
+  timer = setInterval(() => {
+    current = (current + 1) % reviews.length;
+    showReview(current);
+  }, 6000);
+}
+
+function buildTicker() {
+  const all = [...reviews, ...reviews]; // duplicate for seamless loop
+  document.getElementById('tickerTrack').innerHTML = all.map(r => `
+    <div class="ticker-item">
+      <span class="ti-stars">${stars(r.stars)}</span>
+      <span class="ti-name">${r.name}</span>
+      <span class="ti-text">"${r.text.substring(0, 55)}…"</span>
+      <span class="ti-plat ${platClass(r.platform)}">${r.platform}</span>
+    </div>
+  `).join('');
+}
+
+buildDots();
+buildTicker();
+showReview(0, false);
+startTimer();
+</script>
+</body>
+</html>

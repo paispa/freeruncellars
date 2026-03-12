@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Generator – Free Run Cellars</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #739885;
+    --sage-dark: #4e6e5d;
+    --sage-light: #a0b8a8;
+    --bg: #000000;
+    --bg2: #0a0a0a;
+    --text: #e8f0eb;
+    --muted: #4e6e5d;
+    --cream: #ffffff;
+    --fb: #1877f2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(115,152,133,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(78,110,93,0.07) 0%, transparent 50%);
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .page-header { text-align: center; margin-bottom: 40px; }
+
+  .site-logo {
+    height: 34px;
+    filter: brightness(0) invert(1);
+    margin-bottom: 16px;
+    display: block; margin-left: auto; margin-right: auto;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 300; font-style: italic;
+    color: var(--cream); letter-spacing: 1px; line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .page-sub {
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
+  }
+
+  .header-divider {
+    width: 60px; height: 1px; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, var(--sage), transparent);
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sage-dark), var(--sage), var(--sage-dark), transparent);
+  }
+
+  .card-title {
+    font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--sage); font-weight: 600; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .card-title-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(115,152,133,0.15);
+    border: 1px solid rgba(115,152,133,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--sage); font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── Form elements ── */
+  .field { margin-bottom: 16px; }
+
+  label {
+    display: block;
+    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: 6px;
+  }
+
+  select, input[type="text"], textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    padding: 12px 14px;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  select:focus, input[type="text"]:focus, textarea:focus {
+    border-color: rgba(115,152,133,0.5);
+    background: rgba(115,152,133,0.05);
+  }
+
+  select option { background: #0a0a0a; color: var(--text); }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+
+  /* Tone selector */
+  .tone-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .tone-btn {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .tone-btn:hover { border-color: var(--sage); color: var(--sage); }
+  .tone-btn.active { background: rgba(115,152,133,0.12); border-color: var(--sage); color: var(--sage); }
+
+  .tone-icon { font-size: 16px; display: block; margin-bottom: 4px; }
+
+  /* ── Generate button ── */
+  .btn-generate {
+    width: 100%;
+    background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+    border: none;
+    border-radius: 10px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+
+  .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(115,152,133,0.25); }
+  .btn-generate:active { transform: translateY(0); }
+  .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── Output card ── */
+  .output-card {
+    display: none;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .output-card.visible { display: block; }
+
+  /* Post preview */
+  .post-preview {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(115,152,133,0.15);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .post-preview-label {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px; font-weight: 600;
+  }
+
+  #postOutput {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    min-height: 120px;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    border: none;
+    resize: none;
+    padding: 0;
+  }
+
+  #postOutput:focus { outline: none; }
+
+  .char-count {
+    font-size: 9px; color: var(--muted); text-align: right;
+    margin-top: 8px; letter-spacing: 1px;
+  }
+
+  .char-count.over { color: #e05c5c; }
+
+  /* ── Action buttons ── */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .btn-action {
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: none;
+  }
+
+  .btn-regenerate {
+    background: rgba(115,152,133,0.1);
+    border: 1px solid rgba(115,152,133,0.3) !important;
+    color: var(--sage);
+  }
+
+  .btn-regenerate:hover { background: rgba(115,152,133,0.18); }
+
+  .btn-facebook {
+    background: var(--fb);
+    color: #fff;
+  }
+
+  .btn-facebook:hover { background: #1565d8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(24,119,242,0.3); }
+
+  /* Copy success */
+  .copy-success {
+    display: none;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--sage);
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(115,152,133,0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(115,152,133,0.2);
+  }
+
+  /* ── Loading spinner ── */
+  .spinner {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.3);
+    border-top-color: #000;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Event preview strip ── */
+  .event-strip {
+    display: none;
+    background: rgba(115,152,133,0.06);
+    border: 1px solid rgba(115,152,133,0.15);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .event-strip.visible { display: flex; }
+
+  .es-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300;
+    color: var(--sage); line-height: 1;
+    text-align: center; flex-shrink: 0;
+  }
+
+  .es-mon {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); text-align: center;
+  }
+
+  .es-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-style: italic;
+    color: var(--cream);
+  }
+
+  .es-time {
+    font-size: 10px; color: var(--muted); margin-top: 2px;
+  }
+
+  /* Error */
+  .error-msg {
+    display: none;
+    background: rgba(224,92,92,0.08);
+    border: 1px solid rgba(224,92,92,0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 11px;
+    color: #e05c5c;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  /* Loading calendar state */
+  .cal-loading {
+    font-size: 11px; color: var(--muted);
+    font-style: italic; padding: 8px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .spinner-sm {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 1.5px solid rgba(115,152,133,0.2);
+    border-top-color: var(--sage);
+    animation: spin 0.7s linear infinite;
+    display: inline-block; flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <img class="site-logo"
+      src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+      alt="Free Run Cellars">
+    <div class="page-title">Facebook Post Generator</div>
+    <div class="page-sub">For Trish · Free Run Cellars</div>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- Step 1: Pick event -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-num">1</div>
+      Pick an event from your calendar
+    </div>
+
+    <div class="field">
+      <label>Upcoming Event</label>
+      <div id="calStatus" class="cal-loading">
+        <div class="spinner-sm"></div> Loading your calendar…
+      </div>
+      <select id="eventSelect" style="display:none;" onchange="onEventSelected()">
+        <option value="">— Select an event —</option>
+      </select>
+    </div>
+
+    <!-- Event preview -->
+    <div class="event-strip" id="eventStrip">
+      <div>
+        <div class="es-date" id="esDate"></div>
+        <div class="es-mon" id="esMon"></div>
+      </div>
+      <div>
+        <div class="es-name" id="esName"></div>
+        <div class="es-time" id="esTime"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Details -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-num">2</div>
+      Tell us a little about the artist or event
+    </div>
+
+    <div class="field">
+      <label>About the artist / event <span style="color:rgba(115,152,133,0.4);font-weight:400;">(optional but makes the post much better)</span></label>
+      <textarea id="artistDetails" placeholder="e.g. Soulful folk singer from Kalamazoo, fan favorite, plays originals and covers. Great energy with the crowd."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Tone</label>
+      <div class="tone-grid">
+        <button class="tone-btn active" data-tone="warm" onclick="selectTone(this)">
+          <span class="tone-icon">🌿</span> Warm & Inviting
+        </button>
+        <button class="tone-btn" data-tone="fun" onclick="selectTone(this)">
+          <span class="tone-icon">🎉</span> Fun & Energetic
+        </button>
+        <button class="tone-btn" data-tone="elegant" onclick="selectTone(this)">
+          <span class="tone-icon">🍷</span> Elegant & Refined
+        </button>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generatePost()" disabled>
+      <span id="generateBtnText">✦ Generate Facebook Post</span>
+    </button>
+  </div>
+
+  <!-- Step 3: Output -->
+  <div class="card output-card" id="outputCard">
+    <div class="card-title">
+      <div class="card-title-num">3</div>
+      Review &amp; post
+    </div>
+
+    <div class="post-preview">
+      <div class="post-preview-label">✦ Your post — click to edit</div>
+      <textarea id="postOutput" rows="8" spellcheck="true"></textarea>
+      <div class="char-count" id="charCount">0 characters</div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-action btn-regenerate" onclick="generatePost()">
+        ↻ Regenerate
+      </button>
+      <button class="btn-action btn-facebook" onclick="copyAndOpenFacebook()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Copy &amp; Open Facebook
+      </button>
+    </div>
+
+    <div class="copy-success" id="copySuccess">
+      ✓ Post copied! Facebook is opening — just paste it into your post and add the photo.
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────────
+const ICS_URL   = 'https://outlook.office365.com/owa/calendar/df404380dcae40ce9d5e5cae23fc980b@frcwine.com/2bffd8e2d0c6472484e93fb53c70a23b18073354100263554948/calendar.ics';
+const PROXY     = 'https://corsproxy.io/?url=';
+const FB_PAGE   = 'https://www.facebook.com/FreRunCellars'; // update if needed
+
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAYS   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+let events = [];
+let selectedEvent = null;
+let selectedTone  = 'warm';
+
+// ── ICS helpers (same as events page) ───────────────────────────────
+function unfoldICS(raw) { return raw.replace(/\r?\n[ \t]/g, ''); }
+
+function parseICSDate(dtStr) {
+  const val = dtStr.includes(':') ? dtStr.split(':').pop() : dtStr;
+  const y = +val.slice(0,4), mo = +val.slice(4,6)-1, d = +val.slice(6,8);
+  const h = +val.slice(9,11)||0, mi = +val.slice(11,13)||0;
+  return new Date(y, mo, d, h, mi);
+}
+
+function formatTime(date) {
+  let h = date.getHours(), m = date.getMinutes(), ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}${m ? ':' + String(m).padStart(2,'0') : ''} ${ap}`;
+}
+
+function parseICS(text) {
+  const unfolded = unfoldICS(text);
+  const result   = [];
+  const blocks   = unfolded.split('BEGIN:VEVENT');
+  for (let i = 1; i < blocks.length; i++) {
+    const block = blocks[i];
+    const get = (key) => {
+      const m = block.match(new RegExp('\n' + key + '(?:;[^:]+)?:([^\r\n]+)', 'i'));
+      return m ? m[1].trim() : '';
+    };
+    const summary = get('SUMMARY').replace(/\\,/g,',').replace(/\\;/g,';');
+    const dtstart = get('DTSTART');
+    const dtend   = get('DTEND');
+    const rawDesc = get('DESCRIPTION');
+    const desc    = rawDesc.replace(/\\n/g,'\n').replace(/\\,/g,',').replace(/\\/g,'');
+    if (!summary || !dtstart) continue;
+    const startDate = parseICSDate(dtstart);
+    const endDate   = dtend ? parseICSDate(dtend) : null;
+    let timeStr = formatTime(startDate);
+    if (endDate) timeStr += ` – ${formatTime(endDate)}`;
+    const isTicketed = /ticket/i.test(summary);
+    const cleanName  = summary.replace(/\s*-?\s*ticket\s*event/i,'').trim();
+    // extract image from notes if present
+    const imgMatch = desc.match(/image:\s*(\S+)/i);
+    result.push({
+      name: cleanName, date: startDate, time: timeStr,
+      desc, image: imgMatch ? imgMatch[1] : '',
+      isTicketed,
+    });
+  }
+  return result.sort((a,b) => a.date - b.date);
+}
+
+// ── Load calendar ────────────────────────────────────────────────────
+async function loadCalendar() {
+  try {
+    const res  = await fetch(PROXY + encodeURIComponent(ICS_URL));
+    if (!res.ok) throw new Error();
+    const text = await res.text();
+    const today = new Date(); today.setHours(0,0,0,0);
+    events = parseICS(text).filter(e => {
+      const d = new Date(e.date); d.setHours(0,0,0,0);
+      return d >= today;
+    });
+
+    document.getElementById('calStatus').style.display = 'none';
+    const sel = document.getElementById('eventSelect');
+    sel.style.display = 'block';
+    events.forEach((ev, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = `${MONTHS_SHORT[ev.date.getMonth()]} ${ev.date.getDate()} — ${ev.name}`;
+      sel.appendChild(opt);
+    });
+  } catch(e) {
+    document.getElementById('calStatus').innerHTML =
+      '<span style="color:#e05c5c">Could not load calendar. Check your network connection.</span>';
+  }
+}
+
+// ── Event selected ───────────────────────────────────────────────────
+function onEventSelected() {
+  const idx = document.getElementById('eventSelect').value;
+  const strip = document.getElementById('eventStrip');
+
+  if (!idx && idx !== 0) {
+    strip.classList.remove('visible');
+    document.getElementById('generateBtn').disabled = true;
+    selectedEvent = null;
+    return;
+  }
+
+  selectedEvent = events[idx];
+  const d = selectedEvent.date;
+
+  document.getElementById('esDate').textContent = d.getDate();
+  document.getElementById('esMon').textContent  = MONTHS_SHORT[d.getMonth()];
+  document.getElementById('esName').textContent = selectedEvent.name;
+  document.getElementById('esTime').textContent = selectedEvent.time;
+  strip.classList.add('visible');
+  document.getElementById('generateBtn').disabled = false;
+  document.getElementById('outputCard').classList.remove('visible');
+}
+
+// ── Tone selector ────────────────────────────────────────────────────
+function selectTone(btn) {
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedTone = btn.dataset.tone;
+}
+
+// ── Generate post ────────────────────────────────────────────────────
+async function generatePost() {
+  if (!selectedEvent) return;
+
+  const btn     = document.getElementById('generateBtn');
+  const btnText = document.getElementById('generateBtnText');
+  btn.disabled  = true;
+  btnText.innerHTML = '<div class="spinner"></div> Generating…';
+
+  const d         = selectedEvent.date;
+  const dayName   = DAYS[d.getDay()];
+  const monthName = MONTHS[d.getMonth()];
+  const dateNum   = d.getDate();
+  const timeStr   = selectedEvent.time;
+  const artistDetails = document.getElementById('artistDetails').value.trim();
+
+  const toneInstructions = {
+    warm:    'Warm, welcoming, and personal — like a friend inviting you over. Use "we" and "you". Feels like a cozy invitation.',
+    fun:     'Upbeat, energetic, and exciting — get people hyped! Use exclamation points sparingly but effectively. Feel-good and celebratory.',
+    elegant: 'Refined and evocative — paint a picture of a beautiful afternoon at the vineyard. Sophisticated but never stuffy.',
+  };
+
+  const systemPrompt = `You are the voice of Free Run Cellars, a boutique family-run winery in Berrien Springs, Michigan owned by Prashanth Pais and Tricia Slevin. 
+The winery is known for small-batch wines, a relaxed atmosphere, a beautiful pond with turtles, 3 acres of Pinot Gris vines, live music on Sundays, and being family and pet friendly.
+Write Facebook posts that feel authentic, local, and genuine — never corporate or generic.
+Always include the event details naturally within the post. End with relevant hashtags on a new line.
+Keep the post between 100-200 words. Do not use excessive emojis — one or two max, used tastefully.`;
+
+  const userPrompt = `Write a Facebook post announcing this event at Free Run Cellars:
+
+Event: ${selectedEvent.name}
+Date: ${dayName}, ${monthName} ${dateNum}
+Time: ${timeStr}
+${artistDetails ? `About the artist/event: ${artistDetails}` : ''}
+${selectedEvent.isTicketed ? 'This is a ticketed event.' : 'This event is free admission.'}
+
+Tone: ${toneInstructions[selectedTone]}
+
+Write the complete Facebook post ready to publish.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+      }),
+    });
+
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('') || '';
+
+    const output = document.getElementById('postOutput');
+    output.value = text.trim();
+    updateCharCount();
+
+    document.getElementById('outputCard').classList.add('visible');
+    document.getElementById('copySuccess').style.display = 'none';
+    document.getElementById('outputCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch(e) {
+    alert('Could not generate post. Please try again.');
+  }
+
+  btn.disabled  = false;
+  btnText.innerHTML = '✦ Generate Facebook Post';
+}
+
+// ── Char count ───────────────────────────────────────────────────────
+function updateCharCount() {
+  const len = document.getElementById('postOutput').value.length;
+  const el  = document.getElementById('charCount');
+  el.textContent = `${len} characters`;
+  el.classList.toggle('over', len > 63206); // FB limit
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('postOutput').addEventListener('input', updateCharCount);
+});
+
+// ── Copy & open Facebook ─────────────────────────────────────────────
+async function copyAndOpenFacebook() {
+  const text = document.getElementById('postOutput').value;
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch(e) {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  document.getElementById('copySuccess').style.display = 'block';
+  setTimeout(() => window.open('https://www.facebook.com/FreRunCellars', '_blank'), 800);
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────
+loadCalendar();
+</script>
+
+</body>
+</html>

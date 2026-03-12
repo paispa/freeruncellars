@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events – Free Run Cellars</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #739885;
+    --sage-dark: #4e6e5d;
+    --sage-light: #a0b8a8;
+    --bg: #000000;
+    --text: #e8f0eb;
+    --muted: #4e6e5d;
+    --cream: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(115,152,133,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(78,110,93,0.07) 0%, transparent 50%);
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 52px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .page-header { text-align: center; margin-bottom: 44px; }
+
+  .site-logo {
+    height: 38px;
+    filter: brightness(0) invert(1);
+    margin-bottom: 20px;
+    display: block; margin-left: auto; margin-right: auto;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 300; font-style: italic;
+    color: var(--cream); letter-spacing: 1px; line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .page-sub {
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 18px;
+  }
+
+  .header-divider {
+    width: 80px; height: 1px; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, var(--sage), transparent);
+  }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex; gap: 8px; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 40px;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid rgba(115,152,133,0.25);
+    color: var(--muted);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+    padding: 8px 18px; border-radius: 40px;
+    cursor: pointer; transition: all 0.22s ease;
+  }
+  .filter-btn:hover { border-color: var(--sage); color: var(--sage); }
+  .filter-btn.active { background: var(--sage); border-color: var(--sage); color: #000; font-weight: 600; }
+
+  /* ── Loading / Error states ── */
+  .state-box {
+    text-align: center; padding: 60px 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-style: italic; font-weight: 300;
+    color: var(--muted);
+  }
+  .state-icon { font-size: 28px; margin-bottom: 14px; color: rgba(115,152,133,0.3); }
+  .spinner {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid rgba(115,152,133,0.2);
+    border-top-color: var(--sage);
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Month header ── */
+  .month-header {
+    display: flex; align-items: center; gap: 16px;
+    margin: 36px 0 14px;
+  }
+  .month-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; font-style: italic;
+    color: var(--sage); white-space: nowrap;
+  }
+  .month-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, rgba(115,152,133,0.3), transparent);
+  }
+
+  /* ── Event card ── */
+  .event-card {
+    display: grid;
+    grid-template-columns: 80px 1fr 110px;
+    background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
+    border: 1px solid rgba(115,152,133,0.18);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    transition: all 0.25s ease;
+    position: relative;
+    animation: fadeUp 0.45s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .event-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(115,152,133,0.35), transparent);
+  }
+  .event-card:hover {
+    border-color: rgba(115,152,133,0.38);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 36px rgba(0,0,0,0.4);
+  }
+
+  /* Date column */
+  .event-date {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 18px 6px;
+    background: rgba(115,152,133,0.05);
+    border-right: 1px solid rgba(115,152,133,0.1);
+    text-align: center; flex-shrink: 0;
+  }
+  .date-dow { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); margin-bottom: 3px; font-weight: 600; }
+  .date-num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; color: var(--cream); line-height: 1; margin-bottom: 3px; }
+  .date-mon { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+  /* Body */
+  .event-body {
+    padding: 16px 18px;
+    display: flex; flex-direction: column; justify-content: center; gap: 4px;
+    min-width: 0;
+  }
+  .event-type-tag { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); font-weight: 600; }
+  .event-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px; font-weight: 400; font-style: italic;
+    color: var(--cream); line-height: 1.2;
+  }
+  .event-desc {
+    font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 2px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .event-meta {
+    display: flex; gap: 14px; align-items: center; margin-top: 6px; flex-wrap: wrap;
+  }
+  .event-meta span {
+    font-size: 9px; letter-spacing: 1px; color: rgba(115,152,133,0.55);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .admission-badge {
+    background: rgba(115,152,133,0.1);
+    border: 1px solid rgba(115,152,133,0.25);
+    border-radius: 20px; padding: 2px 9px;
+    font-size: 9px; letter-spacing: 1px; color: var(--sage);
+  }
+
+  /* Image */
+  .event-image {
+    flex-shrink: 0; position: relative; overflow: hidden;
+    background: rgba(115,152,133,0.04);
+  }
+  .event-image img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top center;
+    display: block; transition: transform 0.4s ease;
+  }
+  .event-card:hover .event-image img { transform: scale(1.05); }
+  .event-image .placeholder {
+    width: 100%; height: 100%; min-height: 100px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+  }
+  .placeholder-note { font-size: 22px; opacity: 0.15; }
+  .placeholder-initial {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; font-style: italic;
+    color: rgba(115,152,133,0.25); line-height: 1;
+  }
+
+  /* ── Ticket badge ── */
+  .ticket-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(115,152,133,0.15);
+    border: 1px solid rgba(115,152,133,0.3);
+    border-radius: 4px; padding: 2px 6px;
+    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--sage); font-weight: 600;
+  }
+
+  /* ── Intro text ── */
+  .events-intro {
+    text-align: center; margin-bottom: 32px; padding: 0 12px;
+  }
+  .events-intro p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; font-style: italic; font-weight: 300;
+    color: rgba(232,240,235,0.55); line-height: 1.7;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Footer ── */
+  .footer-note {
+    text-align: center; margin-top: 52px; padding-top: 28px;
+    border-top: 1px solid rgba(115,152,133,0.1);
+  }
+  .footer-note p {
+    font-size: 9px; color: rgba(78,110,93,0.4);
+    letter-spacing: 2px; text-transform: uppercase; line-height: 2;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 560px) {
+    .event-card { grid-template-columns: 68px 1fr; }
+    .event-image { display: none; }
+    .event-name { font-size: 18px; }
+    .event-body { padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<div class="page">
+
+  <div class="page-header">
+    <img class="site-logo"
+      src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+      alt="Free Run Cellars">
+    <div class="page-title">Upcoming Events</div>
+    <div class="page-sub">Free Run Cellars · Berrien Springs, MI</div>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- Intro text -->
+  <div class="events-intro">
+    <p>We're thrilled to bring you the vibrant sounds of live music! Check out the exciting events below for a chance to enjoy fantastic performances and unforgettable moments.</p>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-filter="all">All Events</button>
+    <button class="filter-btn" data-filter="live-music">Live Music</button>
+    <button class="filter-btn" data-filter="tasting">Tastings</button>
+    <button class="filter-btn" data-filter="special">Special Events</button>
+  </div>
+
+  <div id="eventsList"></div>
+
+  <div class="footer-note">
+    <p>Events subject to change · Follow us on social for updates<br>
+    freeruncellars.com · 10062 Burgoyne Rd, Berrien Springs MI</p>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────
+//  CONFIGURATION
+// ─────────────────────────────────────────────────────────────────────
+
+const ICS_URL = 'https://outlook.office365.com/owa/calendar/df404380dcae40ce9d5e5cae23fc980b@frcwine.com/2bffd8e2d0c6472484e93fb53c70a23b18073354100263554948/calendar.ics';
+
+// CORS proxy — free, no signup needed
+const PROXY   = 'https://corsproxy.io/?url=';
+
+// ─────────────────────────────────────────────────────────────────────
+//  HOW TO ADD IMAGES & DETAILS TO YOUR EVENTS
+//
+//  In Outlook, open any event → Notes/Body field → add lines like:
+//
+//    image: https://yourphoto.com/artist.jpg
+//    desc: Soulful acoustic duo from Kalamazoo, MI.
+//    type: live-music
+//    admission: Free
+//
+//  Supported types: live-music | tasting | special
+//  If type is omitted, the page will auto-detect from the event title.
+// ─────────────────────────────────────────────────────────────────────
+
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAYS   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const TYPE_LABELS = { "live-music": "Live Music", "tasting": "Wine Tasting", "special": "Special Event" };
+
+// Auto-detect type from title keywords if not specified in notes
+function guessType(title) {
+  const t = title.toLowerCase();
+  if (t.includes('tast') || t.includes('release') || t.includes('pairing')) return 'tasting';
+  if (t.includes('ticket') || t.includes('celebrat') || t.includes('day') || t.includes('special')) return 'special';
+  return 'live-music'; // default — most events are live music
+}
+
+// Parse key: value lines from event description/notes
+function parseNotes(raw) {
+  if (!raw) return {};
+  const result = {};
+  // ICS descriptions can have \n or literal "\\n"
+  const lines = raw.replace(/\\n/g, '\n').split(/\r?\n/);
+  for (const line of lines) {
+    const m = line.match(/^\s*(image|desc|type|admission)\s*:\s*(.+)/i);
+    if (m) result[m[1].toLowerCase()] = m[2].trim();
+  }
+  return result;
+}
+
+// Parse ICS datetime string to JS Date (handles TZID=Eastern Standard Time format)
+function parseICSDate(dtStr) {
+  // Strip TZID param if present — value is after the colon in the property
+  const val = dtStr.includes(':') ? dtStr.split(':').pop() : dtStr;
+  // Format: 20260315T150000
+  const y = +val.slice(0,4), mo = +val.slice(4,6)-1, d = +val.slice(6,8);
+  const h = +val.slice(9,11)||0, mi = +val.slice(11,13)||0;
+  return new Date(y, mo, d, h, mi);
+}
+
+// Format time like "3:00 PM"
+function formatTime(date) {
+  let h = date.getHours(), m = date.getMinutes(), ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}${m ? ':' + String(m).padStart(2,'0') : ''} ${ap}`;
+}
+
+// Unfold ICS lines (continued lines start with a space or tab)
+function unfoldICS(raw) {
+  return raw.replace(/\r?\n[ \t]/g, '');
+}
+
+// Parse ICS text into array of event objects
+function parseICS(text) {
+  const unfolded = unfoldICS(text);
+  const events = [];
+  const blocks = unfolded.split('BEGIN:VEVENT');
+  for (let i = 1; i < blocks.length; i++) {
+    const block = blocks[i];
+    const get = (key) => {
+      // \n boundary handles optional params like DTSTART;TZID=...:value
+      const m = block.match(new RegExp('\n' + key + '(?:;[^:]+)?:([^\r\n]+)', 'i'));
+      return m ? m[1].trim() : '';
+    };
+    const summary  = get('SUMMARY').replace(/\\,/g, ',').replace(/\\;/g, ';');
+    const dtstart  = get('DTSTART');
+    const dtend    = get('DTEND');
+    const rawDesc  = get('DESCRIPTION');
+    const desc     = rawDesc.replace(/\\n/g, '\n').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
+
+    if (!summary || !dtstart) continue;
+
+    const startDate = parseICSDate(dtstart);
+    const endDate   = dtend ? parseICSDate(dtend) : null;
+    const notes     = parseNotes(desc);
+
+    // Determine type
+    const type = notes.type || guessType(summary);
+
+    // Build time display
+    let timeStr = formatTime(startDate);
+    if (endDate) timeStr += ` – ${formatTime(endDate)}`;
+
+    // Detect ticket events from title
+    const isTicketed = /ticket/i.test(summary);
+    const cleanName  = summary.replace(/\s*-?\s*ticket\s*event/i, '').trim();
+
+    events.push({
+      name:      cleanName,
+      date:      startDate,
+      time:      timeStr,
+      type,
+      desc:      notes.desc || '',
+      image:     notes.image || '',
+      admission: notes.admission || (isTicketed ? 'Ticketed' : 'Free'),
+      isTicketed,
+    });
+  }
+
+  // Sort chronologically
+  return events.sort((a,b) => a.date - b.date);
+}
+
+// ── Render ──────────────────────────────────────────────────────────
+
+function renderEvents(events, filter) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const filtered = events.filter(e => {
+    const d = new Date(e.date); d.setHours(0,0,0,0);
+    return d >= today && (filter === 'all' || e.type === filter);
+  });
+
+  const container = document.getElementById('eventsList');
+  container.innerHTML = '';
+
+  if (filtered.length === 0) {
+    const isAll = filter === 'all';
+    container.innerHTML = `
+      <div class="state-box">
+        <div class="state-icon">&#9825;</div>
+        <p>${isAll
+          ? "We might be closed for the season, but we're busy working on an amazing new lineup you won't want to miss. Stay tuned — we can't wait to share what we have in store."
+          : "No upcoming events in this category right now.<br>Check back soon."
+        }</p>
+      </div>`;
+    return;
+  }
+
+  let lastMonth = null;
+  filtered.forEach((ev, i) => {
+    const d = ev.date;
+    const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
+    if (monthKey !== lastMonth) {
+      lastMonth = monthKey;
+      const mh = document.createElement('div');
+      mh.className = 'month-header';
+      mh.innerHTML = `<div class="month-label">${MONTHS[d.getMonth()]} ${d.getFullYear()}</div><div class="month-line"></div>`;
+      container.appendChild(mh);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'event-card';
+    card.style.animationDelay = `${i * 50}ms`;
+
+    // Initial letter for placeholder
+    const initial = ev.name.charAt(0).toUpperCase();
+
+    const imgHtml = ev.image
+      ? `<img src="${ev.image}" alt="${ev.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=placeholder><div class=placeholder-note>♪</div><div class=placeholder-initial>${initial}</div></div>'">`
+      : `<div class="placeholder"><div class="placeholder-note">♪</div><div class="placeholder-initial">${initial}</div></div>`;
+
+    const admHtml = ev.admission
+      ? `<span class="admission-badge">${ev.admission}</span>` : '';
+
+    const descHtml = ev.desc
+      ? `<div class="event-desc">${ev.desc}</div>` : '';
+
+    const ticketHtml = ev.isTicketed
+      ? `<div class="ticket-badge">Tickets</div>` : '';
+
+    card.innerHTML = `
+      <div class="event-date">
+        <div class="date-dow">${DAYS[d.getDay()]}</div>
+        <div class="date-num">${d.getDate()}</div>
+        <div class="date-mon">${MONTHS[d.getMonth()].slice(0,3)}</div>
+      </div>
+      <div class="event-body">
+        <div class="event-type-tag">${TYPE_LABELS[ev.type] || 'Event'}</div>
+        <div class="event-name">${ev.name}</div>
+        ${descHtml}
+        <div class="event-meta">
+          <span>◷ ${ev.time}</span>
+          ${admHtml}
+        </div>
+      </div>
+      <div class="event-image" style="position:relative;">
+        ${imgHtml}
+        ${ticketHtml}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ── Load & boot ─────────────────────────────────────────────────────
+
+let allEvents = [];
+let activeFilter = 'all';
+
+function showLoading() {
+  document.getElementById('eventsList').innerHTML = `
+    <div class="state-box"><div class="spinner"></div><p>Loading events…</p></div>`;
+}
+
+function showError() {
+  document.getElementById('eventsList').innerHTML = `
+    <div class="state-box">
+      <div class="state-icon">&#9825;</div>
+      <p>Couldn't load the calendar right now.<br>Please try refreshing the page.</p>
+    </div>`;
+}
+
+async function loadCalendar() {
+  showLoading();
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(ICS_URL));
+    if (!res.ok) throw new Error('fetch failed');
+    const text = await res.text();
+    allEvents = parseICS(text);
+    renderEvents(allEvents, activeFilter);
+  } catch (e) {
+    console.error(e);
+    showError();
+  }
+}
+
+// Filter buttons
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  renderEvents(allEvents, activeFilter);
+});
+
+loadCalendar();
+</script>
+
+</body>
+</html>
