@@ -1,2 +1,686 @@
-<!-- TO BUILD: live-music-sundays page -->
-<!-- See README.md for content notes and SEO targets -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Music Sundays – Free Run Cellars | Berrien Springs, MI</title>
+<meta name="description" content="Live music every Sunday 3–5 PM at Free Run Cellars in Berrien Springs, Michigan. No cover, no catch. Happy hour on open bottles. March through October. 90 minutes from Chicago.">
+<meta name="keywords" content="live music winery Michigan, live music Berrien Springs, winery near Chicago, Sunday live music Southwest Michigan, Lake Michigan Shore winery events">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Live Music Sundays – Free Run Cellars">
+<meta property="og:description" content="Every Sunday 3–5 PM, March through October. No cover, no catch. Berrien Springs, MI.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --teal:      #537f71;
+  --teal-dk:   #3d6155;
+  --teal-lt:   #7aab9a;
+  --teal-pale: #eef4f1;
+  --black:     #0e0e0e;
+  --off-white: #f7f4f0;
+  --grey:      #787470;
+  --text:      #2c2c2c;
+  --nav-h:     74px;
+  --img-hero:  url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-31.jpeg');
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Jost',sans-serif; color:var(--text); background:var(--off-white); overflow-x:hidden; }
+a { text-decoration:none; color:inherit; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; inset:0 0 auto; z-index:900;
+  height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px;
+  transition:background .35s, box-shadow .35s;
+}
+nav.solid { background:rgba(255,255,255,.97); box-shadow:0 1px 0 rgba(0,0,0,.07); }
+.nav-logo { height:34px; transition:filter .35s; }
+nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
+.nav-links a {
+  font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.82); transition:color .2s;
+}
+nav.solid .nav-links a { color:var(--grey); }
+nav.solid .nav-links a:hover { color:var(--teal); }
+.nav-links a:hover { color:#fff; }
+.has-drop { position:relative; }
+.drop-menu {
+  display:none; position:absolute; top:calc(100% + 10px); left:50%;
+  transform:translateX(-50%);
+  background:#fff; border-radius:8px;
+  box-shadow:0 8px 28px rgba(0,0,0,.11);
+  padding:6px 0; min-width:180px; list-style:none;
+}
+.has-drop:hover .drop-menu { display:block; }
+.drop-menu li a {
+  display:block; padding:10px 18px;
+  font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--grey) !important;
+}
+.drop-menu li a:hover { color:var(--teal) !important; background:var(--teal-pale); }
+.nav-cta {
+  background:var(--teal); color:#fff !important;
+  padding:9px 18px; border-radius:4px;
+  font-size:10px !important; letter-spacing:2px !important;
+  transition:background .2s !important;
+}
+.nav-cta:hover { background:var(--teal-dk) !important; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger span { width:22px; height:1.5px; background:#fff; border-radius:2px; transition:background .3s; }
+nav.solid .hamburger span { background:var(--text); }
+
+/* ── BUTTONS ── */
+.btn-fill {
+  background:var(--teal); color:#fff;
+  padding:13px 30px; border-radius:4px;
+  font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  transition:background .22s, transform .22s, box-shadow .22s;
+  display:inline-block;
+}
+.btn-fill:hover { background:var(--teal-dk); transform:translateY(-2px); box-shadow:0 8px 22px rgba(83,127,113,.35); }
+.btn-line-dk {
+  border:1px solid rgba(83,127,113,.4); color:var(--teal);
+  padding:13px 30px; border-radius:4px;
+  font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase;
+  transition:border-color .22s, background .22s; display:inline-block;
+}
+.btn-line-dk:hover { border-color:var(--teal); background:var(--teal-pale); }
+
+/* ── SHARED ── */
+.s-label {
+  font-size:9px; font-weight:600; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.s-label::after { content:''; width:32px; height:1px; background:var(--teal); }
+.s-label.lt { color:var(--teal-lt); }
+.s-label.lt::after { background:var(--teal-lt); }
+.s-label.center { justify-content:center; }
+.s-label.center::after { display:none; }
+
+h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,3.8vw,54px); font-weight:300; font-style:italic;
+  line-height:1.1; color:var(--black); margin-bottom:18px;
+}
+h2 em { font-style:normal; color:var(--teal); }
+h2.on-dark { color:#fff; }
+h2.on-dark em { color:var(--teal-lt); }
+.body-copy { font-size:14.5px; font-weight:300; line-height:1.82; color:var(--grey); }
+.body-copy.on-dark { color:rgba(255,255,255,.52); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; height:92vh; min-height:560px;
+  display:flex; align-items:flex-end; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background-image:var(--img-hero);
+  background-size:cover; background-position:center 25%;
+  transform:scale(1.04);
+  animation:hZoom 14s ease-out forwards;
+}
+@keyframes hZoom { to { transform:scale(1); } }
+.hero-scrim {
+  position:absolute; inset:0;
+  background:linear-gradient(to top,
+    rgba(8,18,12,.88) 0%,
+    rgba(8,18,12,.35) 50%,
+    rgba(8,18,12,.1) 100%);
+}
+.hero-body {
+  position:relative; z-index:1;
+  padding:0 56px 80px; max-width:780px;
+  animation:fadeUp 1.1s cubic-bezier(.16,1,.3,1) .25s both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.eyebrow {
+  display:flex; align-items:center; gap:10px;
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal-lt); margin-bottom:18px;
+}
+.eyebrow::before { content:''; width:36px; height:1px; background:var(--teal-lt); }
+h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,6.5vw,88px); font-weight:300; font-style:italic;
+  color:#fff; line-height:1.02; letter-spacing:-.5px; margin-bottom:22px;
+}
+h1 em { font-style:normal; color:var(--teal-lt); }
+.hero-sub {
+  font-size:14px; font-weight:300; color:rgba(255,255,255,.65);
+  line-height:1.75; max-width:500px; margin-bottom:36px;
+}
+.hero-details {
+  display:flex; gap:24px; flex-wrap:wrap; margin-bottom:36px;
+}
+.hero-detail {
+  display:flex; align-items:center; gap:8px;
+  font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase;
+  color:rgba(255,255,255,.7);
+}
+.hero-detail-icon { color:var(--teal-lt); font-size:14px; }
+.btn-row { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-line-hero {
+  border:1px solid rgba(255,255,255,.35); color:#fff;
+  padding:13px 30px; border-radius:4px;
+  font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase;
+  transition:border-color .22s, background .22s; display:inline-block;
+}
+.btn-line-hero:hover { border-color:#fff; background:rgba(255,255,255,.08); }
+
+/* ── WHAT TO EXPECT ── */
+.expect { background:#fff; padding:96px 56px; }
+.expect-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:96px; align-items:center; max-width:1100px; margin:0 auto;
+}
+.expect-content .body-copy { margin-bottom:20px; }
+
+/* Details list */
+.detail-list { list-style:none; margin:32px 0; display:flex; flex-direction:column; gap:0; }
+.detail-item {
+  display:flex; align-items:flex-start; gap:16px;
+  padding:16px 0; border-bottom:1px solid rgba(0,0,0,.06);
+}
+.detail-item:first-child { border-top:1px solid rgba(0,0,0,.06); }
+.detail-icon {
+  width:36px; height:36px; border-radius:8px;
+  background:var(--teal-pale); display:flex; align-items:center;
+  justify-content:center; font-size:16px; flex-shrink:0; margin-top:2px;
+}
+.detail-label {
+  font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:4px;
+}
+.detail-text { font-size:13.5px; color:var(--grey); line-height:1.65; font-weight:300; }
+
+/* Visual side */
+.expect-visual {
+  position:relative;
+}
+.expect-img-main {
+  width:100%; height:480px; border-radius:10px; overflow:hidden; position:relative;
+}
+.expect-img-main-bg {
+  position:absolute; inset:0;
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1556.jpeg');
+  background-size:cover; background-position:center;
+  transition:transform .6s ease;
+}
+.expect-img-main:hover .expect-img-main-bg { transform:scale(1.03); }
+.expect-badge {
+  position:absolute; bottom:-20px; right:-20px;
+  background:var(--teal); color:#fff;
+  border-radius:50%; width:110px; height:110px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:12px;
+  box-shadow:0 8px 24px rgba(83,127,113,.35);
+}
+.badge-main { font-family:'Cormorant Garamond',serif; font-size:28px; font-style:italic; line-height:1; }
+.badge-sub { font-size:8px; letter-spacing:1.5px; text-transform:uppercase; margin-top:4px; opacity:.85; }
+
+/* ── HAPPY HOUR BANNER ── */
+.happy-hour {
+  background:var(--black); color:#fff;
+  padding:64px 56px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:40px; flex-wrap:wrap;
+  position:relative; overflow:hidden;
+}
+.happy-hour::before {
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 30% 50%, rgba(83,127,113,.15) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hh-text { position:relative; z-index:1; max-width:600px; }
+.hh-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(83,127,113,.2); border:1px solid rgba(122,171,154,.3);
+  border-radius:20px; padding:6px 14px; margin-bottom:18px;
+  font-size:9px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  color:var(--teal-lt);
+}
+.hh-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,3.5vw,46px); font-weight:300; font-style:italic;
+  color:#fff; line-height:1.15; margin-bottom:14px;
+}
+.hh-title em { font-style:normal; color:var(--teal-lt); }
+.hh-body { font-size:14px; color:rgba(255,255,255,.55); line-height:1.75; font-weight:300; }
+.hh-stat {
+  position:relative; z-index:1;
+  text-align:center; flex-shrink:0;
+  border:1px solid rgba(122,171,154,.2); border-radius:12px;
+  padding:32px 40px;
+}
+.hh-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:72px; font-style:italic; color:var(--teal-lt); line-height:1;
+}
+.hh-unit { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:6px; }
+
+/* ── ARTISTS ── */
+.artists { background:var(--off-white); padding:96px 56px; }
+.artists-header { text-align:center; max-width:520px; margin:0 auto 56px; }
+.artists-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:20px; max-width:1000px; margin:0 auto 48px;
+}
+.artist-card {
+  background:#fff; border-radius:12px; padding:32px 28px;
+  border:1px solid rgba(83,127,113,.1);
+  transition:border-color .25s, transform .25s, box-shadow .25s;
+  position:relative; overflow:hidden;
+}
+.artist-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--teal-dk), var(--teal-lt));
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .3s ease;
+}
+.artist-card:hover { border-color:var(--teal); transform:translateY(-4px); box-shadow:0 12px 32px rgba(83,127,113,.1); }
+.artist-card:hover::before { transform:scaleX(1); }
+.artist-initial {
+  width:52px; height:52px; border-radius:50%;
+  background:var(--teal-pale); border:1px solid rgba(83,127,113,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-style:italic; color:var(--teal);
+  margin-bottom:16px;
+}
+.artist-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-style:italic; color:var(--black); margin-bottom:6px;
+}
+.artist-tag {
+  font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:12px;
+}
+.artist-desc { font-size:13px; color:var(--grey); line-height:1.68; font-weight:300; }
+
+.artists-note {
+  text-align:center; max-width:520px; margin:0 auto;
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px; font-style:italic; font-weight:300;
+  color:var(--grey); line-height:1.7;
+}
+
+/* ── DD CALLOUT ── */
+.dd-bar {
+  background:var(--teal-pale);
+  border-top:1px solid rgba(83,127,113,.15);
+  border-bottom:1px solid rgba(83,127,113,.15);
+  padding:28px 56px;
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  flex-wrap:wrap; text-align:center;
+}
+.dd-icon { font-size:22px; }
+.dd-text { font-size:13px; color:var(--text); font-weight:400; line-height:1.6; }
+.dd-text strong { color:var(--teal); font-weight:600; }
+
+/* ── POLICIES ── */
+.policies { background:#fff; padding:80px 56px; }
+.policies-inner { max-width:900px; margin:0 auto; }
+.policies-header { text-align:center; margin-bottom:48px; }
+.policy-grid {
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+.policy-card {
+  background:var(--off-white); border-radius:10px; padding:28px 24px;
+  display:flex; gap:16px; align-items:flex-start;
+}
+.policy-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+.policy-title { font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--black); margin-bottom:6px; }
+.policy-text { font-size:13px; color:var(--grey); line-height:1.65; font-weight:300; }
+
+/* ── PLAN YOUR VISIT CTA ── */
+.visit-cta {
+  position:relative; height:360px; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.visit-cta-bg {
+  position:absolute; inset:0;
+  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/AS259838.jpeg');
+  background-size:cover; background-position:center 60%;
+}
+.visit-cta-scrim { position:absolute; inset:0; background:rgba(8,18,12,.72); }
+.visit-cta-body {
+  position:relative; z-index:1; text-align:center; padding:0 40px;
+}
+.visit-cta-body h2 { color:#fff; margin-bottom:10px; }
+.visit-cta-body h2 em { color:var(--teal-lt); }
+.visit-cta-body p {
+  font-size:14px; color:rgba(255,255,255,.6); font-weight:300;
+  max-width:440px; margin:0 auto 28px; line-height:1.75;
+}
+.cta-btn-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-line-white {
+  border:1px solid rgba(255,255,255,.3); color:rgba(255,255,255,.8);
+  padding:13px 28px; border-radius:4px;
+  font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  transition:border-color .2s, color .2s; display:inline-block;
+}
+.btn-line-white:hover { border-color:#fff; color:#fff; }
+
+/* ── FOOTER ── */
+.page-footer {
+  background:var(--black); color:rgba(255,255,255,.35);
+  padding:32px 56px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; font-size:11px;
+}
+.page-footer a { transition:color .2s; }
+.page-footer a:hover { color:#fff; }
+.footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.5; }
+.footer-links { display:flex; gap:20px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  nav { padding:0 24px; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .hero-body { padding:0 28px 64px; }
+  .expect { padding:72px 28px; }
+  .expect-inner { grid-template-columns:1fr; gap:48px; }
+  .expect-img-main { height:340px; }
+  .expect-badge { right:10px; bottom:-15px; }
+  .happy-hour { padding:48px 28px; flex-direction:column; }
+  .hh-stat { width:100%; }
+  .artists { padding:72px 28px; }
+  .artists-grid { grid-template-columns:1fr 1fr; }
+  .dd-bar { padding:24px 28px; }
+  .policies { padding:60px 28px; }
+  .policy-grid { grid-template-columns:1fr; }
+  .page-footer { padding:24px 28px; flex-direction:column; text-align:center; }
+  .footer-links { justify-content:center; }
+}
+@media (max-width:600px) {
+  .artists-grid { grid-template-columns:1fr; max-width:400px; margin:0 auto 48px; }
+  .hero-details { flex-direction:column; gap:12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <img class="nav-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/about">Our Story</a></li>
+    <li><a href="/wines">Wines</a></li>
+    <li class="has-drop">
+      <a href="#">Events ▾</a>
+      <ul class="drop-menu">
+        <li><a href="/pages/live-music-sundays.html">Live Music Sundays</a></li>
+        <li><a href="/pages/events-calendar.html">Events Calendar</a></li>
+        <li><a href="/pages/event-packages.html">Private Events</a></li>
+      </ul>
+    </li>
+    <li><a href="/gallery">Gallery</a></li>
+    <li><a href="/contact">Visit Us</a></li>
+    <li><a href="/pages/reviews.html" class="nav-cta">Leave a Review</a></li>
+  </ul>
+  <div class="hamburger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-body">
+    <p class="eyebrow">Every Sunday · March through October</p>
+    <h1>Live music,<br>poured by the <em>glass</em></h1>
+    <p class="hero-sub">Free admission every Sunday afternoon on the patio at Free Run Cellars. Just find a spot, pour a glass, and let the afternoon take care of itself.</p>
+    <div class="hero-details">
+      <div class="hero-detail">
+        <span class="hero-detail-icon">🎵</span>
+        <span>Every Sunday 3–5 PM</span>
+      </div>
+      <div class="hero-detail">
+        <span class="hero-detail-icon">🍷</span>
+        <span>No cover. Wine optional but encouraged.</span>
+      </div>
+      <div class="hero-detail">
+        <span class="hero-detail-icon">🐾</span>
+        <span>Dogs welcome</span>
+      </div>
+      <div class="hero-detail">
+        <span class="hero-detail-icon">📍</span>
+        <span>90 min from Chicago</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <a href="/pages/events-calendar.html" class="btn-fill">See Who's Playing →</a>
+      <a href="https://maps.google.com/?q=10062+Burgoyne+Rd+Berrien+Springs+MI"
+        target="_blank" rel="noopener" class="btn-line-hero">Get Directions</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT TO EXPECT -->
+<section class="expect" id="expect">
+  <div class="expect-inner">
+    <div class="expect-content">
+      <p class="s-label">What to Expect</p>
+      <h2>Two hours of music,<br>and nowhere <em>to be</em></h2>
+      <p class="body-copy">Every Sunday from March through October, we open the patio to local and regional artists who bring something real to the afternoon. No cover, no fuss — just good music in a setting that makes it impossible to leave early.</p>
+      <p class="body-copy">When the weather turns, we move things inside. Either way, the music plays.</p>
+      <ul class="detail-list">
+        <li class="detail-item">
+          <div class="detail-icon">🗓</div>
+          <div>
+            <div class="detail-label">Season</div>
+            <div class="detail-text">March through end of October — every Sunday without exception.</div>
+          </div>
+        </li>
+        <li class="detail-item">
+          <div class="detail-icon">⏰</div>
+          <div>
+            <div class="detail-label">Time</div>
+            <div class="detail-text">3:00 – 5:00 PM. Doors open at 2:00 PM — come early for the best seats on the patio.</div>
+          </div>
+        </li>
+        <li class="detail-item">
+          <div class="detail-icon">🎟</div>
+          <div>
+            <div class="detail-label">Admission</div>
+            <div class="detail-text">Always free — no cover, no catch. Grab a glass if you like, or just grab a seat. Occasional ticketed concerts (handled by the artist) will be noted on the events calendar.</div>
+          </div>
+        </li>
+        <li class="detail-item">
+          <div class="detail-icon">🌧</div>
+          <div>
+            <div class="detail-label">Rain or Shine</div>
+            <div class="detail-text">Outdoor patio when weather allows. We move inside for rain or cold — music goes on regardless.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="expect-visual">
+      <div class="expect-img-main">
+        <div class="expect-img-main-bg"></div>
+      </div>
+      <div class="expect-badge">
+        <div class="badge-main">Free</div>
+        <div class="badge-sub">always & forever</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HAPPY HOUR BANNER -->
+<div class="happy-hour">
+  <div class="hh-text">
+    <div class="hh-tag">✦ New This Season</div>
+    <h2 class="hh-title">Sunday <em>Happy Hour</em></h2>
+    <p class="hh-body">
+      Every Sunday during live music, enjoy half off glass pours from any of our open bottles. 
+      It's our way of making sure every bottle gets the send-off it deserves — and that you 
+      get to try something new without the commitment. Good wine shouldn't go to waste. 
+      Neither should a Sunday afternoon.
+    </p>
+  </div>
+  <div class="hh-stat">
+    <div class="hh-num">½</div>
+    <div class="hh-unit">off glass pours<br>open bottles</div>
+  </div>
+</div>
+
+<!-- ARTISTS -->
+<section class="artists" id="artists">
+  <div class="artists-header">
+    <p class="s-label center">The Artists</p>
+    <h2 style="text-align:center;">Familiar faces,<br><em>great music</em></h2>
+    <p class="body-copy" style="text-align:center;max-width:480px;margin:0 auto;">We bring in artists who connect with a crowd — the kind of musicians you end up following home on Spotify.</p>
+  </div>
+  <div class="artists-grid" style="grid-template-columns:1fr;max-width:420px;">
+    <div class="artist-card">
+      <div class="artist-initial">J</div>
+      <div class="artist-name">Johnny Poracky</div>
+      <div class="artist-tag">✦ The Secret Weapon</div>
+      <p class="artist-desc">You won't always see him on the calendar — but when Johnny shows up, something magic happens. A family friend who steps in for impromptu sessions and last-minute Sundays when the universe decides the patio needs music. Equal parts talented and unpredictable. The best kind of surprise.</p>
+    </div>
+  </div>
+  <p class="artists-note">
+    Our lineup grows every season. Check the events calendar for who's playing each Sunday 
+    — and follow us on Facebook for last-minute additions and announcements.
+  </p>
+</section>
+
+<!-- DD CALLOUT -->
+<div class="dd-bar">
+  <div class="dd-icon">🚗</div>
+  <p class="dd-text">
+    <strong>Designated driver?</strong> Non-alcoholic beverages are on us. 
+    Because the best designated drivers deserve more than just a thank you.
+  </p>
+</div>
+
+<!-- POLICIES -->
+<section class="policies" id="policies">
+  <div class="policies-inner">
+    <div class="policies-header">
+      <p class="s-label center">Good to Know</p>
+      <h2 style="text-align:center;">Before you <em>arrive</em></h2>
+    </div>
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-icon">🐾</div>
+        <div>
+          <div class="policy-title">Dogs Welcome</div>
+          <p class="policy-text">Well-behaved dogs are always welcome on the grounds and patio. Please clean up after your pets. On cold or rainy days we'll often make exceptions to come inside too.</p>
+        </div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">🧀</div>
+        <div>
+          <div class="policy-title">Food & Snacks</div>
+          <p class="policy-text">We carry packaged snacks — crackers, cheese, meat sticks, chips, and kid-friendly options. Outside food is not permitted, as we want to keep the grounds clean for everyone.</p>
+        </div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">👨‍👩‍👧</div>
+        <div>
+          <div class="policy-title">Family Friendly</div>
+          <p class="policy-text">Kids are always welcome. We have a play area and open lawns to roam. Sunday afternoons at Free Run are a family affair — yours included.</p>
+        </div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">🎤</div>
+        <div>
+          <div class="policy-title">Ticketed Concerts</div>
+          <p class="policy-text">Occasionally we host special ticketed performances. These are managed directly by the artist. Check the events calendar or follow us on Facebook for announcements.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT CTA -->
+<div class="visit-cta">
+  <div class="visit-cta-bg"></div>
+  <div class="visit-cta-scrim"></div>
+  <div class="visit-cta-body">
+    <h2 class="on-dark">Join us this <em>Sunday</em></h2>
+    <p>10062 Burgoyne Road, Berrien Springs MI · 90 minutes from Chicago</p>
+    <div class="cta-btn-row">
+      <a href="/pages/events-calendar.html" class="btn-fill">View Events Calendar</a>
+      <a href="https://maps.google.com/?q=10062+Burgoyne+Rd+Berrien+Springs+MI"
+        target="_blank" rel="noopener" class="btn-line-white">Get Directions</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <img class="footer-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars">
+  <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/pages/events-calendar.html">Events</a>
+    <a href="/contact">Visit Us</a>
+    <a href="/cdn-cgi/l/email-protection#8eede1e0faefedfacee8fcedf9e7e0eba0ede1e3">Contact</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Nav scroll
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('solid', scrollY > 50);
+addEventListener('scroll', onScroll, { passive:true });
+onScroll();
+
+// Mobile hamburger
+const burger = document.getElementById('burger');
+const links  = document.getElementById('navLinks');
+let open = false;
+burger.addEventListener('click', () => {
+  open = !open;
+  if (open) {
+    links.style.cssText = `
+      display:flex; flex-direction:column; position:fixed;
+      top:var(--nav-h); left:0; right:0; background:#fff;
+      padding:20px 28px 28px; gap:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.1); z-index:899;
+    `;
+    links.querySelectorAll('a').forEach(a => a.style.color = 'var(--grey)');
+  } else {
+    links.removeAttribute('style');
+  }
+});
+
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.artist-card, .policy-card, .detail-item').forEach((el, i) => {
+  el.style.cssText += `opacity:
