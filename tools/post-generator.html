@@ -473,7 +473,22 @@
 <script>
 // ── Config ──────────────────────────────────────────────────────────
 const ICS_URL   = 'https://outlook.office365.com/owa/calendar/df404380dcae40ce9d5e5cae23fc980b@frcwine.com/2bffd8e2d0c6472484e93fb53c70a23b18073354100263554948/calendar.ics';
-const PROXY     = 'https://corsproxy.io/?url=';
+// CORS proxies — tries each in order until one works
+const PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+async function fetchWithProxy(url) {
+  for (const proxy of PROXIES) {
+    try {
+      const res = await fetch(proxy(url), { signal: AbortSignal.timeout(8000) });
+      if (res.ok) return res;
+    } catch(e) { /* try next */ }
+  }
+  throw new Error('All proxies failed');
+}
 const FB_PAGE   = 'https://www.facebook.com/FreRunCellars'; // update if needed
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -536,7 +551,7 @@ function parseICS(text) {
 // ── Load calendar ────────────────────────────────────────────────────
 async function loadCalendar() {
   try {
-    const res  = await fetch(PROXY + encodeURIComponent(ICS_URL));
+    const res  = await fetchWithProxy(ICS_URL);
     if (!res.ok) throw new Error();
     const text = await res.text();
     const today = new Date(); today.setHours(0,0,0,0);
