@@ -344,7 +344,7 @@ nav {
     <li><a href="contact.html">Visit Us</a></li>
     <li><a href="reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
-  <div class="hamburger" id="burger"><span></span><span></span><span></span></div>
+  <button class="hamburger" id="burger" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="ambient"></div>
@@ -562,6 +562,7 @@ startTimer();
   }
 
   burger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
+burger.addEventListener('touchstart', (e) => { e.preventDefault(); menuOpen ? closeMenu() : openMenu(); }, { passive: false });
   links.addEventListener('click', e => {
     if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') closeMenu();
   });
