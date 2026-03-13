@@ -86,12 +86,14 @@ nav.solid .nav-links a:hover { color:var(--teal); }
 
 .has-drop { position:relative; }
 .drop-menu {
-  display:none; position:absolute; top:calc(100% + 10px); left:50%;
+  display:none; position:absolute; top:100%; left:50%;
   transform:translateX(-50%);
   background:#fff; border-radius:8px;
   box-shadow:0 8px 28px rgba(0,0,0,.11);
   padding:6px 0; min-width:180px; list-style:none;
+  margin-top:0;
 }
+.has-drop { padding-bottom:2px; }
 .has-drop:hover .drop-menu { display:block; }
 .drop-menu li a {
   display:block; padding:10px 18px;

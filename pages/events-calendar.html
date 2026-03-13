@@ -25,6 +25,46 @@
     min-height: 100vh;
   }
 
+  /* ── NAV ── */
+  nav {
+    position: fixed; inset: 0 0 auto; z-index: 900;
+    height: 74px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    background: rgba(0,0,0,.85);
+    box-shadow: 0 1px 0 rgba(115,152,133,.2);
+  }
+  .nav-logo { height: 34px; filter: brightness(0) invert(1); }
+  .nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
+  .nav-links a {
+    font-size: 10.5px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.75); transition: color .2s; text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--sage); }
+  .has-drop { position: relative; padding-bottom: 2px; }
+  .drop-menu {
+    display: none; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 8px 28px rgba(0,0,0,.5);
+    padding: 6px 0; min-width: 180px; list-style: none;
+  }
+  .has-drop:hover .drop-menu { display: block; }
+  .drop-menu li a {
+    display: block; padding: 10px 18px;
+    font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,.55) !important;
+  }
+  .drop-menu li a:hover { color: var(--sage) !important; background: rgba(115,152,133,.08); }
+  .nav-cta {
+    background: var(--sage); color: #000 !important;
+    padding: 9px 18px; border-radius: 4px;
+    font-size: 10px !important; letter-spacing: 2px !important;
+    transition: background .2s !important;
+  }
+  .nav-cta:hover { background: var(--sage-dark) !important; }
+
   .ambient {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
@@ -36,7 +76,7 @@
     position: relative; z-index: 1;
     max-width: 860px;
     margin: 0 auto;
-    padding: 52px 24px 80px;
+    padding: 110px 24px 80px;
   }
 
   /* ── Header ── */
@@ -252,6 +292,29 @@
 </style>
 </head>
 <body>
+
+<nav id="nav">
+  <a href="../index.html">
+    <img class="nav-logo"
+      src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+      alt="Free Run Cellars">
+  </a>
+  <ul class="nav-links">
+    <li><a href="about.html">Our Story</a></li>
+    <li><a href="wines.html">Wines</a></li>
+    <li class="has-drop">
+      <a href="#" style="color:var(--sage)">Events ▾</a>
+      <ul class="drop-menu">
+        <li><a href="live-music-sundays.html">Live Music Sundays</a></li>
+        <li><a href="events-calendar.html">Events Calendar</a></li>
+        <li><a href="event-packages.html">Private Events</a></li>
+      </ul>
+    </li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html">Visit Us</a></li>
+    <li><a href="reviews.html" class="nav-cta">Leave a Review</a></li>
+  </ul>
+</nav>
 
 <div class="ambient"></div>
 
