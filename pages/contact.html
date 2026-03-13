@@ -72,11 +72,26 @@ nav.solid .nav-links a:hover { color:var(--teal); }
   transition:background .2s !important;
 }
 .nav-cta:hover { background:var(--teal-dk) !important; }
-.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
-.hamburger.active span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
-.hamburger.active span:nth-child(2) { opacity:0; }
-.hamburger.active span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
-.hamburger span { transition:transform .25s, opacity .25s, background .3s; }
+.hamburger {
+  display:none; flex-direction:column; gap:5px;
+  cursor:pointer; padding:10px;
+  background:none; border:none;
+  position:relative; z-index:1001;
+  pointer-events:all;
+  min-width:44px; min-height:44px;
+  align-items:center; justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hamburger span {
+  width:22px; height:2px; background:rgba(255,255,255,0.85);
+  border-radius:2px; display:block;
+  transition:transform .25s ease, opacity .25s ease;
+  pointer-events:none;
+}
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 .hamburger span { width:22px; height:1.5px; background:#fff; border-radius:2px; transition:background .3s; }
 nav.solid .hamburger span { background:var(--text); }
 
@@ -384,6 +399,42 @@ h2.on-dark em { color:var(--teal-lt); }
   .photo-strip { grid-template-columns:1fr; height:auto; }
   .ps-item { height:200px; }
 }
+
+@media (max-width:960px) {
+  .nav-links { display:none !important; }
+  .nav-links.open {
+    display:flex !important; flex-direction:column;
+    position:fixed; top:70px; left:0; right:0; bottom:0;
+    background:rgba(5,12,8,0.97);
+    padding:32px 28px 40px; gap:0;
+    overflow-y:auto; z-index:999;
+    border-top:1px solid rgba(115,152,133,0.2);
+    list-style:none;
+  }
+  .nav-links.open > li > a {
+    display:block; padding:16px 0;
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:rgba(255,255,255,0.85) !important;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .nav-links.open .has-drop .drop-menu {
+    display:block; position:static; transform:none;
+    background:transparent; box-shadow:none; border:none;
+    padding:0 0 8px 16px; min-width:unset;
+  }
+  .nav-links.open .has-drop .drop-menu li a {
+    color:rgba(115,152,133,0.85) !important;
+    font-size:11px; padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    display:block;
+  }
+  .nav-links.open .nav-cta {
+    background:#537f71; color:#fff !important;
+    border-radius:4px; padding:14px 0; text-align:center;
+    margin-top:16px; border:none !important;
+  }
+  .hamburger { display:flex; }
+}
 </style>
 </head>
 <body>
@@ -511,15 +562,7 @@ h2.on-dark em { color:var(--teal-lt); }
           <div class="cm-arrow">→</div>
         </a>
 
-        <a href="/cdn-cgi/l/email-protection#86e5e9e8f2e7e5f2c6e0f4e5f1efe8e3a8e5e9ebb9f5f3e4ece3e5f2bbcee3eaeae9a6e0f4e9eba6c0f4e3e3a6d4f3e8a6c5e3eaeae7f4f5a6f1e3e4f5eff2e3" class="contact-method">
-          <div class="cm-icon email">✉️</div>
-          <div class="cm-text">
-            <div class="cm-label">Email</div>
-            <div class="cm-value"><span class="__cf_email__" data-cfemail="f99a96978d989a8db99f8b9a8e90979cd79a9694">[email&#160;protected]</span></div>
-            <div class="cm-sub">Opens your default mail app</div>
-          </div>
-          <div class="cm-arrow">→</div>
-        </a>
+        <a href="mailto:contact@frcwine.com">contact@frcwine.com</a>
 
         <a href="https://www.instagram.com/freeruncellars" target="_blank" rel="noopener" class="contact-method">
           <div class="cm-icon instagram">
@@ -621,7 +664,7 @@ h2.on-dark em { color:var(--teal-lt); }
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // Nav scroll
 const nav = document.getElementById('nav');
 const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
@@ -631,70 +674,26 @@ onScroll();
 // Mobile hamburger
 const burger = document.getElementById('burger');
 const links  = document.getElementById('navLinks');
-let menuOpen = false;
 
-function openMenu() {
-  menuOpen = true;
-  burger.classList.add('active');
-  links.style.cssText = `
-    display:flex !important; flex-direction:column; position:fixed;
-    top:74px; left:0; right:0; background:rgba(10,10,10,0.98);
-    padding:20px 28px 32px; gap:0;
-    box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:899;
-    border-top:1px solid rgba(115,152,133,0.2);
-  `;
-  links.querySelectorAll('a').forEach(a => {
-    a.style.color = 'rgba(255,255,255,0.8)';
-    a.style.padding = '14px 0';
-    a.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
-    a.style.fontSize = '11px';
-    a.style.letterSpacing = '2px';
-  });
-  // Show dropdown items inline on mobile
-  links.querySelectorAll('.drop-menu').forEach(d => {
-    d.style.cssText = `
-      display:block; position:static; transform:none;
-      background:transparent; box-shadow:none; border:none;
-      padding:0 0 0 16px; min-width:unset;
-    `;
-    d.querySelectorAll('a').forEach(a => {
-      a.style.color = 'rgba(115,152,133,0.8)';
-      a.style.padding = '10px 0';
-      a.style.fontSize = '10px';
-      a.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
-    });
-  });
-}
+burger.addEventListener('click', function(e) {
+  e.stopPropagation();
+  const isOpen = links.classList.contains('open');
+  links.classList.toggle('open', !isOpen);
+  burger.classList.toggle('open', !isOpen);
+});
 
-function closeMenu() {
-  menuOpen = false;
-  burger.classList.remove('active');
-  links.removeAttribute('style');
-  links.querySelectorAll('.drop-menu').forEach(d => d.removeAttribute('style'));
-  links.querySelectorAll('a').forEach(a => a.removeAttribute('style'));
-}
-
-burger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
-burger.addEventListener('touchstart', (e) => { e.preventDefault(); menuOpen ? closeMenu() : openMenu(); }, { passive: false });
-
-// Close menu when a link is clicked
-links.addEventListener('click', e => {
+links.addEventListener('click', function(e) {
   if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
-    closeMenu();
+    links.classList.remove('open');
+    burger.classList.remove('open');
   }
 });
 
-// Close on outside tap
-document.addEventListener('click', e => {
-  if (menuOpen && !links.contains(e.target) && !burger.contains(e.target)) closeMenu();
-});
-
-// Highlight today's hours row
-const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-const today = days[new Date().getDay()];
-document.querySelectorAll('.hours-row').forEach(row => {
-  const day = row.querySelector('.hr-day')?.textContent.toLowerCase() || '';
-  if (day.includes(today)) row.classList.add('today');
+document.addEventListener('click', function(e) {
+  if (links.classList.contains('open') && !links.contains(e.target) && !burger.contains(e.target)) {
+    links.classList.remove('open');
+    burger.classList.remove('open');
+  }
 });
 
 // Scroll reveal

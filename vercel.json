@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "frcwine.com" }],
+      "destination": "https://www.frcwine.com/$1",
+      "permanent": true
+    }
+  ]
+}

@@ -113,18 +113,24 @@ nav.solid .nav-links a:hover { color:var(--teal); }
 .hamburger {
   display:none; flex-direction:column; gap:5px;
   cursor:pointer; padding:10px;
-  position:relative; z-index:1000;
+  background:none; border:none;
+  position:relative; z-index:1001;
   pointer-events:all;
   min-width:44px; min-height:44px;
   align-items:center; justify-content:center;
-  background:none; border:none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 .hamburger span {
-  width:22px; height:1.5px; background:#fff;
-  border-radius:2px; transition:background .3s;
+  width:22px; height:2px; background:#fff;
+  border-radius:2px; display:block;
+  transition:transform .25s ease, opacity .25s ease, background .3s;
+  pointer-events:none;
 }
-nav.solid .hamburger span { background:var(--text); }
+nav.solid .hamburger span { background:#333; }
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
 /* ── BUTTONS ── */
 .btn-fill {
@@ -196,9 +202,9 @@ h2.on-dark em { color:var(--teal-lt); }
 .hero-scrim {
   position:absolute; inset:0;
   background:linear-gradient(to top,
-    rgba(8,18,12,.82) 0%,
-    rgba(8,18,12,.28) 55%,
-    rgba(8,18,12,.08) 100%);
+    rgba(8,18,12,.92) 0%,
+    rgba(8,18,12,.55) 45%,
+    rgba(8,18,12,.25) 100%);
 }
 .hero-body {
   position:relative; z-index:1;
@@ -220,7 +226,7 @@ h1 {
   font-size:clamp(50px,6.5vw,92px); font-weight:300; font-style:italic;
   color:#fff; line-height:1.02; letter-spacing:-.5px; margin-bottom:22px;
 }
-h1 em { font-style:normal; color:var(--teal-lt); }
+h1 em { font-style:normal; color:#a8d4be; }
 .hero-sub {
   font-size:14px; font-weight:300; color:rgba(255,255,255,.65);
   line-height:1.75; max-width:500px; margin-bottom:14px;
@@ -256,7 +262,7 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 }
 .strip-item {
   display:flex; align-items:center; gap:9px;
-  padding:16px 30px;
+  padding:16px 24px;
   font-size:10px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase;
   border-right:1px solid rgba(255,255,255,.18);
 }
@@ -357,7 +363,7 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 }
 .photo-break-sub {
   font-size:10px; letter-spacing:4px; text-transform:uppercase;
-  color:rgba(255,255,255,.5); text-align:center;
+  color:rgba(255,255,255,.75); text-align:center;
 }
 
 /* ── WINES ── */
@@ -382,14 +388,14 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 }
 .wine-list { list-style:none; margin:28px 0 36px; }
 .wine-list li {
-  display:grid; grid-template-columns:auto 1fr;
-  gap:12px; align-items:baseline;
+  display:flex; flex-wrap:wrap; align-items:baseline;
+  gap:4px 10px;
   padding:13px 0; border-bottom:1px solid rgba(0,0,0,.06);
   font-size:14px;
 }
-.wine-list li::before { content:'–'; color:var(--teal); font-weight:700; }
-.wn { font-weight:500; color:var(--black); }
-.wd { font-size:12px; color:var(--grey); font-style:italic; margin-left:6px; }
+.wine-list li::before { content:'–'; color:var(--teal); font-weight:700; flex-shrink:0; }
+.wn { font-weight:500; color:var(--black); flex-shrink:0; }
+.wd { font-size:12px; color:var(--grey); font-style:italic; }
 
 /* ── EVENTS BANNER ── */
 .events-banner {
@@ -582,8 +588,8 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 /* ── FOOTER ── */
 footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px 28px; }
 .footer-grid {
-  display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr;
-  gap:52px; margin-bottom:44px;
+  display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;
+  gap:40px; margin-bottom:44px;
 }
 .f-brand-logo { height:30px; filter:brightness(0) invert(1); margin-bottom:14px; }
 .f-brand p { font-size:12px; line-height:1.82; font-weight:300; max-width:210px; }
@@ -612,7 +618,38 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
 /* ── RESPONSIVE ── */
 @media (max-width:960px) {
   nav { padding:0 24px; }
-  .nav-links { display:none; }
+  .nav-links { display:none !important; }
+  .nav-links.open {
+    display:flex !important; flex-direction:column;
+    position:fixed; top:70px; left:0; right:0; bottom:0;
+    background:rgba(5,12,8,0.97);
+    padding:32px 28px 40px; gap:0;
+    overflow-y:auto; z-index:999;
+    border-top:1px solid rgba(115,152,133,0.2);
+    list-style:none;
+  }
+  .nav-links.open > li > a {
+    display:block; padding:16px 0;
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:rgba(255,255,255,0.85) !important;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .nav-links.open .has-drop .drop-menu {
+    display:block; position:static; transform:none;
+    background:transparent; box-shadow:none; border:none;
+    padding:0 0 8px 16px; min-width:unset;
+  }
+  .nav-links.open .has-drop .drop-menu li a {
+    color:rgba(115,152,133,0.85) !important;
+    font-size:11px; padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    display:block;
+  }
+  .nav-links.open .nav-cta {
+    background:var(--teal); color:#fff !important;
+    border-radius:4px; padding:14px 0; text-align:center;
+    margin-top:16px;
+  }
   .hamburger { display:flex; }
   .hero-body { padding:0 28px 64px; }
   .scroll-hint { display:none; }
@@ -674,9 +711,9 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
     <li><a href="pages/contact.html">Visit Us</a></li>
     <li><a href="pages/reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
-  <div class="hamburger" id="burger" aria-label="Open menu">
+  <button class="hamburger" id="burger" aria-label="Open menu" type="button">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -990,12 +1027,12 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
       <strong>10062 Burgoyne Road</strong><br>
       Berrien Springs, MI 49103<br><br>
       <strong>(269) 815-6885</strong><br>
-      <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d3b0bcbda7b2b0a793b5a1b0a4babdb6fdb0bcbe">[email&#160;protected]</a>
+      <a href="mailto:contact@frcwine.com">contact@frcwine.com</a>
     </div>
     <div class="visit-btns">
       <a href="https://maps.google.com/?q=10062+Burgoyne+Rd+Berrien+Springs+MI"
         target="_blank" rel="noopener" class="btn-fill">Get Directions</a>
-      <a href="/cdn-cgi/l/email-protection#74171b1a0015170034120617031d1a115a171b19" class="btn-line-dk">Email Us</a>
+      <a href="mailto:contact@frcwine.com" class="btn-line-dk">Email Us</a>
     </div>
   </div>
 </section>
@@ -1024,9 +1061,12 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
   <p class="s-label center" style="color:rgba(255,255,255,.55);">Stay Connected</p>
   <h2 style="color:#fff; margin-bottom:10px;">Be the first to <em style="color:rgba(255,255,255,.7);">know</em></h2>
   <p>New releases, upcoming events, and the occasional love letter from the vineyard.</p>
-  <div class="nl-form">
-    <input type="email" class="nl-input" placeholder="Your email address" aria-label="Email address">
-    <button class="nl-btn" type="submit">Subscribe</button>
+  <div class="nl-form" id="nlForm">
+    <input type="email" class="nl-input" id="nlEmail" placeholder="Your email address" aria-label="Email address">
+    <button class="nl-btn" id="nlBtn" type="button" onclick="subscribeNewsletter()">Subscribe</button>
+  </div>
+  <div id="nlSuccess" style="display:none;margin-top:14px;font-size:13px;color:rgba(255,255,255,.8);letter-spacing:.5px;">
+    ✓ You're on the list — see you at the vineyard.
   </div>
 </section>
 
@@ -1052,13 +1092,40 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
           </svg>
         </a>
       </div>
+      <!-- Podcast links -->
+      <div style="margin-top:18px;">
+        <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px;font-weight:600;">Hear Our Story</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="https://open.spotify.com/episode/2QQvuKemIWH9dlWREocD2u" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px;padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:4px;transition:all .2s;"
+            onmouseover="this.style.borderColor='#1DB954';this.style.color='#1DB954'"
+            onmouseout="this.style.borderColor='rgba(255,255,255,.1)';this.style.color='rgba(255,255,255,.5)'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            Spotify
+          </a>
+          <a href="https://podcasts.apple.com/us/podcast/episode-108-free-run-cellars-under-new-owners/id1700454745?i=1000720996083" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px;padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:4px;transition:all .2s;"
+            onmouseover="this.style.borderColor='#B150E2';this.style.color='#B150E2'"
+            onmouseout="this.style.borderColor='rgba(255,255,255,.1)';this.style.color='rgba(255,255,255,.5)'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 2.4c5.28 0 9.6 4.32 9.6 9.6s-4.32 9.6-9.6 9.6S2.4 17.28 2.4 12 6.72 2.4 12 2.4zm0 3.6c-2.4 0-4.44 1.68-4.44 4.44 0 1.68.84 3.12 2.16 3.96-.12.6-.24 1.32-.36 2.04-.12.84.48 1.56 1.32 1.56h2.64c.84 0 1.44-.72 1.32-1.56-.12-.72-.24-1.44-.36-2.04 1.32-.84 2.16-2.28 2.16-3.96C16.44 7.68 14.4 6 12 6z"/></svg>
+            Apple
+          </a>
+          <a href="https://music.amazon.com/podcasts/2e1cc431-4278-47d5-88d6-ebe5224230ff/episodes/f76eb1c7-d098-4aa6-a505-f7e8478386b1/if-vines-could-talk-episode-108-free-run-cellars-%E2%80%93-under-new-owners" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px;padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:4px;transition:all .2s;"
+            onmouseover="this.style.borderColor='#00A8E1';this.style.color='#00A8E1'"
+            onmouseout="this.style.borderColor='rgba(255,255,255,.1)';this.style.color='rgba(255,255,255,.5)'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.4 17.4c-.12.24-.36.36-.6.36-.12 0-.24 0-.36-.12-2.4-1.44-5.4-1.8-8.88-.96-.36.12-.72-.12-.84-.48s.12-.72.48-.84c3.84-.84 7.08-.48 9.72 1.08.36.24.48.72.24 1.08l.24-.12zm1.08-2.88c-.12.36-.48.48-.84.36-2.76-1.68-6.96-2.16-10.2-1.2-.36.12-.72-.12-.84-.48-.12-.36.12-.72.48-.84 3.72-.96 8.28-.48 11.52 1.44.24.24.36.6.24.96l-.36-.24zm.12-2.88C15.6 9.72 9.6 9.6 6.12 10.68c-.48.12-.96-.12-1.08-.6-.12-.48.12-.96.6-1.08C9.6 7.8 16.2 8.04 20.04 10.32c.36.24.48.72.24 1.08-.12.36-.6.48-.96.24l.28-.96z"/></svg>
+            Amazon
+          </a>
+        </div>
+      </div>
     </div>
     <div class="f-col">
       <h4>Visit</h4>
       <ul>
         <li><a href="pages/contact.html">Hours &amp; Location</a></li>
         <li><a href="https://maps.google.com/?q=10062+Burgoyne+Rd+Berrien+Springs+MI" target="_blank" rel="noopener">Get Directions</a></li>
-        <li><a href="/cdn-cgi/l/email-protection#c2a1adacb6a3a1b682a4b0a1b5abaca7eca1adaf">Contact Us</a></li>
+        <li><a href="mailto:contact@frcwine.com">Contact Us</a></li>
       </ul>
     </div>
     <div class="f-col">
@@ -1076,83 +1143,124 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
       <h4>Contact</h4>
       <ul>
         <li><a href="tel:2698156885">(269) 815-6885</a></li>
-        <li><a href="/cdn-cgi/l/email-protection#a4c7cbcad0c5c7d0e4c2d6c7d3cdcac18ac7cbc9"><span class="__cf_email__" data-cfemail="c2a1adacb6a3a1b682a4b0a1b5abaca7eca1adaf">[email&#160;protected]</span></a></li>
+        <li><a href="mailto:contact@frcwine.com">contact@frcwine.com</a></li>
         <li><a href="https://freeruncellars.com">freeruncellars.com</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4>In the Community</h4>
+      <ul>
+        <li><a href="https://stjoetoday.com/member/free-run-cellars" target="_blank" rel="noopener">St. Joe Today</a></li>
+        <li><a href="https://business.harborcountry.org/list/member/free-run-cellars-145" target="_blank" rel="noopener">Harbor Country Chamber</a></li>
+        <li><a href="https://www.moodyonthemarket.com/free-run-cellars-to-begin-new-chapter-as-independent-winery/" target="_blank" rel="noopener">Moody on the Market</a></li>
+        <li><a href="https://www.lmswine.com" target="_blank" rel="noopener">Lake Michigan Shore AVA</a></li>
       </ul>
     </div>
   </div>
   <div class="f-bottom">
-    <span>© 2025 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+    <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
     <span><a href="/privacy">Privacy Policy</a> · <a href="/accessibility">Accessibility</a></span>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+// ── EmailJS init (replace with your keys) ──
+// emailjs.init('YOUR_PUBLIC_KEY');
+
+// ── Age Gate ──
+(function() {
+  if (sessionStorage.getItem('ageVerified')) return;
+  const gate = document.createElement('div');
+  gate.id = 'age-gate';
+  gate.innerHTML = `
+    <div id="age-box">
+      <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+        alt="Free Run Cellars" style="height:34px;filter:brightness(0) invert(1);margin-bottom:24px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;font-weight:300;color:#fff;margin-bottom:8px;">Welcome to Free Run Cellars</p>
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:32px;">Please confirm you are of legal drinking age</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button onclick="ageYes()" style="background:#537f71;border:none;color:#fff;padding:14px 32px;border-radius:4px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;">Yes, I am 21+</button>
+        <button onclick="ageNo()" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:14px 32px;border-radius:4px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;">No, take me back</button>
+      </div>
+      <p style="font-size:9px;color:rgba(255,255,255,.2);margin-top:24px;letter-spacing:1px;">Must be 21+ to purchase alcohol · freeruncellars.com</p>
+    </div>
+  `;
+  const style = document.createElement('style');
+  style.textContent = `
+    #age-gate { position:fixed;inset:0;background:rgba(5,12,8,.97);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px; }
+    #age-box { text-align:center;max-width:420px; }
+  `;
+  document.head.appendChild(style);
+  document.body.prepend(gate);
+})();
+
+function ageYes() {
+  sessionStorage.setItem('ageVerified', '1');
+  document.getElementById('age-gate').style.opacity = '0';
+  document.getElementById('age-gate').style.transition = 'opacity .4s';
+  setTimeout(() => document.getElementById('age-gate').remove(), 400);
+}
+function ageNo() { window.location.href = 'https://www.responsibility.org'; }
+
+// ── Newsletter subscribe ──
+async function subscribeNewsletter() {
+  const email = document.getElementById('nlEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('nlEmail').style.outline = '2px solid #e05c5c';
+    return;
+  }
+  document.getElementById('nlBtn').textContent = '...';
+  document.getElementById('nlBtn').disabled = true;
+
+  try {
+    // Option A: EmailJS (uncomment when keys are ready)
+    // await emailjs.send('YOUR_SERVICE_ID', 'YOUR_NEWSLETTER_TEMPLATE', {
+    //   subscriber_email: email,
+    //   to_email: 'contact@frcwine.com'
+    // });
+
+    // Option B: mailto fallback (works without EmailJS setup)
+    window.location.href = `mailto:contact@frcwine.com?subject=Newsletter Signup&body=New subscriber: ${email}`;
+
+    document.getElementById('nlForm').style.display = 'none';
+    document.getElementById('nlSuccess').style.display = 'block';
+  } catch(e) {
+    document.getElementById('nlBtn').textContent = 'Subscribe';
+    document.getElementById('nlBtn').disabled = false;
+  }
+}
 // Nav scroll
 const nav = document.getElementById('nav');
 const onScroll = () => nav.classList.toggle('solid', scrollY > 50);
 addEventListener('scroll', onScroll, { passive:true });
 onScroll();
 
-// Mobile hamburger
+// Mobile hamburger — simple CSS class toggle
 const burger = document.getElementById('burger');
 const links  = document.getElementById('navLinks');
-let menuOpen = false;
 
-function openMenu() {
-  menuOpen = true;
-  burger.classList.add('active');
-  links.style.cssText = `
-    display:flex !important; flex-direction:column; position:fixed;
-    top:74px; left:0; right:0; background:rgba(10,10,10,0.98);
-    padding:20px 28px 32px; gap:0;
-    box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:899;
-    border-top:1px solid rgba(115,152,133,0.2);
-  `;
-  links.querySelectorAll('a').forEach(a => {
-    a.style.color = 'rgba(255,255,255,0.8)';
-    a.style.padding = '14px 0';
-    a.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
-    a.style.fontSize = '11px';
-    a.style.letterSpacing = '2px';
-  });
-  // Show dropdown items inline on mobile
-  links.querySelectorAll('.drop-menu').forEach(d => {
-    d.style.cssText = `
-      display:block; position:static; transform:none;
-      background:transparent; box-shadow:none; border:none;
-      padding:0 0 0 16px; min-width:unset;
-    `;
-    d.querySelectorAll('a').forEach(a => {
-      a.style.color = 'rgba(115,152,133,0.8)';
-      a.style.padding = '10px 0';
-      a.style.fontSize = '10px';
-      a.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
-    });
-  });
-}
+burger.addEventListener('click', function(e) {
+  e.stopPropagation();
+  const isOpen = links.classList.contains('open');
+  links.classList.toggle('open', !isOpen);
+  burger.classList.toggle('open', !isOpen);
+});
 
-function closeMenu() {
-  menuOpen = false;
-  burger.classList.remove('active');
-  links.removeAttribute('style');
-  links.querySelectorAll('.drop-menu').forEach(d => d.removeAttribute('style'));
-  links.querySelectorAll('a').forEach(a => a.removeAttribute('style'));
-}
-
-burger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
-burger.addEventListener('touchstart', (e) => { e.preventDefault(); menuOpen ? closeMenu() : openMenu(); }, { passive: false });
-
-// Close menu when a link is clicked
-links.addEventListener('click', e => {
+// Close when a real link is tapped
+links.addEventListener('click', function(e) {
   if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
-    closeMenu();
+    links.classList.remove('open');
+    burger.classList.remove('open');
   }
 });
 
 // Close on outside tap
-document.addEventListener('click', e => {
-  if (menuOpen && !links.contains(e.target) && !burger.contains(e.target)) closeMenu();
+document.addEventListener('click', function(e) {
+  if (links.classList.contains('open') && !links.contains(e.target) && !burger.contains(e.target)) {
+    links.classList.remove('open');
+    burger.classList.remove('open');
+  }
 });
 
 // Scroll reveal

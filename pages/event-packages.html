@@ -76,11 +76,26 @@ nav.solid .nav-links a:hover { color:var(--teal); }
   transition:background .2s !important;
 }
 .nav-cta:hover { background:var(--teal-dk) !important; }
-.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
-.hamburger.active span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
-.hamburger.active span:nth-child(2) { opacity:0; }
-.hamburger.active span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
-.hamburger span { transition:transform .25s, opacity .25s, background .3s; }
+.hamburger {
+  display:none; flex-direction:column; gap:5px;
+  cursor:pointer; padding:10px;
+  background:none; border:none;
+  position:relative; z-index:1001;
+  pointer-events:all;
+  min-width:44px; min-height:44px;
+  align-items:center; justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hamburger span {
+  width:22px; height:2px; background:rgba(255,255,255,0.85);
+  border-radius:2px; display:block;
+  transition:transform .25s ease, opacity .25s ease;
+  pointer-events:none;
+}
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 .hamburger span { width:22px; height:1.5px; background:#fff; border-radius:2px; transition:background .3s; }
 nav.solid .hamburger span { background:var(--text); }
 
@@ -461,6 +476,42 @@ h1 em { font-style:normal; color:var(--teal-lt); }
   .included-grid { grid-template-columns:1fr; }
   .intro-imgs { grid-template-columns:1fr; }
 }
+
+@media (max-width:960px) {
+  .nav-links { display:none !important; }
+  .nav-links.open {
+    display:flex !important; flex-direction:column;
+    position:fixed; top:70px; left:0; right:0; bottom:0;
+    background:rgba(5,12,8,0.97);
+    padding:32px 28px 40px; gap:0;
+    overflow-y:auto; z-index:999;
+    border-top:1px solid rgba(115,152,133,0.2);
+    list-style:none;
+  }
+  .nav-links.open > li > a {
+    display:block; padding:16px 0;
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:rgba(255,255,255,0.85) !important;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .nav-links.open .has-drop .drop-menu {
+    display:block; position:static; transform:none;
+    background:transparent; box-shadow:none; border:none;
+    padding:0 0 8px 16px; min-width:unset;
+  }
+  .nav-links.open .has-drop .drop-menu li a {
+    color:rgba(115,152,133,0.85) !important;
+    font-size:11px; padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    display:block;
+  }
+  .nav-links.open .nav-cta {
+    background:#537f71; color:#fff !important;
+    border-radius:4px; padding:14px 0; text-align:center;
+    margin-top:16px; border:none !important;
+  }
+  .hamburger { display:flex; }
+}
 </style>
 </head>
 <body>
@@ -693,11 +744,9 @@ h1 em { font-style:normal; color:var(--teal-lt); }
       <p class="email-box-sub">Tell us your date, guest count, and what you're celebrating. We'll take it from there — no forms, no automated replies, just a real conversation.</p>
       <div class="email-display">
         <span class="email-display-icon">✉</span>
-        <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f0c00011b0e0c1b2f091d0c1806010a410c0002">[email&#160;protected]</a></span>
+        <span><a href="mailto:contact@frcwine.com">contact@frcwine.com</a></span>
       </div>
-      <a href="/cdn-cgi/l/email-protection#4e2d21203a2f2d3a0e283c2d3927202b602d2123713d3b2c242b2d3a731e3c27382f3a2b6e0b382b203a6e0b203f3b273c376eaccedd6e083c2b2b6e1c3b206e0d2b22222f3c3d682c212a377306276e1a3c273d266e2f202a6e1e3c2f3d262f203a26626b7e0a6b7e0f6b7e0a6b7e0f0769236e27203a2b3c2b3d3a2b2a6e27206e26213d3a2720296e2f206e2b382b203a6e2f3a6e083c2b2b6e1c3b206e0d2b22222f3c3d606b7e0a6b7e0f6b7e0a6b7e0f0b382b203a6e3a373e2b746b7e0a6b7e0f0f3e3e3c213627232f3a2b6e2a2f3a2b746b7e0a6b7e0f093b2b3d3a6e2d213b203a746b7e0a6b7e0f0f20373a262720296e2b223d2b746b7e0a6b7e0f6b7e0a6b7e0f1a262f20253d6f" class="btn-email">
-        <span>✉</span> Open in Mail App
-      </a>
+      <a href="mailto:contact@frcwine.com">contact@frcwine.com</a>
       <p class="email-note">Opens your default mail app with the details pre-filled.<br>Or copy the address above and send from anywhere.</p>
     </div>
   </div>
@@ -713,11 +762,11 @@ h1 em { font-style:normal; color:var(--teal-lt); }
     <a href="../index.html">Home</a>
     <a href="live-music-sundays.html">Live Music</a>
     <a href="events-calendar.html">Events</a>
-    <a href="/cdn-cgi/l/email-protection#670408091306041327011504100e09024904080a">Contact</a>
+    <a href="mailto:contact@frcwine.com">contact@frcwine.com</a>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // Nav scroll
 const nav = document.getElementById('nav');
 const onScroll = () => nav.classList.toggle('solid', scrollY > 50);
