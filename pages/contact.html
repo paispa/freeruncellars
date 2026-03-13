@@ -76,19 +76,23 @@ nav.solid .nav-links a:hover { color:var(--teal); }
   display:none; flex-direction:column; gap:5px;
   cursor:pointer; padding:10px;
   background:none; border:none;
-  position:relative; z-index:1001;
-  pointer-events:all;
+  position:relative; z-index:10000;
+  pointer-events:auto;
   min-width:44px; min-height:44px;
   align-items:center; justify-content:center;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 .hamburger span {
-  width:22px; height:2px; background:rgba(255,255,255,0.85);
+  width:22px; height:2px; background:rgba(255,255,255,0.9);
   border-radius:2px; display:block;
-  transition:transform .25s ease, opacity .25s ease;
+  transition:transform .25s ease, opacity .2s ease;
   pointer-events:none;
 }
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
 .hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
 .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
@@ -670,31 +674,6 @@ const nav = document.getElementById('nav');
 const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
 addEventListener('scroll', onScroll, { passive:true });
 onScroll();
-
-// Mobile hamburger
-const burger = document.getElementById('burger');
-const links  = document.getElementById('navLinks');
-
-burger.addEventListener('click', function(e) {
-  e.stopPropagation();
-  const isOpen = links.classList.contains('open');
-  links.classList.toggle('open', !isOpen);
-  burger.classList.toggle('open', !isOpen);
-});
-
-links.addEventListener('click', function(e) {
-  if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
-    links.classList.remove('open');
-    burger.classList.remove('open');
-  }
-});
-
-document.addEventListener('click', function(e) {
-  if (links.classList.contains('open') && !links.contains(e.target) && !burger.contains(e.target)) {
-    links.classList.remove('open');
-    burger.classList.remove('open');
-  }
-});
 
 // Scroll reveal
 const io = new IntersectionObserver(entries => {
