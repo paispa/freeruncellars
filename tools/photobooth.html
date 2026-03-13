@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Free Run Cellars – Photo Booth</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #739885;
+    --sage-dark: #4e6e5d;
+    --bg: #000000;
+    --bg2: #0a0a0a;
+    --cream: #ffffff;
+    --text: #e8f0eb;
+    --muted: #4e6e5d;
+    --green: #4caf7d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+
+  body {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999;
+    overflow: hidden !important;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+  }
+  .screen.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .ambient {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(115,152,133,0.10) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 50%, rgba(78,110,93,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 0%, rgba(115,152,133,0.07) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* ─── ATTRACT ─── */
+  #screenAttract { gap: 32px; cursor: pointer; user-select: none; }
+
+  .attract-logo {
+    height: 56px;
+    filter: brightness(0) invert(1);
+    animation: floatLogo 4s ease-in-out infinite;
+  }
+  @keyframes floatLogo {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .attract-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 300; letter-spacing: 4px;
+    color: var(--cream); text-align: center;
+  }
+
+  .attract-sub { font-size: 11px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
+
+  .attract-divider {
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sage), transparent);
+  }
+
+  .attract-tap {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.97); }
+  }
+
+  .tap-circle {
+    width: 90px; height: 90px; border-radius: 50%;
+    border: 2px solid var(--sage);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .tap-circle::before {
+    content: '';
+    position: absolute; inset: -8px; border-radius: 50%;
+    border: 1px solid rgba(115,152,133,0.3);
+    animation: ripple 2.5s ease-in-out infinite;
+  }
+  @keyframes ripple {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.4); opacity: 0; }
+  }
+  .tap-icon { font-size: 32px; }
+  .tap-label { font-size: 10px; letter-spacing: 3px; color: var(--sage); text-transform: uppercase; }
+
+  /* ─── MODE SELECT ─── */
+  #screenMode { gap: 36px; }
+
+  .mode-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-style: italic; color: var(--sage); letter-spacing: 2px;
+  }
+
+  .mode-options { display: flex; gap: 24px; }
+
+  .mode-card {
+    width: 200px; height: 160px;
+    border: 1px solid rgba(115,152,133,0.4); border-radius: 16px;
+    background: rgba(10,10,10,0.8);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; cursor: pointer; transition: all 0.3s ease;
+    position: relative; overflow: hidden;
+  }
+  .mode-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(115,152,133,0.1), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .mode-card:hover, .mode-card:active {
+    border-color: var(--sage); transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(115,152,133,0.2);
+  }
+  .mode-card:hover::before { opacity: 1; }
+  .mode-icon { font-size: 36px; }
+  .mode-label { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--cream); }
+  .mode-sub { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* ─── CAMERA ─── */
+  #screenCamera { background: #000; }
+
+  .camera-container {
+    position: relative; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  #videoEl { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+
+  .camera-overlay { position: absolute; inset: 0; pointer-events: none; }
+
+  .bracket { position: absolute; width: 40px; height: 40px; border-color: rgba(115,152,133,0.7); border-style: solid; }
+  .bracket.tl { top: 20px; left: 20px; border-width: 2px 0 0 2px; }
+  .bracket.tr { top: 20px; right: 20px; border-width: 2px 2px 0 0; }
+  .bracket.bl { bottom: 60px; left: 20px; border-width: 0 0 2px 2px; }
+  .bracket.br { bottom: 60px; right: 20px; border-width: 0 2px 2px 0; }
+
+  .cam-watermark {
+    position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    opacity: 0.5; pointer-events: none;
+  }
+  .cam-watermark img { height: 20px; filter: brightness(0) invert(1); }
+  .cam-watermark span { font-size: 8px; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
+
+  .strip-progress {
+    position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px;
+  }
+  .strip-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: background 0.3s; }
+  .strip-dot.done { background: var(--sage); }
+  .strip-dot.current { background: #fff; box-shadow: 0 0 8px #fff; }
+
+  .camera-controls {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 56px;
+    background: rgba(0,0,0,0.90); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center; gap: 40px;
+    border-top: 1px solid rgba(115,152,133,0.3); pointer-events: all;
+  }
+
+  .shutter-btn {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+    border: 3px solid rgba(255,255,255,0.2); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 0 24px rgba(115,152,133,0.4);
+    position: relative; top: -14px;
+  }
+  .shutter-btn:active { transform: scale(0.92); }
+
+  .cam-back-btn {
+    font-size: 10px; letter-spacing: 2px; color: var(--muted);
+    text-transform: uppercase; cursor: pointer; padding: 8px 16px;
+    position: relative; top: -14px;
+  }
+
+  /* ─── COUNTDOWN ─── */
+  .countdown-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; z-index: 10;
+  }
+  .countdown-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 180px; font-weight: 700;
+    color: rgba(115,152,133,0.95);
+    text-shadow: 0 0 60px rgba(115,152,133,0.5);
+    opacity: 0; transform: scale(1.5); transition: all 0.3s ease;
+  }
+  .countdown-num.show { opacity: 1; transform: scale(1); }
+  .countdown-num.hide { opacity: 0; transform: scale(0.5); }
+
+  .flash-white {
+    position: absolute; inset: 0; background: white; opacity: 0;
+    pointer-events: none; z-index: 20; transition: opacity 0.05s;
+  }
+  .flash-white.go { opacity: 1; }
+
+  /* ─── PREVIEW ─── */
+  #screenPreview { gap: 0; padding: 0; flex-direction: row; align-items: stretch; justify-content: stretch; }
+
+  .preview-photo-col {
+    flex: 1.4; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #000; position: relative; padding: 20px; gap: 14px;
+    border-right: 1px solid rgba(115,152,133,0.2); min-width: 0;
+  }
+
+  .preview-photo-col .retake-btn {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: transparent; border: 1px solid rgba(115,152,133,0.35); border-radius: 6px;
+    color: var(--muted); font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    padding: 8px 20px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .preview-photo-col .retake-btn:hover { border-color: var(--sage); color: var(--sage); }
+
+  .preview-imgs {
+    display: flex; flex-direction: row; gap: 10px;
+    align-items: center; justify-content: center;
+    width: 100%; max-height: calc(100vh - 80px); overflow: hidden;
+  }
+
+  .preview-img-frame { border-radius: 6px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.7); flex-shrink: 1; }
+  .preview-img-frame img { display: block; max-height: calc(100vh - 100px); max-width: 100%; width: auto; object-fit: contain; }
+
+  .preview-payment-col {
+    width: 340px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 36px 28px; gap: 18px; background: #000; position: relative;
+  }
+  .preview-payment-col::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, #4e6e5d, #739885, #4e6e5d, transparent);
+  }
+
+  .pay-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 300; font-style: italic;
+    color: var(--cream); text-align: center; letter-spacing: 1px; line-height: 1.3;
+  }
+
+  .pay-price-badge { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .pay-price { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 700; color: var(--sage); line-height: 1; }
+  .pay-price-label { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; line-height: 1.5; }
+  .pay-divider { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--sage-dark), transparent); }
+
+  .pay-email-input {
+    width: 100%; background: rgba(10,20,14,0.6);
+    border: 1px solid rgba(115,152,133,0.35); border-radius: 10px;
+    color: var(--cream); font-family: 'Montserrat', sans-serif;
+    font-size: 15px; padding: 14px 16px; outline: none;
+    transition: border-color 0.2s; text-align: center;
+  }
+  .pay-email-input:focus { border-color: var(--sage); }
+  .pay-email-input::placeholder { color: var(--muted); font-size: 13px; }
+
+  .pay-btn-primary {
+    width: 100%; padding: 15px; background: var(--sage);
+    border: none; border-radius: 10px; color: #000;
+    font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s; box-shadow: 0 4px 24px rgba(115,152,133,0.25);
+  }
+  .pay-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .pay-free-option {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    width: 100%; padding: 12px 16px;
+    border: 1px solid rgba(115,152,133,0.2); border-radius: 10px;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .pay-free-option:hover { border-color: rgba(115,152,133,0.5); }
+  .pay-free-label { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .pay-free-sub { font-size: 9px; color: rgba(78,110,93,0.6); letter-spacing: 0.5px; text-align: center; }
+  .pay-privacy { font-size: 8px; color: rgba(78,110,93,0.45); letter-spacing: 0.5px; text-align: center; line-height: 1.6; }
+
+  /* ─── THANKS ─── */
+  #screenThanks { gap: 28px; }
+
+  .thanks-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+    display: flex; align-items: center; justify-content: center; font-size: 36px;
+    box-shadow: 0 0 40px rgba(115,152,133,0.35);
+    animation: scaleIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  @keyframes scaleIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .thanks-title { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; font-style: italic; color: var(--cream); letter-spacing: 2px; }
+  .thanks-sub { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-align: center; line-height: 1.7; }
+  .thanks-divider { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, var(--sage), transparent); }
+  .review-nudge { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--sage); letter-spacing: 1px; text-align: center; }
+
+  .thanks-restart {
+    margin-top: 12px; padding: 12px 32px; background: transparent;
+    border: 1px solid rgba(115,152,133,0.4); border-radius: 8px; color: var(--muted);
+    font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+  }
+  .thanks-restart:hover { border-color: var(--sage); color: var(--sage); }
+
+  /* ─── SENDING OVERLAY ─── */
+  .sending-overlay {
+    position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.92);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .sending-overlay.active { opacity: 1; pointer-events: all; }
+  .sending-spinner {
+    width: 50px; height: 50px; border-radius: 50%;
+    border: 2px solid rgba(115,152,133,0.25); border-top-color: #739885;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .sending-label { font-size: 11px; letter-spacing: 3px; color: var(--sage); text-transform: uppercase; }
+
+  /* ─── SETUP BANNER ─── */
+  .setup-banner {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: #739885; color: #000; padding: 8px 20px;
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .setup-banner a { color: #000; text-decoration: underline; cursor: pointer; }
+  .setup-banner-close { position: absolute; right: 16px; cursor: pointer; font-size: 14px; background: none; border: none; color: #000; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- SETUP BANNER — auto-hides when CONFIG is filled in -->
+<div class="setup-banner" id="setupBanner">
+  ⚙️ EmailJS not yet configured —
+  <a onclick="showSetupInstructions()">tap here for instructions</a>
+  <button class="setup-banner-close" onclick="document.getElementById('setupBanner').style.display='none'">✕</button>
+</div>
+
+<div class="ambient"></div>
+
+<div class="sending-overlay" id="sendingOverlay">
+  <div class="sending-spinner"></div>
+  <div class="sending-label">Sending your photo…</div>
+</div>
+
+<!-- ATTRACT -->
+<div class="screen active" id="screenAttract" onclick="goTo('screenMode')">
+  <img class="attract-logo"
+    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    alt="Free Run Cellars" onerror="this.style.display='none'">
+  <div class="attract-title">Capture the Moment</div>
+  <div class="attract-divider"></div>
+  <div class="attract-sub">Free Run Cellars · Berrien Springs, MI</div>
+  <div class="attract-tap">
+    <div class="tap-circle"><span class="tap-icon">📸</span></div>
+    <div class="tap-label">Tap anywhere to start</div>
+  </div>
+</div>
+
+<!-- MODE SELECT -->
+<div class="screen" id="screenMode">
+  <div class="mode-title">Choose your session</div>
+  <div class="mode-options">
+    <div class="mode-card" onclick="startSession(1)">
+      <div class="mode-icon">🥂</div>
+      <div class="mode-label">1 Photo</div>
+      <div class="mode-sub">Single shot</div>
+    </div>
+    <div class="mode-card" onclick="startSession(3)">
+      <div class="mode-icon">🍷</div>
+      <div class="mode-label">3 Photos</div>
+      <div class="mode-sub">Strip of three</div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMERA -->
+<div class="screen" id="screenCamera">
+  <div class="camera-container">
+    <video id="videoEl" autoplay playsinline muted></video>
+    <canvas id="hiddenCanvas" style="display:none"></canvas>
+    <div class="camera-overlay">
+      <div class="bracket tl"></div><div class="bracket tr"></div>
+      <div class="bracket bl"></div><div class="bracket br"></div>
+      <div class="strip-progress" id="stripProgress"></div>
+      <div class="cam-watermark">
+        <img src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95" alt="">
+        <span>freeruncellars.com</span>
+      </div>
+      <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-num" id="countdownNum"></div>
+      </div>
+      <div class="flash-white" id="flashWhite"></div>
+    </div>
+    <div class="camera-controls">
+      <div class="cam-back-btn" onclick="goBack()">← Back</div>
+      <div class="shutter-btn" id="shutterBtn" onclick="startCountdown()">📷</div>
+      <div style="width:80px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW + PAYMENT -->
+<div class="screen" id="screenPreview">
+  <div class="preview-photo-col">
+    <div class="preview-imgs" id="previewImgs"></div>
+    <button class="retake-btn" onclick="retake()">↺ Retake</button>
+  </div>
+  <div class="preview-payment-col">
+    <div class="pay-title">Your photo,<br>on us.</div>
+    <div class="pay-divider"></div>
+    <input class="pay-email-input" type="email" id="emailInput"
+      placeholder="your@email.com" autocomplete="email" inputmode="email">
+    <button class="pay-btn-primary" id="payBtn" onclick="handleSendFree()">
+      Email My Photo ✦
+    </button>
+    <div class="pay-free-option" onclick="handleTip()">
+      <div class="pay-free-label">🍷 Leave a tip</div>
+      <div class="pay-free-sub">Any amount, no pressure — it means the world.</div>
+    </div>
+    <div class="pay-free-option" onclick="handleReview()">
+      <div class="pay-free-label">⭐ Leave a review</div>
+      <div class="pay-free-sub">Share your experience on Google.</div>
+    </div>
+    <div class="pay-privacy">Your email is only used to send your photo.<br>We never share your information.</div>
+  </div>
+</div>
+
+<!-- THANKS -->
+<div class="screen" id="screenThanks">
+  <div class="thanks-icon">🍷</div>
+  <div class="thanks-title">Cheers!</div>
+  <div class="thanks-sub">Your photo is on its way.<br>Thank you for visiting Free Run Cellars.</div>
+  <div class="thanks-divider"></div>
+  <div class="review-nudge">Loved your visit? Leave us a review — it means the world.</div>
+  <button class="thanks-restart" onclick="restart()">Take Another Photo →</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+// ╔══════════════════════════════════════════════════════════╗
+// ║  CONFIGURATION — fill in your keys before going live    ║
+// ╚══════════════════════════════════════════════════════════╝
+const CONFIG = {
+  emailjs_public_key:       'g6DwhDedu0HLzfAw8',
+  emailjs_service_id:       'service_9x5fnh1',
+  emailjs_template_single:  'emailjs_template_single',  // 1-photo template
+  emailjs_template_strip:   'emailjs_template_strip',   // 3-photo template
+  godaddy_payment_url:      'https://ea09434a-3b46-47e9-a8f7-23b2df1c0f7d.paylinks.godaddy.com/photobooth',
+  logo_url: 'https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95',
+};
+
+const CONFIGURED = CONFIG.emailjs_public_key !== 'g6DwhDedu0HLzfAw8';
+
+function getTemplateId() {
+  return capturedFrames.length === 1
+    ? CONFIG.emailjs_template_single
+    : CONFIG.emailjs_template_strip;
+}
+
+if (CONFIGURED) {
+  emailjs.init({ publicKey: CONFIG.emailjs_public_key });
+  document.getElementById('setupBanner').style.display = 'none';
+}
+
+// ─── State ───────────────────────────────────────────────────
+let totalShots = 1, capturedFrames = [], stream = null;
+let countingDown = false, currentShot = 0, logoImage = null;
+
+const _logoImg = new Image();
+_logoImg.crossOrigin = 'anonymous';
+_logoImg.onload = () => { logoImage = _logoImg; };
+_logoImg.src = CONFIG.logo_url;
+
+// ─── Navigation ──────────────────────────────────────────────
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goBack() { stopCamera(); goTo('screenMode'); }
+
+// ─── Camera ──────────────────────────────────────────────────
+async function startSession(shots) {
+  totalShots = shots; capturedFrames = []; currentShot = 0;
+  updateStripProgress(); goTo('screenCamera'); await startCamera();
+}
+
+async function startCamera() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false
+    });
+    document.getElementById('videoEl').srcObject = stream;
+  } catch(e) { alert('Camera access needed. Please allow camera permissions and reload.'); }
+}
+
+function stopCamera() {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+}
+
+function updateStripProgress() {
+  const el = document.getElementById('stripProgress');
+  if (totalShots === 1) { el.innerHTML = ''; return; }
+  el.innerHTML = Array.from({ length: totalShots }, (_, i) => {
+    const cls = i < currentShot ? 'done' : i === currentShot ? 'current' : '';
+    return `<div class="strip-dot ${cls}"></div>`;
+  }).join('');
+}
+
+// ─── Countdown & capture ──────────────────────────────────────
+function startCountdown() {
+  if (countingDown) return;
+  countingDown = true;
+  document.getElementById('shutterBtn').style.pointerEvents = 'none';
+  runCountdown(3);
+}
+
+function runCountdown(n) {
+  const numEl = document.getElementById('countdownNum');
+  if (n === 0) { numEl.className = 'countdown-num hide'; captureFrame(); return; }
+  numEl.textContent = n;
+  numEl.className = 'countdown-num show';
+  setTimeout(() => { numEl.className = 'countdown-num hide'; setTimeout(() => runCountdown(n - 1), 300); }, 900);
+}
+
+function captureFrame() {
+  const video = document.getElementById('videoEl');
+  const canvas = document.getElementById('hiddenCanvas');
+  const vw = video.videoWidth || 1280, vh = video.videoHeight || 720;
+  canvas.width = vw; canvas.height = vh;
+  const ctx = canvas.getContext('2d');
+  ctx.translate(vw, 0); ctx.scale(-1, 1);
+  ctx.drawImage(video, 0, 0, vw, vh);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  addWatermark(ctx, vw, vh);
+  capturedFrames.push(canvas.toDataURL('image/jpeg', 0.92));
+  currentShot++; updateStripProgress();
+  const flashEl = document.getElementById('flashWhite');
+  flashEl.classList.add('go');
+  setTimeout(() => flashEl.classList.remove('go'), 120);
+  countingDown = false;
+  document.getElementById('shutterBtn').style.pointerEvents = 'all';
+  if (currentShot < totalShots) {
+    setTimeout(() => startCountdown(), 1500);
+  } else {
+    setTimeout(() => showPreview(), 600);
+  }
+}
+
+function addWatermark(ctx, w, h) {
+  const logoH = Math.round(h * 0.055), pad = Math.round(w * 0.022);
+  if (logoImage) {
+    const ratio = logoImage.naturalWidth / logoImage.naturalHeight;
+    ctx.save(); ctx.globalAlpha = 0.75;
+    ctx.drawImage(logoImage, pad, h - logoH - pad, Math.round(logoH * ratio), logoH);
+    ctx.restore();
+  }
+  const fontSize = Math.round(h * 0.022);
+  ctx.save(); ctx.globalAlpha = 0.65; ctx.fillStyle = '#fff';
+  ctx.font = `300 ${fontSize}px 'Montserrat', sans-serif`;
+  ctx.textAlign = 'right'; ctx.fillText('freeruncellars.com', w - pad, h - pad); ctx.restore();
+  const dateStr = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+  const smallFont = Math.round(h * 0.018);
+  ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = '#fff';
+  ctx.font = `300 ${smallFont}px 'Montserrat', sans-serif`;
+  ctx.textAlign = 'right'; ctx.fillText(dateStr, w - pad, pad + smallFont); ctx.restore();
+}
+
+// ─── Preview ──────────────────────────────────────────────────
+function showPreview() {
+  stopCamera();
+  const area = document.getElementById('previewImgs');
+  area.innerHTML = '';
+  const btn = document.getElementById('payBtn');
+  btn.textContent = 'Email My Photo ✦';
+  btn.disabled = false; btn.style.opacity = '1'; btn.onclick = handleSendFree;
+  document.getElementById('emailInput').value = '';
+  capturedFrames.forEach(src => {
+    const wrap = document.createElement('div');
+    wrap.className = 'preview-img-frame';
+    const img = document.createElement('img');
+    img.src = src;
+    if (capturedFrames.length === 3) {
+      img.style.maxHeight = 'calc((100vh - 80px) / 1.1)';
+      img.style.maxWidth = 'calc((100vw - 380px) / 3 - 10px)';
+    } else {
+      img.style.maxHeight = 'calc(100vh - 80px)';
+      img.style.maxWidth = 'calc(100vw - 380px)';
+    }
+    wrap.appendChild(img); area.appendChild(wrap);
+  });
+  goTo('screenPreview');
+}
+
+function retake() {
+  capturedFrames = []; currentShot = 0; updateStripProgress();
+  goTo('screenCamera'); startCamera();
+}
+
+// ─── Send & Tip handlers ─────────────────────────────────────
+function validateEmail() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email || !email.includes('@')) {
+    const input = document.getElementById('emailInput');
+    input.focus(); input.style.borderColor = '#e05555';
+    input.placeholder = 'Enter your email first ↑';
+    setTimeout(() => { input.style.borderColor = ''; input.placeholder = 'your@email.com'; }, 2500);
+    return false;
+  }
+  return true;
+}
+
+function handleSendFree() {
+  if (!validateEmail()) return;
+  sendPhoto();
+}
+
+function handleTip() {
+  if (!validateEmail()) return;
+  if (CONFIG.godaddy_payment_url !== 'https://ea09434a-3b46-47e9-a8f7-23b2df1c0f7d.paylinks.godaddy.com/photobooth') {
+    window.open(CONFIG.godaddy_payment_url, '_blank');
+  }
+  sendPhoto();
+}
+
+function handleReview() {
+  if (!validateEmail()) return;
+  window.open('https://g.page/r/CYbLnDx6hWxXEAE/review', '_blank');
+  sendPhoto();
+}
+
+async function sendPhoto() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email || !email.includes('@')) return;
+  if (!CONFIGURED) { showSending(1800, () => goTo('screenThanks')); return; }
+  showSending();
+  try {
+    await emailjs.send(CONFIG.emailjs_service_id, getTemplateId(), {
+      to_email: email,
+      photo_1: capturedFrames[0] || '',
+      photo_2: capturedFrames[1] || '',
+      photo_3: capturedFrames[2] || '',
+      photo_count: capturedFrames.length,
+      note: 'Thank you for visiting — we hope to see you again soon!',
+      date: new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' }),
+    });
+    hideSending(); goTo('screenThanks');
+  } catch(err) {
+    hideSending();
+    alert('Send failed — check your EmailJS config. Error: ' + (err.text || err));
+  }
+}
+
+function showSending(duration, cb) {
+  document.getElementById('sendingOverlay').classList.add('active');
+  if (duration) setTimeout(() => { hideSending(); if (cb) cb(); }, duration);
+}
+function hideSending() { document.getElementById('sendingOverlay').classList.remove('active'); }
+
+// ─── Restart ──────────────────────────────────────────────────
+function restart() {
+  capturedFrames = []; currentShot = 0;
+  document.getElementById('emailInput').value = '';
+  const btn = document.getElementById('payBtn');
+  if (btn) { btn.textContent = 'Email My Photo ✦'; btn.disabled = false; btn.style.opacity = '1'; btn.onclick = handleSendFree; }
+  goTo('screenAttract');
+}
+
+// ─── Setup help ───────────────────────────────────────────────
+function showSetupInstructions() {
+  alert(
+`FREE RUN CELLARS PHOTO BOOTH — EMAILJS SETUP
+
+1. Go to emailjs.com → sign up (free)
+2. Add Email Service → connect Gmail (contact@frcwine.com)
+3. Create Email Template with these variables:
+     {{to_email}}   ← recipient
+     {{photo_1}}    ← base64 image (attach as inline)
+     {{photo_2}}    ← base64 image (for 3-shot strip)
+     {{photo_3}}    ← base64 image (for 3-shot strip)
+     {{date}}       ← date of visit
+     {{note}}       ← thank you message
+
+4. Copy from EmailJS dashboard:
+     Public Key   → CONFIG.emailjs_public_key
+     Service ID   → CONFIG.emailjs_service_id
+     Template ID  → CONFIG.emailjs_template_id
+
+5. GoDaddy Payments:
+     Create a $5 payment link → CONFIG.godaddy_payment_url
+
+6. Save the file — the setup banner will disappear automatically.
+`
+  );
+}
+</script>
+</body>
+</html>
