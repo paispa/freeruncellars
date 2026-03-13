@@ -7,11 +7,5 @@
       "destination": "https://www.frcwine.com/$1",
       "permanent": true
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/images/:path*",
-      "destination": "/public/images/:path*"
-    }
   ]
 }

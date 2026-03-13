@@ -41,14 +41,14 @@
   --nav-h:     74px;
 
   /* ── GODADDY CDN IMAGES ── */
-  --img-hero:    url('/images/FR-exterior-2.jpg');
-  --img-story:   url('/images/R06A2367.jpeg');
-  --img-patio:   url('/images/FR-high-tables-2.jpg');
-  --img-wine:    url('/images/FR-glass-on-table.jpg');
-  --img-events:  url('/images/FR_Outside_LiveMusic_2021_02.JPG');
-  --img-wedding: url('/images/untitled-985.jpeg');
-  --img-pond:    url('/images/IMG_4007.jpeg');
-  --img-sign:    url('/images/FR-snow-entrance-sign.jpg');
+  --img-hero:    url('/public/images/FR-exterior-2.jpg');
+  --img-story:   url('/public/images/R06A2367.jpeg');
+  --img-patio:   url('/public/images/FR-high-tables-2.jpg');
+  --img-wine:    url('/public/images/FR-glass-on-table.jpg');
+  --img-events:  url('/public/images/FR_Outside_LiveMusic_2021_02.JPG');
+  --img-wedding: url('/public/images/untitled-985.jpeg');
+  --img-pond:    url('/public/images/IMG_4007.jpeg');
+  --img-sign:    url('/public/images/FR-snow-entrance-sign.jpg');
 }
 
 /* ── RESET ── */
@@ -714,28 +714,28 @@ nav.solid .hamburger span { background: #333; }
 /* ── Mobile image fixes ── */
 @media (max-width: 768px) {
   .hero-bg {
-    background-position: center 20% !important;
+    background-position: 60% center !important;
     background-size: cover !important;
   }
   .story-img-inner {
-    background-position: center 30% !important;
-  }
-  .exp-bg {
-    background-position: center 50% !important;
-  }
-  .photo-break {
-    background-position: center 40% !important;
-    background-size: cover !important;
-  }
-  .events-banner {
     background-position: center 25% !important;
     background-size: cover !important;
   }
+  .photo-break {
+    background-position: center 35% !important;
+    background-size: cover !important;
+  }
+  .events-banner {
+    background-position: center 20% !important;
+    background-size: cover !important;
+  }
   .private-img-bg {
-    background-position: center 30% !important;
+    background-position: center 25% !important;
+    background-size: cover !important;
   }
   .grounds-img-bg {
-    background-position: center 50% !important;
+    background-position: center 40% !important;
+    background-size: cover !important;
   }
 }
 
@@ -747,7 +747,7 @@ nav.solid .hamburger span { background: #333; }
 <!-- NAV -->
 <nav id="nav">
   <img class="nav-logo"
-    src="/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+    src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
     alt="Free Run Cellars">
   <ul class="nav-links" id="navLinks">
     <li><a href="pages/about.html">Our Story</a></li>
@@ -1126,7 +1126,7 @@ nav.solid .hamburger span { background: #333; }
   <div class="footer-grid">
     <div class="f-brand">
       <img class="f-brand-logo"
-        src="/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+        src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
         alt="Free Run Cellars">
       <p>A boutique winery in Berrien Springs, Michigan rooted in the belief that a guest is akin to God. Small-batch wines, open doors, and 10 acres to call your own for the afternoon.</p>
       <div class="f-social">
@@ -1227,7 +1227,7 @@ nav.solid .hamburger span { background: #333; }
   gate.id = 'age-gate';
   gate.innerHTML = `
     <div id="age-box">
-      <img src="/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+      <img src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
         alt="Free Run Cellars" style="height:34px;filter:brightness(0) invert(1);margin-bottom:24px;">
       <p style="font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;font-weight:300;color:#fff;margin-bottom:8px;">Welcome to Free Run Cellars</p>
       <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:32px;">Please confirm you are of legal drinking age</p>
