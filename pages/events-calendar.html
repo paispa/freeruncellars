@@ -291,19 +291,43 @@
   }
 
   
-  @media (max-width:960px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hamburger {
-  display:none; flex-direction:column; gap:5px;
-  cursor:pointer; padding:10px;
-  background:none; border:none;
-  position:relative; z-index:10000;
-  pointer-events:auto;
-  min-width:44px; min-height:44px;
-  align-items:center; justify-content:center;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  /* ── MOBILE NAV ── */
+@media (max-width:960px) {
+  .nav-links {
+    display:none;
+    flex-direction:column;
+    position:fixed; top:70px; left:0; right:0; bottom:0;
+    background:rgba(5,12,8,0.97);
+    padding:32px 28px 40px;
+    overflow-y:auto; z-index:9998;
+    border-top:1px solid rgba(115,152,133,0.2);
+    list-style:none; gap:0; margin:0;
+  }
+  .nav-links.open { display:flex; }
+  .nav-links > li > a {
+    display:block; padding:16px 0;
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:rgba(255,255,255,0.85) !important;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .nav-links .has-drop .drop-menu {
+    display:block; position:static; transform:none;
+    background:transparent; box-shadow:none; border:none;
+    padding:0 0 8px 16px; min-width:unset;
+  }
+  .nav-links .has-drop .drop-menu li a {
+    color:rgba(115,152,133,0.85) !important;
+    font-size:11px; padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    display:block;
+  }
+  .nav-links .nav-cta {
+    background:#537f71 !important; color:#fff !important;
+    border-radius:4px !important; padding:14px 18px !important;
+    text-align:center !important; margin-top:16px !important;
+    display:block !important;
+  }
+  .hamburger { display:flex !important; }
 }
 .hamburger span {
   width:22px; height:2px; background:rgba(255,255,255,0.9);
@@ -315,22 +339,8 @@
 .hamburger.open span:nth-child(2) { opacity:0; }
 .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
-.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
-.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
 
-@media (max-width:960px) {
-  .nav-links { display:none !important; }
-  .nav-links.open {
-    display:flex !important; flex-direction:column;
-    position:fixed; top:70px; left:0; right:0; bottom:0;
-    background:rgba(5,12,8,0.97);
-    padding:32px 28px 40px; gap:0;
-    overflow-y:auto; z-index:999;
-    border-top:1px solid rgba(115,152,133,0.2);
-    list-style:none;
-  }
   .nav-links.open > li > a {
     display:block; padding:16px 0;
     font-size:13px; letter-spacing:2px; text-transform:uppercase;
@@ -684,32 +694,35 @@ loadCalendar();
   var links  = document.getElementById('navLinks');
   if (!burger || !links) return;
 
-  burger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    var open = links.classList.contains('open');
-    links.classList.toggle('open', !open);
-    burger.classList.toggle('open', !open);
-  });
-
-  links.addEventListener('click', function(e) {
-    if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
-      links.classList.remove('open');
-      burger.classList.remove('open');
-    }
-  });
-
-  document.addEventListener('click', function(e) {
-    if (links.classList.contains('open') &&
-        !links.contains(e.target) && !burger.contains(e.target)) {
-      links.classList.remove('open');
-      burger.classList.remove('open');
-    }
-  });
-})();
-
+  
 </script>
 
 <script>
+
+// ── Mobile nav ──
+document.addEventListener('DOMContentLoaded', function() {
+  var burger = document.getElementById('burger');
+  var navLinks = document.getElementById('navLinks');
+  if (!burger || !navLinks) return;
+  burger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    navLinks.classList.toggle('open');
+    burger.classList.toggle('open');
+  });
+  navLinks.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
+      navLinks.classList.remove('open');
+      burger.classList.remove('open');
+    }
+  });
+  document.addEventListener('click', function(e) {
+    if (navLinks.classList.contains('open') &&
+        !navLinks.contains(e.target) && !burger.contains(e.target)) {
+      navLinks.classList.remove('open');
+      burger.classList.remove('open');
+    }
+  });
+});
 </script>
 </body>
 </html>

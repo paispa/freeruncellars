@@ -226,8 +226,8 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 ## Pending Items
 
-- [ ] EmailJS keys → fill into photo booth CONFIG
-- [ ] GoDaddy tip/payment link → fill into photo booth CONFIG
+- [x] EmailJS keys → filled in (service_9x5fnh1, g6DwhDedu0HLzfAw8)
+- [x] GoDaddy tip/payment link → filled in
 - [ ] Switch `freeruncellars.com` DNS to Vercel when ready
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)

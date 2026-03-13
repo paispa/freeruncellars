@@ -85,18 +85,7 @@ nav.solid .nav-links a { color:var(--grey); }
 nav.solid .nav-links a:hover { color:var(--teal); }
 
 /* Mobile overlay menu */
-@media (max-width:960px) {
-  .nav-links {
-    display:none;
-    flex-direction:column;
-    position:fixed; top:70px; left:0; right:0; bottom:0;
-    background:rgba(5,12,8,0.97);
-    padding:32px 28px 40px;
-    overflow-y:auto; z-index:999;
-    border-top:1px solid rgba(115,152,133,0.2);
-    list-style:none; gap:0;
-  }
-  .nav-links.open { display:flex; }
+
   .nav-links > li > a {
     display:block; padding:16px 0;
     font-size:13px; letter-spacing:2px; text-transform:uppercase;
@@ -119,52 +108,26 @@ nav.solid .nav-links a:hover { color:var(--teal); }
     border-radius:4px !important; padding:14px 18px !important;
     text-align:center; margin-top:16px; display:block;
   }
-  .hamburger { display:flex; }
-}
-
-.has-drop { position:relative; }
-.drop-menu {
-  display:none; position:absolute; top:100%; left:50%;
-  transform:translateX(-50%);
-  background:#fff; border-radius:8px;
-  box-shadow:0 8px 28px rgba(0,0,0,.11);
-  padding:6px 0; min-width:180px; list-style:none;
-  margin-top:0;
-}
-.has-drop { padding-bottom:2px; }
-.has-drop:hover .drop-menu { display:block; }
-.drop-menu li a {
-  display:block; padding:10px 18px;
-  font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
-  color:var(--grey) !important;
-}
-.drop-menu li a:hover { color:var(--teal) !important; background:var(--teal-pale); }
-
-.nav-cta {
-  background:var(--teal); color:#fff !important;
-  padding:9px 18px; border-radius:4px;
-  font-size:10px !important; letter-spacing:2px !important;
-  transition:background .2s !important;
-}
-.nav-cta:hover { background:var(--teal-dk) !important; }
-
-.hamburger {
+  .hamburger {
   display:none; flex-direction:column; gap:5px;
   cursor:pointer; padding:10px;
   background:none; border:none;
-  position:relative; z-index:1001;
-  pointer-events:all;
+  position:relative; z-index:9999;
+  pointer-events:auto;
   min-width:44px; min-height:44px;
   align-items:center; justify-content:center;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 .hamburger span {
-  width:22px; height:2px; background:#fff;
+  width:22px; height:2px; background:rgba(255,255,255,0.9);
   border-radius:2px; display:block;
-  transition:transform .25s ease, opacity .25s ease, background .3s;
+  transition:transform .25s ease, opacity .2s ease;
   pointer-events:none;
 }
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 nav.solid .hamburger span { background:#333; }
 .hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
@@ -388,7 +351,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 }
 .photo-break-scrim {
   position:absolute; inset:0;
-  background:rgba(8,18,12,.38);
+  background:rgba(8,18,12,.58);
   display:flex; align-items:center; justify-content:center;
   flex-direction:column; gap:12px;
 }
@@ -400,8 +363,9 @@ h1 em { font-style:normal; color:#a8d4be; }
   padding:0 32px;
 }
 .photo-break-sub {
-  font-size:10px; letter-spacing:4px; text-transform:uppercase;
-  color:rgba(255,255,255,.75); text-align:center;
+  font-size:11px; letter-spacing:4px; text-transform:uppercase;
+  color:rgba(255,255,255,.95); text-align:center;
+  text-shadow:0 1px 12px rgba(0,0,0,.8);
 }
 
 /* ── WINES ── */
@@ -692,6 +656,44 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
   .nl-form { flex-direction:column; border-radius:6px; }
   .footer-grid { grid-template-columns:1fr; }
 }
+/* ── MOBILE NAV ── */
+@media (max-width:960px) {
+  .nav-links {
+    display:none;
+    flex-direction:column;
+    position:fixed; top:70px; left:0; right:0; bottom:0;
+    background:rgba(5,12,8,0.97);
+    padding:32px 28px 40px;
+    overflow-y:auto; z-index:9998;
+    border-top:1px solid rgba(115,152,133,0.2);
+    list-style:none; gap:0; margin:0;
+  }
+  .nav-links.open { display:flex; }
+  .nav-links > li > a {
+    display:block; padding:16px 0;
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:rgba(255,255,255,0.85) !important;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .nav-links .has-drop .drop-menu {
+    display:block; position:static; transform:none;
+    background:transparent; box-shadow:none; border:none;
+    padding:0 0 8px 16px; min-width:unset;
+  }
+  .nav-links .has-drop .drop-menu li a {
+    color:rgba(115,152,133,0.85) !important;
+    font-size:11px; padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    display:block;
+  }
+  .nav-links .nav-cta {
+    background:#537f71 !important; color:#fff !important;
+    border-radius:4px !important; padding:14px 18px !important;
+    text-align:center !important; margin-top:16px !important;
+    display:block !important;
+  }
+  .hamburger { display:flex !important; }
+}
 </style>
 </head>
 <body>
@@ -716,9 +718,7 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
     <li><a href="pages/contact.html">Visit Us</a></li>
     <li><a href="pages/reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
-  <button class="hamburger" id="burger" aria-label="Open menu" type="button">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="hamburger" id="burger" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
 </nav>
 
 <!-- HERO -->
@@ -729,7 +729,7 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
     <p class="eyebrow">Berrien Springs, Michigan</p>
     <h1>A place that feels like<br><em>yours</em> the moment you arrive</h1>
     <p class="hero-sub">Small-batch wines, live music, and 10 acres of Southwest Michigan beauty — 90 minutes from Chicago.</p>
-    <p class="hero-philosophy">Atithidevo Bhav &nbsp;·&nbsp; the guest is akin to God</p>
+    <p class="hero-philosophy">A place just to <em style="font-style:italic;color:#a8d4be;">be</em></p>
     <div class="btn-row">
       <a href="pages/contact.html" class="btn-fill">Plan Your Visit</a>
       <a href="pages/events-calendar.html" class="btn-line">Upcoming Events</a>
@@ -1168,7 +1168,32 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+// ── Mobile nav ──
+document.addEventListener('DOMContentLoaded', function() {
+  var burger = document.getElementById('burger');
+  var navLinks = document.getElementById('navLinks');
+  if (!burger || !navLinks) return;
+  burger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    navLinks.classList.toggle('open');
+    burger.classList.toggle('open');
+  });
+  navLinks.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
+      navLinks.classList.remove('open');
+      burger.classList.remove('open');
+    }
+  });
+  document.addEventListener('click', function(e) {
+    if (navLinks.classList.contains('open') &&
+        !navLinks.contains(e.target) && !burger.contains(e.target)) {
+      navLinks.classList.remove('open');
+      burger.classList.remove('open');
+    }
+  });
+});
+</script>
 <script>
 // ── EmailJS init (replace with your keys) ──
 // emailjs.init('YOUR_PUBLIC_KEY');
@@ -1241,16 +1266,6 @@ const onScroll = () => nav.classList.toggle('solid', scrollY > 50);
 addEventListener('scroll', onScroll, { passive:true });
 onScroll();
 
-// Mobile hamburger — simple CSS class toggle
-const burger = document.getElementById('burger');
-const links  = document.getElementById('navLinks');
-
-burger.addEventListener('click', function(e) {
-  e.stopPropagation();
-  const isOpen = links.classList.contains('open');
-  links.classList.toggle('open', !isOpen);
-  burger.classList.toggle('open', !isOpen);
-});
 
 // Close when a real link is tapped
 links.addEventListener('click', function(e) {
@@ -1271,4 +1286,22 @@ document.addEventListener('click', function(e) {
 // Scroll reveal
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.i
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold:0.12 });
+document.querySelectorAll('.exp-item, .pkg, .fact-item, .r-card, .f-col').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity .55s ease, transform .55s ease';
+  io.observe(el);
+});
+document.querySelectorAll('.exp-item.visible, .pkg.visible, .fact-item.visible, .r-card.visible, .f-col.visible').forEach(el => {
+  el.style.opacity = '1';
+  el.style.transform = 'translateY(0)';
+});
+</script>
+</body>
+</html>
