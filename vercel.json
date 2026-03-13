@@ -1,10 +1,4 @@
 {
-  "functions": {
-    "api/calendar.js": {
-      "memory": 128,
-      "maxDuration": 10
-    }
-  },
   "redirects": [
     {
       "source": "/(.*)",
