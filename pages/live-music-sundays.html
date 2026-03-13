@@ -79,6 +79,10 @@ nav.solid .nav-links a:hover { color:var(--teal); }
 }
 .nav-cta:hover { background:var(--teal-dk) !important; }
 .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger.active span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity:0; }
+.hamburger.active span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+.hamburger span { transition:transform .25s, opacity .25s, background .3s; }
 .hamburger span { width:22px; height:1.5px; background:#fff; border-radius:2px; transition:background .3s; }
 nav.solid .hamburger span { background:var(--text); }
 
@@ -657,20 +661,61 @@ onScroll();
 // Mobile hamburger
 const burger = document.getElementById('burger');
 const links  = document.getElementById('navLinks');
-let open = false;
-burger.addEventListener('click', () => {
-  open = !open;
-  if (open) {
-    links.style.cssText = `
-      display:flex; flex-direction:column; position:fixed;
-      top:var(--nav-h); left:0; right:0; background:#fff;
-      padding:20px 28px 28px; gap:18px;
-      box-shadow:0 8px 24px rgba(0,0,0,.1); z-index:899;
+let menuOpen = false;
+
+function openMenu() {
+  menuOpen = true;
+  burger.classList.add('active');
+  links.style.cssText = `
+    display:flex !important; flex-direction:column; position:fixed;
+    top:74px; left:0; right:0; background:rgba(10,10,10,0.98);
+    padding:20px 28px 32px; gap:0;
+    box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:899;
+    border-top:1px solid rgba(115,152,133,0.2);
+  `;
+  links.querySelectorAll('a').forEach(a => {
+    a.style.color = 'rgba(255,255,255,0.8)';
+    a.style.padding = '14px 0';
+    a.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+    a.style.fontSize = '11px';
+    a.style.letterSpacing = '2px';
+  });
+  // Show dropdown items inline on mobile
+  links.querySelectorAll('.drop-menu').forEach(d => {
+    d.style.cssText = `
+      display:block; position:static; transform:none;
+      background:transparent; box-shadow:none; border:none;
+      padding:0 0 0 16px; min-width:unset;
     `;
-    links.querySelectorAll('a').forEach(a => a.style.color = 'var(--grey)');
-  } else {
-    links.removeAttribute('style');
+    d.querySelectorAll('a').forEach(a => {
+      a.style.color = 'rgba(115,152,133,0.8)';
+      a.style.padding = '10px 0';
+      a.style.fontSize = '10px';
+      a.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+    });
+  });
+}
+
+function closeMenu() {
+  menuOpen = false;
+  burger.classList.remove('active');
+  links.removeAttribute('style');
+  links.querySelectorAll('.drop-menu').forEach(d => d.removeAttribute('style'));
+  links.querySelectorAll('a').forEach(a => a.removeAttribute('style'));
+}
+
+burger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
+
+// Close menu when a link is clicked
+links.addEventListener('click', e => {
+  if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
+    closeMenu();
   }
+});
+
+// Close on outside tap
+document.addEventListener('click', e => {
+  if (menuOpen && !links.contains(e.target) && !burger.contains(e.target)) closeMenu();
 });
 
 // Scroll reveal

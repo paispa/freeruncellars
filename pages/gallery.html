@@ -69,6 +69,10 @@ nav.solid { background:rgba(10,10,10,.97); box-shadow:0 1px 0 rgba(255,255,255,.
 }
 .nav-cta:hover { background:var(--teal-dk) !important; }
 .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger.active span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity:0; }
+.hamburger.active span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+.hamburger span { transition:transform .25s, opacity .25s, background .3s; }
 .hamburger span { width:22px; height:1.5px; background:rgba(255,255,255,.7); border-radius:2px; }
 
 /* ── HEADER ── */

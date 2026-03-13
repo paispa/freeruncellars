@@ -289,6 +289,19 @@
     .event-name { font-size: 18px; }
     .event-body { padding: 12px 14px; }
   }
+
+  /* ── Mobile nav ── */
+  @media (max-width:960px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  }
+  .hamburger { display: none; }
+  .hamburger span { width: 22px; height: 1.5px; background: rgba(255,255,255,0.8); border-radius: 2px; transition: transform .25s, opacity .25s; }
+  .hamburger.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
 </style>
 </head>
 <body>
@@ -314,6 +327,7 @@
     <li><a href="contact.html">Visit Us</a></li>
     <li><a href="reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
+  <div class="hamburger" id="burger"><span></span><span></span><span></span></div>
 </nav>
 
 <div class="ambient"></div>
@@ -357,7 +371,22 @@
 const ICS_URL = 'https://outlook.office365.com/owa/calendar/df404380dcae40ce9d5e5cae23fc980b@frcwine.com/2bffd8e2d0c6472484e93fb53c70a23b18073354100263554948/calendar.ics';
 
 // CORS proxy — free, no signup needed
-const PROXY   = 'https://corsproxy.io/?url=';
+// CORS proxies — tries each in order until one works
+const PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+async function fetchWithProxy(url) {
+  for (const proxy of PROXIES) {
+    try {
+      const res = await fetch(proxy(url), { signal: AbortSignal.timeout(8000) });
+      if (res.ok) return res;
+    } catch(e) { /* try next */ }
+  }
+  throw new Error('All proxies failed');
+}
 
 // ─────────────────────────────────────────────────────────────────────
 //  HOW TO ADD IMAGES & DETAILS TO YOUR EVENTS
@@ -573,7 +602,7 @@ function showError() {
 async function loadCalendar() {
   showLoading();
   try {
-    const res = await fetch(PROXY + encodeURIComponent(ICS_URL));
+    const res = await fetchWithProxy(ICS_URL);
     if (!res.ok) throw new Error('fetch failed');
     const text = await res.text();
     allEvents = parseICS(text);
@@ -597,5 +626,56 @@ document.getElementById('filterBar').addEventListener('click', e => {
 loadCalendar();
 </script>
 
+<script>
+// Mobile hamburger
+(function() {
+  const burger = document.getElementById('burger');
+  const links  = document.getElementById('navLinks');
+  if (!burger || !links) return;
+  let menuOpen = false;
+
+  function openMenu() {
+    menuOpen = true;
+    burger.classList.add('active');
+    links.style.cssText = `
+      display:flex !important; flex-direction:column; position:fixed;
+      top:74px; left:0; right:0; background:rgba(10,10,10,0.98);
+      padding:20px 28px 32px; gap:0; list-style:none;
+      box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:899;
+      border-top:1px solid rgba(115,152,133,0.2);
+    `;
+    links.querySelectorAll('a').forEach(a => {
+      a.style.color = 'rgba(255,255,255,0.8)';
+      a.style.padding = '14px 0';
+      a.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+      a.style.fontSize = '11px';
+      a.style.letterSpacing = '2px';
+      a.style.display = 'block';
+    });
+    links.querySelectorAll('.drop-menu').forEach(d => {
+      d.style.cssText = 'display:block;position:static;transform:none;background:transparent;box-shadow:none;border:none;padding:0 0 0 16px;min-width:unset;';
+      d.querySelectorAll('a').forEach(a => {
+        a.style.color = 'rgba(115,152,133,0.8)';
+        a.style.fontSize = '10px';
+      });
+    });
+  }
+
+  function closeMenu() {
+    menuOpen = false;
+    burger.classList.remove('active');
+    links.removeAttribute('style');
+    links.querySelectorAll('.drop-menu, a').forEach(el => el.removeAttribute('style'));
+  }
+
+  burger.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
+  links.addEventListener('click', e => {
+    if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') closeMenu();
+  });
+  document.addEventListener('click', e => {
+    if (menuOpen && !links.contains(e.target) && !burger.contains(e.target)) closeMenu();
+  });
+})();
+</script>
 </body>
 </html>
