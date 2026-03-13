@@ -123,7 +123,7 @@ h2.on-dark em { color:var(--teal-lt); }
 }
 .hero-bg {
   position:absolute; inset:0;
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-199.jpeg');
+  background-image:url('../public/images/untitled-199.jpeg');
   background-size:cover; background-position:center 20%;
   transform:scale(1.04);
   animation:hZoom 14s ease-out forwards;
@@ -193,11 +193,11 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 }
 .intro-img:hover .intro-img-bg { transform:scale(1.04); }
 .intro-img-1 .intro-img-bg {
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-716.jpeg');
+  background-image:url('../public/images/untitled-716.jpeg');
   background-position:center;
 }
 .intro-img-2 .intro-img-bg {
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-987.jpeg');
+  background-image:url('../public/images/untitled-985.jpeg');
   background-position:center 20%;
 }
 
@@ -253,13 +253,13 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 }
 .pkg-card:hover .pkg-img-bg { transform:scale(1.05); }
 .pkg-img-1 .pkg-img-bg {
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/R06A1556.jpeg');
+  background-image:url('../public/images/R06A1556.jpeg');
 }
 .pkg-img-2 .pkg-img-bg {
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-589.jpeg');
+  background-image:url('../public/images/untitled-589.jpeg');
   background-position:center top;
 }.pkg-img-3 .pkg-img-bg {
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-985.jpeg');
+  background-image:url('../public/images/untitled-985.jpeg');
   background-position:center 20%;
 }
 
@@ -312,7 +312,7 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 .photo-break { height:420px; position:relative; overflow:hidden; }
 .photo-break-bg {
   position:absolute; inset:0;
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-991.jpeg');
+  background-image:url('../public/images/untitled-985.jpeg');
   background-size:cover; background-position:center 40%;
 }
 .photo-break-scrim {
@@ -343,7 +343,7 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 }
 .caterer-img-bg {
   position:absolute; inset:0;
-  background-image:url('https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/untitled-601.jpeg');
+  background-image:url('../public/images/untitled-601.jpeg');
   background-size:cover; background-position:center 30%;
   transition:transform .6s ease;
 }
@@ -536,6 +536,28 @@ nav.solid .hamburger span { background: #333; }
   }
 }
 
+
+/* ── Desktop dropdown ── */
+.has-drop { position: relative; cursor: pointer; }
+.drop-menu {
+  display: none;
+  position: absolute; top: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%);
+  background: #fff; border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  padding: 8px 0; min-width: 190px;
+  list-style: none; z-index: 9000;
+}
+.has-drop:hover .drop-menu { display: block; }
+.drop-menu li a {
+  display: block; padding: 11px 20px;
+  font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; font-weight: 600;
+  color: #333 !important; white-space: nowrap;
+  transition: color 0.2s, background 0.2s;
+}
+.drop-menu li a:hover { color: #537f71 !important; background: rgba(83,127,113,.06); }
+
 </style>
 </head>
 <body>
@@ -543,7 +565,7 @@ nav.solid .hamburger span { background: #333; }
 <!-- NAV -->
 <nav id="nav">
   <img class="nav-logo"
-    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
     alt="Free Run Cellars">
   <ul class="nav-links" id="navLinks">
     <li><a href="about.html">Our Story</a></li>
@@ -779,7 +801,7 @@ nav.solid .hamburger span { background: #333; }
 <!-- FOOTER -->
 <footer class="page-footer">
   <img class="footer-logo"
-    src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+    src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
     alt="Free Run Cellars">
   <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
   <div class="footer-links">
