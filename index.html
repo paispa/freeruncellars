@@ -92,7 +92,7 @@ nav.solid .nav-links a:hover { color:var(--teal); }
     color:rgba(255,255,255,0.85) !important;
     border-bottom:1px solid rgba(255,255,255,0.07);
   }
-  .nav-links .has-drop .drop-menu {
+  .nav-links.open .has-drop .drop-menu {
     display:block; position:static; transform:none;
     background:transparent; box-shadow:none; border:none;
     padding:0 0 8px 16px; min-width:unset;
@@ -182,7 +182,7 @@ h2.on-dark em { color:var(--teal-lt); }
 .hero-bg {
   position:absolute; inset:0;
   background-image:var(--img-hero);
-  background-size:cover; background-position:center 40%;
+  background-size:cover; background-position:center 30%;
   transform:scale(1.04);
   animation:hZoom 14s ease-out forwards;
 }
@@ -267,7 +267,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 .story-img-inner {
   position:absolute; inset:0;
   background-image:var(--img-story);
-  background-size:cover; background-position:center 15%;
+  background-size:cover; background-position:center 20%;
   transition:transform .7s ease;
 }
 .story-img:hover .story-img-inner { transform:scale(1.03); }
@@ -334,7 +334,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 .photo-break-bg {
   position:absolute; inset:0;
   background-image:var(--img-patio);
-  background-size:cover; background-position:center 35%;
+  background-size:cover; background-position:center 50%;
 }
 .photo-break-scrim {
   position:absolute; inset:0;
@@ -367,7 +367,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 .wines-img-bg {
   position:absolute; inset:0;
   background-image:var(--img-wine);
-  background-size:cover; background-position:center;
+  background-size:cover; background-position:center 40%;
 }
 .wines-tag {
   position:absolute; bottom:28px; left:28px;
@@ -394,7 +394,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 .eb-bg {
   position:absolute; inset:0;
   background-image:var(--img-events);
-  background-size:cover; background-position:center 30%;
+  background-size:cover; background-position:center 25%;
 }
 .eb-scrim { position:absolute; inset:0; background:rgba(8,18,12,.68); }
 .eb-body {
@@ -419,7 +419,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 .private-img-bg {
   position:absolute; inset:0;
   background-image:var(--img-wedding);
-  background-size:cover; background-position:center 20%;
+  background-size:cover; background-position:center 30%;
   transition:transform .7s ease;
 }
 .private-img:hover .private-img-bg { transform:scale(1.03); }
@@ -668,7 +668,7 @@ nav.solid .hamburger span { background: #333; }
     border-bottom: 1px solid rgba(255,255,255,0.07);
     text-decoration: none;
   }
-  .nav-links .has-drop .drop-menu {
+  .nav-links.open .has-drop .drop-menu {
     display: block !important;
     position: static; transform: none;
     background: transparent; box-shadow: none; border: none;
