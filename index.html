@@ -119,19 +119,6 @@ nav.solid .nav-links a:hover { color:var(--teal); }
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
-.hamburger span {
-  width:22px; height:2px; background:rgba(255,255,255,0.9);
-  border-radius:2px; display:block;
-  transition:transform .25s ease, opacity .2s ease;
-  pointer-events:none;
-}
-.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity:0; }
-.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-nav.solid .hamburger span { background:#333; }
-.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
-.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
 /* ── BUTTONS ── */
 .btn-fill {
@@ -618,38 +605,7 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
 .f-bottom a:hover { color:#fff; }
 
 /* ── RESPONSIVE ── */
-@media (max-width:960px) {
-  nav { padding:0 24px; }
-  .hero-body { padding:0 28px 64px; }
-  .scroll-hint { display:none; }
-  .strip { justify-content:flex-start; }
-  .strip-item { padding:13px 18px; font-size:9.5px; }
-  .story { grid-template-columns:1fr; }
-  .story-img { min-height:340px; }
-  .story-content { padding:52px 28px; }
-  .experience { padding:72px 28px; }
-  .exp-grid { grid-template-columns:1fr 1fr; }
-  .wines { padding:72px 28px; }
-  .wines-inner { grid-template-columns:1fr; gap:40px; }
-  .wines-img { height:340px; }
-  .events-banner { height:380px; }
-  .private { padding:72px 28px; }
-  .private-split { grid-template-columns:1fr; gap:36px; }
-  .private-img { height:340px; }
-  .packages { grid-template-columns:1fr; }
-  .grounds-inner { grid-template-columns:1fr; }
-  .grounds-content { padding:56px 28px; }
-  .reviews { padding:72px 28px; }
-  .reviews-grid { grid-template-columns:1fr; max-width:480px; }
-  .visit { grid-template-columns:1fr; }
-  .visit-img { min-height:260px; }
-  .visit-content { padding:56px 28px; }
-  .fruitful { padding:40px 28px; }
-  .newsletter { padding:56px 28px; }
-  footer { padding:48px 28px 24px; }
-  .footer-grid { grid-template-columns:1fr 1fr; gap:36px; }
-  .f-bottom { flex-direction:column; text-align:center; }
-}
+
 @media (max-width:600px) {
   .exp-grid { grid-template-columns:1fr; }
   .facts { grid-template-columns:1fr 1fr; }
@@ -657,43 +613,81 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
   .footer-grid { grid-template-columns:1fr; }
 }
 /* ── MOBILE NAV ── */
-@media (max-width:960px) {
+
+
+/* ── Hamburger button ── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px; height: 44px;
+  background: none; border: none;
+  cursor: pointer; padding: 10px;
+  position: relative; z-index: 10001;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.hamburger span {
+  display: block;
+  width: 22px; height: 2px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 2px;
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+nav.solid .hamburger span { background: #333; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile nav overlay ── */
+@media (max-width: 960px) {
+  .hamburger { display: flex; }
   .nav-links {
-    display:none;
-    flex-direction:column;
-    position:fixed; top:70px; left:0; right:0; bottom:0;
-    background:rgba(5,12,8,0.97);
-    padding:32px 28px 40px;
-    overflow-y:auto; z-index:9998;
-    border-top:1px solid rgba(115,152,133,0.2);
-    list-style:none; gap:0; margin:0;
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 70px; left: 0; right: 0; bottom: 0;
+    background: rgba(5,12,8,0.97);
+    padding: 28px 28px 40px;
+    overflow-y: auto;
+    z-index: 10000;
+    border-top: 1px solid rgba(115,152,133,0.2);
+    list-style: none;
+    gap: 0; margin: 0;
   }
-  .nav-links.open { display:flex; }
+  .nav-links.open { display: flex !important; }
   .nav-links > li > a {
-    display:block; padding:16px 0;
-    font-size:13px; letter-spacing:2px; text-transform:uppercase;
-    color:rgba(255,255,255,0.85) !important;
-    border-bottom:1px solid rgba(255,255,255,0.07);
+    display: block;
+    padding: 15px 0;
+    font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    text-decoration: none;
   }
   .nav-links .has-drop .drop-menu {
-    display:block; position:static; transform:none;
-    background:transparent; box-shadow:none; border:none;
-    padding:0 0 8px 16px; min-width:unset;
+    display: block !important;
+    position: static; transform: none;
+    background: transparent; box-shadow: none; border: none;
+    padding: 0 0 8px 16px; min-width: unset;
   }
   .nav-links .has-drop .drop-menu li a {
-    color:rgba(115,152,133,0.85) !important;
-    font-size:11px; padding:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    display:block;
+    color: rgba(115,152,133,0.85) !important;
+    font-size: 11px; padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: block; letter-spacing: 1.5px;
   }
   .nav-links .nav-cta {
-    background:#537f71 !important; color:#fff !important;
-    border-radius:4px !important; padding:14px 18px !important;
-    text-align:center !important; margin-top:16px !important;
-    display:block !important;
+    background: #537f71 !important; color: #fff !important;
+    border-radius: 4px !important; padding: 13px 18px !important;
+    text-align: center !important; margin-top: 16px !important;
+    display: block !important; letter-spacing: 2px !important;
   }
-  .hamburger { display:flex !important; }
 }
+
 </style>
 </head>
 <body>
@@ -1169,30 +1163,6 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-// ── Mobile nav ──
-document.addEventListener('DOMContentLoaded', function() {
-  var burger = document.getElementById('burger');
-  var navLinks = document.getElementById('navLinks');
-  if (!burger || !navLinks) return;
-  burger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    navLinks.classList.toggle('open');
-    burger.classList.toggle('open');
-  });
-  navLinks.addEventListener('click', function(e) {
-    if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
-      navLinks.classList.remove('open');
-      burger.classList.remove('open');
-    }
-  });
-  document.addEventListener('click', function(e) {
-    if (navLinks.classList.contains('open') &&
-        !navLinks.contains(e.target) && !burger.contains(e.target)) {
-      navLinks.classList.remove('open');
-      burger.classList.remove('open');
-    }
-  });
-});
 </script>
 <script>
 // ── EmailJS init (replace with your keys) ──
@@ -1302,6 +1272,48 @@ document.querySelectorAll('.exp-item.visible, .pkg.visible, .fact-item.visible, 
   el.style.opacity = '1';
   el.style.transform = 'translateY(0)';
 });
+
+// ── Mobile nav ──────────────────────────────────────────
+(function() {
+  function initNav() {
+    var burger   = document.getElementById('burger');
+    var navLinks = document.getElementById('navLinks');
+    if (!burger || !navLinks) return;
+
+    burger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = navLinks.classList.contains('open');
+      navLinks.classList.toggle('open', !isOpen);
+      burger.classList.toggle('open', !isOpen);
+    });
+
+    // Close on link tap
+    navLinks.addEventListener('click', function(e) {
+      var a = e.target.closest('a');
+      if (a && a.getAttribute('href') && a.getAttribute('href') !== '#') {
+        navLinks.classList.remove('open');
+        burger.classList.remove('open');
+      }
+    });
+
+    // Close on outside tap
+    document.addEventListener('click', function(e) {
+      if (navLinks.classList.contains('open') &&
+          !navLinks.contains(e.target) &&
+          !burger.contains(e.target)) {
+        navLinks.classList.remove('open');
+        burger.classList.remove('open');
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+
 </script>
 </body>
 </html>

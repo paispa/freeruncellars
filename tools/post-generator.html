@@ -472,22 +472,22 @@
 
 <script>
 // ── Config ──────────────────────────────────────────────────────────
-const ICS_URL   = 'https://outlook.office365.com/owa/calendar/df404380dcae40ce9d5e5cae23fc980b@frcwine.com/2bffd8e2d0c6472484e93fb53c70a23b18073354100263554948/calendar.ics';
-// CORS proxies — tries each in order until one works
-const PROXIES = [
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-];
+const ICS_URL = 'https://outlook.office365.com/owa/calendar/df404380dcae40ce9d5e5cae23fc980b@frcwine.com/2bffd8e2d0c6472484e93fb53c70a23b18073354100263554948/calendar.ics';
 
-async function fetchWithProxy(url) {
-  for (const proxy of PROXIES) {
+// 1st: own Vercel serverless proxy; fallbacks: public CORS proxies
+const ENDPOINTS = [
+  () => fetch('/api/calendar', { signal: AbortSignal.timeout(8000) }),
+  () => fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(ICS_URL), { signal: AbortSignal.timeout(8000) }),
+  () => fetch('https://corsproxy.io/?url=' + encodeURIComponent(ICS_URL), { signal: AbortSignal.timeout(8000) }),
+];
+async function fetchCalendar() {
+  for (const ep of ENDPOINTS) {
     try {
-      const res = await fetch(proxy(url), { signal: AbortSignal.timeout(8000) });
-      if (res.ok) return res;
-    } catch(e) { /* try next */ }
+      const res = await ep();
+      if (res.ok) { const t = await res.text(); if (t.includes('BEGIN:VCALENDAR')) return t; }
+    } catch(e) {}
   }
-  throw new Error('All proxies failed');
+  throw new Error('All calendar sources failed');
 }
 const FB_PAGE   = 'https://www.facebook.com/FreRunCellars'; // update if needed
 
@@ -551,9 +551,7 @@ function parseICS(text) {
 // ── Load calendar ────────────────────────────────────────────────────
 async function loadCalendar() {
   try {
-    const res  = await fetchWithProxy(ICS_URL);
-    if (!res.ok) throw new Error();
-    const text = await res.text();
+    const text = await fetchCalendar();
     const today = new Date(); today.setHours(0,0,0,0);
     events = parseICS(text).filter(e => {
       const d = new Date(e.date); d.setHours(0,0,0,0);
