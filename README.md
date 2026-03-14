@@ -14,10 +14,11 @@
 
 Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michigan. Currently built as static HTML hosted on Vercel, connected to `frcwine.com` (test domain) while `freeruncellars.com` remains on the existing GoDaddy site. Future plan is to migrate to WordPress.
 
-**Current stack:** Static HTML → GitHub → Vercel → frcwine.com  
-**Target stack:** WordPress (WP Engine or Kinsta) + custom theme based on these prototypes  
-**DNS:** frcwine.com managed via GoDaddy · A record `216.198.79.1` · CNAME `www` → Vercel  
+**Current stack:** Static HTML → GitHub → Vercel → frcwine.com
+**Target stack:** WordPress (WP Engine or Kinsta) + custom theme based on these prototypes
+**DNS:** frcwine.com managed via GoDaddy · A record `216.198.79.1` · CNAME `www` → Vercel
 **Redirect:** `frcwine.com` → `www.frcwine.com` handled by `vercel.json` in repo root
+**Clean URLs:** `"cleanUrls": true` in `vercel.json` — pages served at `/pages/about` (no `.html`)
 
 ---
 
@@ -228,6 +229,10 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 - [x] EmailJS keys → filled in (service_9x5fnh1, g6DwhDedu0HLzfAw8)
 - [x] GoDaddy tip/payment link → filled in
+- [x] Hamburger menu fixed on all pages
+- [x] Events calendar JS crash fixed
+- [x] Clean URLs enabled (`/pages/about` instead of `/pages/about.html`)
+- [x] Wines section mobile layout fixed (single-column stacking)
 - [ ] Switch `freeruncellars.com` DNS to Vercel when ready
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)

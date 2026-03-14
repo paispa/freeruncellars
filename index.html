@@ -84,42 +84,6 @@ nav.solid .nav-links a { color:var(--grey); }
 .nav-links a:hover { color:#fff; }
 nav.solid .nav-links a:hover { color:var(--teal); }
 
-/* Mobile overlay menu */
-
-  .nav-links > li > a {
-    display:block; padding:16px 0;
-    font-size:13px; letter-spacing:2px; text-transform:uppercase;
-    color:rgba(255,255,255,0.85) !important;
-    border-bottom:1px solid rgba(255,255,255,0.07);
-  }
-  .nav-links.open .has-drop .drop-menu {
-    display:block; position:static; transform:none;
-    background:transparent; box-shadow:none; border:none;
-    padding:0 0 8px 16px; min-width:unset;
-  }
-  .nav-links .has-drop .drop-menu li a {
-    color:rgba(115,152,133,0.85) !important;
-    font-size:11px; padding:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    display:block;
-  }
-  .nav-links .nav-cta {
-    background:var(--teal) !important; color:#fff !important;
-    border-radius:4px !important; padding:14px 18px !important;
-    text-align:center; margin-top:16px; display:block;
-  }
-  .hamburger {
-  display:none; flex-direction:column; gap:5px;
-  cursor:pointer; padding:10px;
-  background:none; border:none;
-  position:relative; z-index:9999;
-  pointer-events:auto;
-  min-width:44px; min-height:44px;
-  align-items:center; justify-content:center;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-
 /* ── BUTTONS ── */
 .btn-fill {
   background:var(--teal); color:#fff;
@@ -762,12 +726,24 @@ nav.solid .hamburger span { background: #333; }
     background-position: center 45% !important;
     background-size: cover !important;
   }
+  /* Wines section — stack to single column */
+  .wines { padding: 60px 24px !important; }
+  .wines-inner { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .wines-img { height: 320px !important; }
+  .wines-img-bg {
+    background-position: center 40% !important;
+    background-size: cover !important;
+  }
+  /* Hero body — reduce side padding so headline doesn't over-wrap */
+  .hero-body { padding: 0 24px 80px !important; }
 }
 
 @media (max-width: 480px) {
   .hero-bg { background-position: 55% center !important; }
+  .hero-body { padding: 0 20px 60px !important; }
   .story-img { height: 280px !important; }
   .photo-break { height: 220px !important; }
+  .wines-img { height: 260px !important; }
 }
 
 </style>
@@ -1319,22 +1295,6 @@ const onScroll = () => nav.classList.toggle('solid', scrollY > 50);
 addEventListener('scroll', onScroll, { passive:true });
 onScroll();
 
-
-// Close when a real link is tapped
-links.addEventListener('click', function(e) {
-  if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
-    links.classList.remove('open');
-    burger.classList.remove('open');
-  }
-});
-
-// Close on outside tap
-document.addEventListener('click', function(e) {
-  if (links.classList.contains('open') && !links.contains(e.target) && !burger.contains(e.target)) {
-    links.classList.remove('open');
-    burger.classList.remove('open');
-  }
-});
 
 // Scroll reveal
 const io = new IntersectionObserver(entries => {
