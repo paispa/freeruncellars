@@ -31,7 +31,7 @@ a { text-decoration:none; color:inherit; }
 
 /* ── NAV ── */
 nav {
-  position:fixed; inset:0 0 auto; z-index:900;
+  position:fixed; inset:0 0 auto; z-index:9000;
   height:var(--nav-h);
   display:flex; align-items:center; justify-content:space-between;
   padding:0 48px;
@@ -362,7 +362,7 @@ nav.solid .hamburger span { background: #333; }
   background: #fff; border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0,0,0,.12);
   padding: 8px 0; min-width: 190px;
-  list-style: none; z-index: 9000;
+  list-style: none; z-index: 9100;
 }
 .has-drop:hover .drop-menu { display: block; }
 .drop-menu li a {
@@ -381,9 +381,9 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- NAV -->
 <nav id="nav">
-  <img class="nav-logo"
+  <a href="../index.html" style="line-height:0"><img class="nav-logo"
     src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-    alt="Free Run Cellars">
+    alt="Free Run Cellars"></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="about.html">Our Story</a></li>
     <li><a href="wines.html">Wines</a></li>

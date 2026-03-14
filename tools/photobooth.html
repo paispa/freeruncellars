@@ -662,25 +662,57 @@ function handleReview() {
   sendPhoto();
 }
 
+// Compress a base64 image to reduce size for EmailJS
+function compressImage(dataUrl, maxWidth, quality) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'medium';
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // Check size and reduce further if still too big
+      let result = canvas.toDataURL('image/jpeg', quality);
+      if (result.length > 16000) { // ~12KB base64
+        result = canvas.toDataURL('image/jpeg', quality * 0.6);
+      }
+      resolve(result);
+    };
+    img.src = dataUrl;
+  });
+}
+
 async function sendPhoto() {
   const email = document.getElementById('emailInput').value.trim();
   if (!email || !email.includes('@')) return;
   if (!CONFIGURED) { showSending(1800, () => goTo('screenThanks')); return; }
   showSending();
   try {
+    // Compress aggressively — EmailJS 50KB limit covers ALL variables combined
+    // With 3 photos, each must be ~12KB max → 380px wide at 0.45 quality
+    const compressed = await Promise.all(
+      capturedFrames.map(f => compressImage(f, 380, 0.45))
+    );
+
     await emailjs.send(CONFIG.emailjs_service_id, getTemplateId(), {
       to_email: email,
-      photo_1: capturedFrames[0] || '',
-      photo_2: capturedFrames[1] || '',
-      photo_3: capturedFrames[2] || '',
+      photo_1: compressed[0] || '',
+      photo_2: compressed[1] || '',
+      photo_3: compressed[2] || '',
       photo_count: capturedFrames.length,
-      note: 'Thank you for visiting — we hope to see you again soon!',
+      winery_name: 'Free Run Cellars',
+      note: 'Thank you for visiting Free Run Cellars — we hope to see you again soon!',
       date: new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' }),
     });
     hideSending(); goTo('screenThanks');
   } catch(err) {
     hideSending();
-    alert('Send failed — check your EmailJS config. Error: ' + (err.text || err));
+    console.error('EmailJS error:', err);
+    alert('Send failed: ' + (err.text || err.message || JSON.stringify(err)));
   }
 }
 

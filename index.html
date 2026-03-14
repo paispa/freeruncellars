@@ -60,7 +60,7 @@ a    { text-decoration:none; color:inherit; }
 
 /* ── NAV ── */
 nav {
-  position:fixed; inset:0 0 auto; z-index:900;
+  position:fixed; inset:0 0 auto; z-index:9000;
   height:var(--nav-h);
   display:flex; align-items:center; justify-content:space-between;
   padding:0 48px;
@@ -698,7 +698,7 @@ nav.solid .hamburger span { background: #333; }
   background: #fff; border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0,0,0,.12);
   padding: 8px 0; min-width: 190px;
-  list-style: none; z-index: 9000;
+  list-style: none; z-index: 9100;
 }
 .has-drop:hover .drop-menu { display: block; }
 .drop-menu li a {
@@ -712,31 +712,62 @@ nav.solid .hamburger span { background: #333; }
 
 
 /* ── Mobile image fixes ── */
+/* Fix iOS Safari background-attachment:fixed zoom bug */
+.hero-bg, .story-img-inner, .photo-break-scrim,
+.exp-bg, .events-banner, .private-img-bg, .grounds-img-bg {
+  background-attachment: scroll;
+}
+
 @media (max-width: 768px) {
+  /* Hero — FR-exterior-2.jpg — landscape exterior */
+  .hero { min-height: 100svh; }
   .hero-bg {
     background-position: 60% center !important;
     background-size: cover !important;
   }
+  /* Story — R06A2367.jpeg — portrait couple toasting */
+  .story-section { min-height: auto; }
+  .story-img { height: 360px !important; }
   .story-img-inner {
-    background-position: center 25% !important;
-    background-size: cover !important;
-  }
-  .photo-break {
-    background-position: center 35% !important;
-    background-size: cover !important;
-  }
-  .events-banner {
     background-position: center 20% !important;
     background-size: cover !important;
   }
-  .private-img-bg {
-    background-position: center 25% !important;
+  /* Photo break — FR-snow-entrance-sign.jpg */
+  .photo-break { height: 260px !important; }
+  .photo-break-scrim {
+    background-position: center 50% !important;
     background-size: cover !important;
   }
-  .grounds-img-bg {
+  /* Wine section */
+  .exp-section { padding: 60px 20px !important; }
+  .exp-bg {
     background-position: center 40% !important;
     background-size: cover !important;
   }
+  /* Events banner — FR_Outside_LiveMusic */
+  .events-banner { height: 340px !important; }
+  .events-banner {
+    background-position: center 25% !important;
+    background-size: cover !important;
+  }
+  /* Private events */
+  .private-img { height: 320px !important; }
+  .private-img-bg {
+    background-position: center 30% !important;
+    background-size: cover !important;
+  }
+  /* Grounds/pond */
+  .grounds-img { min-height: 300px !important; }
+  .grounds-img-bg {
+    background-position: center 45% !important;
+    background-size: cover !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-bg { background-position: 55% center !important; }
+  .story-img { height: 280px !important; }
+  .photo-break { height: 220px !important; }
 }
 
 </style>
@@ -746,9 +777,9 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- NAV -->
 <nav id="nav">
-  <img class="nav-logo"
+  <a href="/" style="line-height:0"><img class="nav-logo"
     src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-    alt="Free Run Cellars">
+    alt="Free Run Cellars"></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="pages/about.html">Our Story</a></li>
     <li><a href="pages/wines.html">Wines</a></li>
