@@ -165,11 +165,11 @@
   .bracket { position: absolute; width: 40px; height: 40px; border-color: rgba(115,152,133,0.7); border-style: solid; }
   .bracket.tl { top: 20px; left: 20px; border-width: 2px 0 0 2px; }
   .bracket.tr { top: 20px; right: 20px; border-width: 2px 2px 0 0; }
-  .bracket.bl { bottom: 166px; left: 20px; border-width: 0 0 2px 2px; }
-  .bracket.br { bottom: 166px; right: 20px; border-width: 0 2px 2px 0; }
+  .bracket.bl { bottom: 184px; left: 20px; border-width: 0 0 2px 2px; }
+  .bracket.br { bottom: 184px; right: 20px; border-width: 0 2px 2px 0; }
 
   .cam-watermark {
-    position: absolute; bottom: 170px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 188px; left: 50%; transform: translateX(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 2px;
     opacity: 0.5; pointer-events: none;
   }
@@ -185,7 +185,7 @@
   .strip-dot.current { background: #fff; box-shadow: 0 0 8px #fff; }
 
   .camera-controls {
-    position: absolute; bottom: 58px; left: 0; right: 0; height: 100px;
+    position: absolute; bottom: 76px; left: 0; right: 0; height: 100px;
     background: rgba(0,0,0,0.90); backdrop-filter: blur(10px);
     display: flex; align-items: center; justify-content: center; gap: 40px;
     border-top: 1px solid rgba(115,152,133,0.3); pointer-events: all;
@@ -325,6 +325,15 @@
   .thanks-divider { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, var(--sage), transparent); }
   .review-nudge { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--sage); letter-spacing: 1px; text-align: center; }
 
+  .thanks-actions { display: flex; gap: 16px; }
+  .thanks-action-btn {
+    padding: 14px 28px; border: 1px solid rgba(115,152,133,0.4); border-radius: 10px;
+    color: var(--sage); font-family: 'Montserrat', sans-serif; font-size: 11px;
+    font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .thanks-action-btn:hover { border-color: var(--sage); background: rgba(115,152,133,0.1); }
+
   .thanks-restart {
     margin-top: 12px; padding: 12px 32px; background: transparent;
     border: 1px solid rgba(115,152,133,0.4); border-radius: 8px; color: var(--muted);
@@ -446,14 +455,6 @@
     <button class="pay-btn-primary" id="payBtn" onclick="handleSendFree()">
       Email My Photo ✦
     </button>
-    <div class="pay-free-option" onclick="handleTip()">
-      <div class="pay-free-label">🍷 Leave a tip</div>
-      <div class="pay-free-sub">Any amount, no pressure — it means the world.</div>
-    </div>
-    <div class="pay-free-option" onclick="handleReview()">
-      <div class="pay-free-label">⭐ Leave a review</div>
-      <div class="pay-free-sub">Share your experience on Google.</div>
-    </div>
     <div class="pay-privacy">Your email is only used to send your photo.<br>We never share your information.</div>
   </div>
 </div>
@@ -464,7 +465,10 @@
   <div class="thanks-title">Cheers!</div>
   <div class="thanks-sub">Your photo is on its way.<br>Thank you for visiting Free Run Cellars.</div>
   <div class="thanks-divider"></div>
-  <div class="review-nudge">Loved your visit? Leave us a review — it means the world.</div>
+  <div class="thanks-actions">
+    <div class="thanks-action-btn" onclick="tipOnly()">🍷 Leave a Tip</div>
+    <div class="thanks-action-btn" onclick="reviewOnly()">⭐ Leave a Review</div>
+  </div>
   <button class="thanks-restart" onclick="restart()">Take Another Photo →</button>
 </div>
 
@@ -592,11 +596,6 @@ function addWatermark(ctx, w, h) {
   ctx.save(); ctx.globalAlpha = 0.65; ctx.fillStyle = '#fff';
   ctx.font = `300 ${fontSize}px 'Montserrat', sans-serif`;
   ctx.textAlign = 'right'; ctx.fillText('freeruncellars.com', w - pad, h - pad); ctx.restore();
-  const dateStr = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
-  const smallFont = Math.round(h * 0.018);
-  ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = '#fff';
-  ctx.font = `300 ${smallFont}px 'Montserrat', sans-serif`;
-  ctx.textAlign = 'right'; ctx.fillText(dateStr, w - pad, pad + smallFont); ctx.restore();
 }
 
 // ─── Strip composition ────────────────────────────────────────
@@ -679,18 +678,14 @@ function handleSendFree() {
   sendPhoto();
 }
 
-function handleTip() {
-  if (!validateEmail()) return;
+function tipOnly() {
   if (CONFIG.godaddy_payment_url !== 'YOUR_GODADDY_PAYMENT_LINK') {
     window.open(CONFIG.godaddy_payment_url, '_blank');
   }
-  sendPhoto();
 }
 
-function handleReview() {
-  if (!validateEmail()) return;
+function reviewOnly() {
   window.open('https://g.page/r/CYbLnDx6hWxXEAE/review', '_blank');
-  sendPhoto();
 }
 
 // Compress a base64 image before uploading.
