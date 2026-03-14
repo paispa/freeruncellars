@@ -229,10 +229,15 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 - [x] EmailJS keys → filled in (service_9x5fnh1, g6DwhDedu0HLzfAw8)
 - [x] GoDaddy tip/payment link → filled in
-- [x] Hamburger menu fixed on all pages
+- [x] Hamburger menu fixed on all pages (missing `id="navLinks"`, leaked CSS, broken IIFEs)
 - [x] Events calendar JS crash fixed
+- [x] Gallery filter and hamburger fixed (unclosed IIFE caused SyntaxError)
+- [x] Reviews page scroll fixed (`body: position fixed` was blocking scroll)
+- [x] Wines filter JS implemented (buttons existed but had no handler)
 - [x] Clean URLs enabled (`/pages/about` instead of `/pages/about.html`)
 - [x] Wines section mobile layout fixed (single-column stacking)
+- [x] Live Music and Visit Us mobile hero padding fixed
+- [x] Chatbot updated to direct users to events calendar page for upcoming events
 - [ ] Switch `freeruncellars.com` DNS to Vercel when ready
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)

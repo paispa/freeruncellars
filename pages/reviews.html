@@ -22,15 +22,10 @@
   html { height: 100%; }
 
   body {
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 9999;
-    overflow-y: auto !important;
     background: var(--bg);
     font-family: 'Montserrat', sans-serif;
     color: var(--text);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -420,7 +415,7 @@ nav.solid .hamburger span { background: #333; }
   <a href="../index.html" style="line-height:0"><img class="nav-logo"
       src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
       alt="Free Run Cellars"></a>
-  <ul class="nav-links">
+  <ul class="nav-links" id="navLinks">
     <li><a href="about.html">Our Story</a></li>
     <li><a href="wines.html">Wines</a></li>
     <li class="has-drop">
@@ -610,13 +605,6 @@ buildTicker();
 showReview(0, false);
 startTimer();
 
-// ── Mobile hamburger ──
-(function() {
-  var burger = document.getElementById('burger');
-  var links  = document.getElementById('navLinks');
-  if (!burger || !links) return;
-
-  
 </script>
 <script>
 

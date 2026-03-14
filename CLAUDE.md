@@ -244,10 +244,15 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 
 ## Recent Fixes (March 2026)
 
-- **Hamburger menu**: Removed leaked CSS outside `@media` queries that was overriding desktop styles on all pages. Removed broken `links`/`burger` event listeners that threw `ReferenceError` before the nav IIFE could execute.
+- **Hamburger menu (all pages)**: Removed leaked CSS outside `@media` queries overriding desktop styles. Removed broken `links`/`burger` event listeners. Added missing `id="navLinks"` to `<ul>` on `events-calendar.html` and `reviews.html` so `getElementById` resolves correctly.
+- **Gallery filter + hamburger**: Removed unclosed `(function() {` stub that caused a JS SyntaxError, killing both the filter and hamburger in the same script block.
 - **Events calendar**: Removed unclosed `(function() {` IIFE that caused a silent JS syntax error, leaving the events list permanently blank.
+- **Reviews page scroll**: Removed `position: fixed !important` from `body` — was preventing the page from scrolling on mobile. Also removed orphaned incomplete IIFE stub.
 - **Clean URLs**: Added `"cleanUrls": true` to `vercel.json` — pages now resolve at `/pages/about` without the `.html` extension. Old `.html` links 308-redirect automatically.
+- **Wines filter**: Filter buttons existed in HTML but had no JS handler. Added click listener filtering `.wine-card` elements by `data-type` attribute.
 - **Wines mobile layout**: `.wines-inner` now stacks to a single column at 768px with correct image height and background positioning.
+- **Mobile hero padding**: `live-music-sundays.html` and `contact.html` had no mobile override for large desktop side padding — added responsive breakpoints so hero content isn't squeezed on phone.
+- **Chatbot**: Added `EVENTS CALENDAR` section to system prompt directing users to the live events page for specific upcoming events and artist lineups.
 
 ---
 
