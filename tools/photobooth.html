@@ -662,11 +662,9 @@ function handleReview() {
   sendPhoto();
 }
 
-// Compress a base64 image to stay within EmailJS payload limits.
-// EmailJS caps the entire request at ~50KB base64 total.
-//   Single photo → up to ~46KB base64 → 900px wide @ 0.72 quality
-//   Strip (3)    → up to ~14KB base64 each → 420px wide @ 0.55 quality
-function compressImage(dataUrl, maxWidth, quality, sizeLimit) {
+// Compress a base64 image before uploading.
+// Images are stored server-side; email only carries a URL, so no size constraints here.
+function compressImage(dataUrl, maxWidth, quality) {
   return new Promise(resolve => {
     const img = new Image();
     img.onload = () => {
@@ -678,15 +676,26 @@ function compressImage(dataUrl, maxWidth, quality, sizeLimit) {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      let result = canvas.toDataURL('image/jpeg', quality);
-      // Only re-compress if genuinely over budget
-      if (sizeLimit && result.length > sizeLimit) {
-        result = canvas.toDataURL('image/jpeg', quality * 0.7);
-      }
-      resolve(result);
+      resolve(canvas.toDataURL('image/jpeg', quality));
     };
     img.src = dataUrl;
   });
+}
+
+// Upload one base64 image to /api/upload-photo (imgbb, 7-day TTL).
+// Returns the public URL string.
+async function uploadPhoto(dataUrl) {
+  const res = await fetch('/api/upload-photo', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image: dataUrl }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Upload error ${res.status}`);
+  }
+  const { url } = await res.json();
+  return url;
 }
 
 async function sendPhoto() {
@@ -695,19 +704,19 @@ async function sendPhoto() {
   if (!CONFIGURED) { showSending(1800, () => goTo('screenThanks')); return; }
   showSending();
   try {
+    // Compress to a good web size — no email payload constraints since we send URLs
     const isStrip = capturedFrames.length > 1;
-    // Single: 900px @ 0.72 quality, limit 46 000 chars
-    // Strip:  420px @ 0.55 quality, limit 14 000 chars each
-    const [maxW, qual, limit] = isStrip ? [420, 0.55, 14000] : [900, 0.72, 46000];
-    const compressed = await Promise.all(
-      capturedFrames.map(f => compressImage(f, maxW, qual, limit))
-    );
+    const [maxW, qual] = isStrip ? [900, 0.82] : [1200, 0.88];
+    const compressed = await Promise.all(capturedFrames.map(f => compressImage(f, maxW, qual)));
+
+    // Upload each photo; email gets tiny URL variables instead of base64 blobs
+    const urls = await Promise.all(compressed.map(uploadPhoto));
 
     await emailjs.send(CONFIG.emailjs_service_id, getTemplateId(), {
       to_email: email,
-      photo_1: compressed[0] || '',
-      photo_2: compressed[1] || '',
-      photo_3: compressed[2] || '',
+      photo_url_1: urls[0] || '',
+      photo_url_2: urls[1] || '',
+      photo_url_3: urls[2] || '',
       photo_count: capturedFrames.length,
       winery_name: 'Free Run Cellars',
       note: 'Thank you for visiting Free Run Cellars — we hope to see you again soon!',
@@ -716,8 +725,8 @@ async function sendPhoto() {
     hideSending(); goTo('screenThanks');
   } catch(err) {
     hideSending();
-    console.error('EmailJS error:', err);
-    alert('Send failed: ' + (err.text || err.message || JSON.stringify(err)));
+    console.error('Photo send error:', err);
+    alert('Send failed: ' + (err.message || JSON.stringify(err)));
   }
 }
 
