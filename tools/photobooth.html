@@ -714,9 +714,9 @@ async function sendPhoto() {
 
     await emailjs.send(CONFIG.emailjs_service_id, getTemplateId(), {
       to_email: email,
-      photo_url_1: urls[0] || '',
-      photo_url_2: urls[1] || '',
-      photo_url_3: urls[2] || '',
+      photo_1: urls[0] || '',
+      photo_2: urls[1] || '',
+      photo_3: urls[2] || '',
       photo_count: capturedFrames.length,
       winery_name: 'Free Run Cellars',
       note: 'Thank you for visiting Free Run Cellars — we hope to see you again soon!',
