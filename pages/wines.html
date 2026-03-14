@@ -462,30 +462,7 @@ h2.on-dark em { color:var(--teal-lt); }
 }
 
 
-  .nav-links.open > li > a {
-    display:block; padding:16px 0;
-    font-size:13px; letter-spacing:2px; text-transform:uppercase;
-    color:rgba(255,255,255,0.85) !important;
-    border-bottom:1px solid rgba(255,255,255,0.07);
-  }
-  .nav-links.open .has-drop .drop-menu {
-    display:block; position:static; transform:none;
-    background:transparent; box-shadow:none; border:none;
-    padding:0 0 8px 16px; min-width:unset;
-  }
-  .nav-links.open .has-drop .drop-menu li a {
-    color:rgba(115,152,133,0.85) !important;
-    font-size:11px; padding:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    display:block;
-  }
-  .nav-links.open .nav-cta {
-    background:#537f71; color:#fff !important;
-    border-radius:4px; padding:14px 0; text-align:center;
-    margin-top:16px; border:none !important;
-  }
-  .hamburger { display:flex; }
-}
+
 
 /* ── Hamburger button ── */
 .hamburger {
@@ -1118,15 +1095,6 @@ document.querySelectorAll('.wine-card, .flight-card').forEach((el, i) => {
   el.style.cssText += `opacity:0; transform:translateY(14px); transition:opacity .5s ${i*50}ms ease, transform .5s ${i*50}ms ease;`;
   io.observe(el);
 });
-
-// ── Mobile hamburger ──
-(function() {
-  var burger = document.getElementById('burger');
-  var links  = document.getElementById('navLinks');
-  if (!burger || !links) return;
-
-  
-
 
 // ── Mobile nav ──────────────────────────────────────────
 (function() {
