@@ -497,7 +497,7 @@ if (CONFIGURED) {
 }
 
 // ─── State ───────────────────────────────────────────────────
-let totalShots = 1, capturedFrames = [], stream = null;
+let totalShots = 1, capturedFrames = [], composedStrip = null, stream = null;
 let countingDown = false, currentShot = 0, logoImage = null;
 
 const _logoImg = new Image();
@@ -599,8 +599,39 @@ function addWatermark(ctx, w, h) {
   ctx.textAlign = 'right'; ctx.fillText(dateStr, w - pad, pad + smallFont); ctx.restore();
 }
 
+// ─── Strip composition ────────────────────────────────────────
+async function composeStrip(frames) {
+  const imgs = await Promise.all(frames.map(src => new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.src = src;
+  })));
+  const pw = imgs[0].naturalWidth;
+  const ph = imgs[0].naturalHeight;
+  const gap = Math.round(pw * 0.012);
+  const pad = Math.round(pw * 0.025);
+  const brandH = Math.round(pw * 0.07);
+  const canvas = document.createElement('canvas');
+  canvas.width = pw + pad * 2;
+  canvas.height = pad + ph * 3 + gap * 2 + pad + brandH;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  imgs.forEach((img, i) => {
+    ctx.drawImage(img, pad, pad + i * (ph + gap), pw, ph);
+  });
+  if (logoImage) {
+    const lh = Math.round(brandH * 0.55);
+    const lw = Math.round(lh * (logoImage.naturalWidth / logoImage.naturalHeight));
+    ctx.save(); ctx.globalAlpha = 0.65;
+    ctx.drawImage(logoImage, Math.round((canvas.width - lw) / 2), canvas.height - brandH + Math.round((brandH - lh) / 2), lw, lh);
+    ctx.restore();
+  }
+  return canvas.toDataURL('image/jpeg', 0.9);
+}
+
 // ─── Preview ──────────────────────────────────────────────────
-function showPreview() {
+async function showPreview() {
   stopCamera();
   const area = document.getElementById('previewImgs');
   area.innerHTML = '';
@@ -608,25 +639,25 @@ function showPreview() {
   btn.textContent = 'Email My Photo ✦';
   btn.disabled = false; btn.style.opacity = '1'; btn.onclick = handleSendFree;
   document.getElementById('emailInput').value = '';
-  capturedFrames.forEach(src => {
+
+  const srcs = capturedFrames.length === 3
+    ? [await composeStrip(capturedFrames).then(s => { composedStrip = s; return s; })]
+    : capturedFrames;
+
+  srcs.forEach(src => {
     const wrap = document.createElement('div');
     wrap.className = 'preview-img-frame';
     const img = document.createElement('img');
     img.src = src;
-    if (capturedFrames.length === 3) {
-      img.style.maxHeight = 'calc((100vh - 80px) / 1.1)';
-      img.style.maxWidth = 'calc((100vw - 380px) / 3 - 10px)';
-    } else {
-      img.style.maxHeight = 'calc(100vh - 80px)';
-      img.style.maxWidth = 'calc(100vw - 380px)';
-    }
+    img.style.maxHeight = 'calc(100vh - 80px)';
+    img.style.maxWidth = 'calc(100vw - 380px)';
     wrap.appendChild(img); area.appendChild(wrap);
   });
   goTo('screenPreview');
 }
 
 function retake() {
-  capturedFrames = []; currentShot = 0; updateStripProgress();
+  capturedFrames = []; composedStrip = null; currentShot = 0; updateStripProgress();
   goTo('screenCamera'); startCamera();
 }
 
@@ -704,19 +735,16 @@ async function sendPhoto() {
   if (!CONFIGURED) { showSending(1800, () => goTo('screenThanks')); return; }
   showSending();
   try {
-    // Compress to a good web size — no email payload constraints since we send URLs
-    const isStrip = capturedFrames.length > 1;
-    const [maxW, qual] = isStrip ? [900, 0.82] : [1200, 0.88];
-    const compressed = await Promise.all(capturedFrames.map(f => compressImage(f, maxW, qual)));
-
-    // Upload each photo; email gets tiny URL variables instead of base64 blobs
-    const urls = await Promise.all(compressed.map(uploadPhoto));
+    // For strip: upload a single composited image; for single: upload the one frame
+    const source = capturedFrames.length > 1
+      ? (composedStrip || await composeStrip(capturedFrames))
+      : capturedFrames[0];
+    const compressed = await compressImage(source, 1200, 0.88);
+    const url = await uploadPhoto(compressed);
 
     await emailjs.send(CONFIG.emailjs_service_id, getTemplateId(), {
       to_email: email,
-      photo_1: urls[0] || '',
-      photo_2: urls[1] || '',
-      photo_3: urls[2] || '',
+      photo_1: url,
       photo_count: capturedFrames.length,
       winery_name: 'Free Run Cellars',
       note: 'Thank you for visiting Free Run Cellars — we hope to see you again soon!',
@@ -738,7 +766,7 @@ function hideSending() { document.getElementById('sendingOverlay').classList.rem
 
 // ─── Restart ──────────────────────────────────────────────────
 function restart() {
-  capturedFrames = []; currentShot = 0;
+  capturedFrames = []; composedStrip = null; currentShot = 0;
   document.getElementById('emailInput').value = '';
   const btn = document.getElementById('payBtn');
   if (btn) { btn.textContent = 'Email My Photo ✦'; btn.disabled = false; btn.style.opacity = '1'; btn.onclick = handleSendFree; }
