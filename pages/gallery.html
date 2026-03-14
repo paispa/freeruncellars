@@ -564,18 +564,6 @@ const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
 addEventListener('scroll', onScroll, { passive:true });
 onScroll();
 
-// Hamburger
-const burger = document.getElementById('burger');
-const links  = document.getElementById('navLinks');
-let menuOpen = false;
-
-// ── Mobile hamburger ──
-(function() {
-  var burger = document.getElementById('burger');
-  var links  = document.getElementById('navLinks');
-  if (!burger || !links) return;
-
-  
 // Filter
 document.getElementById('filterBar').addEventListener('click', e => {
   const btn = e.target.closest('.filter-btn');

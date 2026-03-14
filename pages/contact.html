@@ -361,6 +361,11 @@ h2.on-dark em { color:var(--teal-lt); }
 /* ── RESPONSIVE ── */
 /* ── MOBILE NAV ── */
 
+@media (max-width:768px) {
+  .hero-body { padding:0 24px 60px; flex-direction:column; gap:24px; align-items:flex-start; }
+  .hero-hours { width:100%; }
+}
+
 @media (max-width:560px) {
   .photo-strip { grid-template-columns:1fr; height:auto; }
   .ps-item { height:200px; }

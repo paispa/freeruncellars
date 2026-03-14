@@ -1096,6 +1096,24 @@ document.querySelectorAll('.wine-card, .flight-card').forEach((el, i) => {
   io.observe(el);
 });
 
+// ── Wine filter ──────────────────────────────────────────
+(function() {
+  var filterBar = document.getElementById('filterBar');
+  if (!filterBar) return;
+
+  filterBar.addEventListener('click', function(e) {
+    var btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var filter = btn.dataset.filter;
+    document.querySelectorAll('.wine-card').forEach(function(card) {
+      var match = filter === 'all' || card.dataset.type === filter;
+      card.style.display = match ? '' : 'none';
+    });
+  });
+})();
+
 // ── Mobile nav ──────────────────────────────────────────
 (function() {
   function initNav() {
