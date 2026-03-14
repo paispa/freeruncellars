@@ -662,8 +662,11 @@ function handleReview() {
   sendPhoto();
 }
 
-// Compress a base64 image to reduce size for EmailJS
-function compressImage(dataUrl, maxWidth, quality) {
+// Compress a base64 image to stay within EmailJS payload limits.
+// EmailJS caps the entire request at ~50KB base64 total.
+//   Single photo → up to ~46KB base64 → 900px wide @ 0.72 quality
+//   Strip (3)    → up to ~14KB base64 each → 420px wide @ 0.55 quality
+function compressImage(dataUrl, maxWidth, quality, sizeLimit) {
   return new Promise(resolve => {
     const img = new Image();
     img.onload = () => {
@@ -673,12 +676,12 @@ function compressImage(dataUrl, maxWidth, quality) {
       canvas.height = Math.round(img.height * scale);
       const ctx = canvas.getContext('2d');
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'medium';
+      ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      // Check size and reduce further if still too big
       let result = canvas.toDataURL('image/jpeg', quality);
-      if (result.length > 16000) { // ~12KB base64
-        result = canvas.toDataURL('image/jpeg', quality * 0.6);
+      // Only re-compress if genuinely over budget
+      if (sizeLimit && result.length > sizeLimit) {
+        result = canvas.toDataURL('image/jpeg', quality * 0.7);
       }
       resolve(result);
     };
@@ -692,10 +695,12 @@ async function sendPhoto() {
   if (!CONFIGURED) { showSending(1800, () => goTo('screenThanks')); return; }
   showSending();
   try {
-    // Compress aggressively — EmailJS 50KB limit covers ALL variables combined
-    // With 3 photos, each must be ~12KB max → 380px wide at 0.45 quality
+    const isStrip = capturedFrames.length > 1;
+    // Single: 900px @ 0.72 quality, limit 46 000 chars
+    // Strip:  420px @ 0.55 quality, limit 14 000 chars each
+    const [maxW, qual, limit] = isStrip ? [420, 0.55, 14000] : [900, 0.72, 46000];
     const compressed = await Promise.all(
-      capturedFrames.map(f => compressImage(f, 380, 0.45))
+      capturedFrames.map(f => compressImage(f, maxW, qual, limit))
     );
 
     await emailjs.send(CONFIG.emailjs_service_id, getTemplateId(), {
