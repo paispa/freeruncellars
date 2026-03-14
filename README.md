@@ -38,8 +38,10 @@ freeruncellars/
 │   ├── contact.html            ← Visit Us / Hours / Map
 │   └── reviews.html            ← Review landing (Google, Yelp, Facebook)
 ├── tools/
-│   ├── post-generator.html     ← Internal: AI Facebook post generator
-│   └── photobooth.html         ← Photo booth with EmailJS (needs config keys)
+│   ├── post-generator.html          ← Internal: AI Facebook post generator
+│   ├── photobooth.html              ← Photo booth with EmailJS + Vercel Blob
+│   ├── email-template-single.html   ← EmailJS template: single photo
+│   └── email-template-strip.html    ← EmailJS template: 3-photo composited strip
 ├── assets/
 │   ├── images/                 ← Brand assets
 │   └── docs/
@@ -69,19 +71,15 @@ freeruncellars/
 
 ## Photo Booth Setup
 
-Fill in the CONFIG block at the top of `tools/photobooth.html`:
+CONFIG keys are filled in at the top of `tools/photobooth.html`. Two additional requirements:
 
-```javascript
-const CONFIG = {
-  emailjs_public_key:      'YOUR_EMAILJS_PUBLIC_KEY',
-  emailjs_service_id:      'YOUR_EMAILJS_SERVICE_ID',
-  emailjs_template_single: 'YOUR_TEMPLATE_ID_SINGLE_PHOTO',
-  emailjs_template_strip:  'YOUR_TEMPLATE_ID_3_PHOTO_STRIP',
-  godaddy_payment_url:     'YOUR_GODADDY_TIP_LINK',
-};
-```
+**Vercel Blob** — photos are stored server-side so email only carries a URL:
+1. Vercel dashboard → Storage → Create Blob store
+2. Copy `BLOB_READ_WRITE_TOKEN` → add to Vercel project environment variables
 
-EmailJS is set up under Prashanth's login. Templates are in the EmailJS dashboard.
+**EmailJS templates** — paste the HTML from `tools/email-template-single.html` and `tools/email-template-strip.html` into the matching templates in the EmailJS dashboard. Set the **To Email** field to `{{to_email}}` and enable the HTML editor.
+
+**3-photo strip** — the browser composites all three frames into one vertical film-strip image (dark background, FRC logo at the bottom) before uploading. One image is stored and emailed, just like a traditional photo booth print.
 
 ---
 
@@ -238,6 +236,9 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Wines section mobile layout fixed (single-column stacking)
 - [x] Live Music and Visit Us mobile hero padding fixed
 - [x] Chatbot updated to direct users to events calendar page for upcoming events
+- [x] Photo booth: switched to Vercel Blob storage + URL-based email delivery
+- [x] Photo booth: 3-photo strip composited into single film-strip image client-side
+- [x] Email templates: added fallback "view photo" links for image-blocking email clients
 - [ ] Switch `freeruncellars.com` DNS to Vercel when ready
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
@@ -249,4 +250,4 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 ---
 
-*Last updated: March 2026*
+*Last updated: March 14, 2026*

@@ -39,22 +39,19 @@
               </p>
             </td>
           </tr>
-          <!-- Photo strip — 3 side by side -->
+          <!-- Photo strip (composited single image) -->
+          <tr>
+            <td align="center" style="padding-bottom:12px;">
+              <img src="{{photo_1}}" alt="Your photo strip"
+                style="display:block;width:100%;height:auto;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.6);">
+            </td>
+          </tr>
+          <!-- Photo link fallback (visible when images are blocked) -->
           <tr>
             <td align="center" style="padding-bottom:32px;">
-              <table cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                  <td width="33%" style="padding:0 4px 0 0;">
-                    <img src="{{photo_1}}" style="max-width:100%; height:auto; display:block; margin:8px auto;" />
-                  </td>
-                  <td width="33%" style="padding:0 2px;">
-                    <img src="{{photo_2}}" style="max-width:100%; height:auto; display:block; margin:8px auto;" />
-                  </td>
-                  <td width="33%" style="padding:0 0 0 4px;">
-                    <img src="{{photo_3}}" style="max-width:100%; height:auto; display:block; margin:8px auto;" />
-                  </td>
-                </tr>
-              </table>
+              <a href="{{photo_1}}" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#739885;text-decoration:none;border-bottom:1px solid #4e6e5d;">
+                View &amp; download your photo strip →
+              </a>
             </td>
           </tr>
           <!-- Note -->

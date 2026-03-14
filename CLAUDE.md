@@ -44,7 +44,8 @@ freeruncellars/
 │
 ├── api/                          # Vercel serverless functions
 │   ├── chat.js                   # AI chat assistant (Anthropic Claude Haiku)
-│   └── calendar.js               # Outlook ICS calendar proxy (CORS workaround)
+│   ├── calendar.js               # Outlook ICS calendar proxy (CORS workaround)
+│   └── upload-photo.js           # Photo booth image storage (Vercel Blob)
 │
 ├── pages/                        # All public content pages
 │   ├── about.html                # Our Story / owner bios
@@ -58,7 +59,9 @@ freeruncellars/
 │
 ├── tools/                        # Internal staff utilities (not linked publicly)
 │   ├── post-generator.html       # AI-powered Facebook post generator
-│   └── photobooth.html           # Event photo booth (camera + email via EmailJS)
+│   ├── photobooth.html           # Event photo booth (camera + email via EmailJS)
+│   ├── email-template-single.html  # EmailJS template — single photo
+│   └── email-template-strip.html   # EmailJS template — 3-photo composited strip
 │
 ├── assets/
 │   └── docs/
@@ -82,15 +85,23 @@ Anthropic Claude Haiku chatbot for the winery website. Key details:
 ### `api/calendar.js`
 CORS proxy for the Outlook ICS calendar feed. Caches for 5 minutes with 10-minute stale-while-revalidate. Falls back through three CORS proxy services if the primary fails.
 
+### `api/upload-photo.js`
+Receives a base64 image from the photo booth, uploads binary to Vercel Blob, and returns the public URL. Requires `BLOB_READ_WRITE_TOKEN` environment variable (set in Vercel dashboard under Storage → Blob store → token).
+
 ### `tools/photobooth.html`
-Requires manual configuration of the `CONFIG` object at the top of the file:
+CONFIG is filled in at the top of the file (keys committed to repo). For a 3-photo session the browser composites all three frames into one vertical film-strip canvas (dark background, FRC logo centred at the bottom) before uploading — so only a single image is stored and emailed.
+
+Email templates live in `tools/email-template-single.html` and `tools/email-template-strip.html`. Paste their HTML into the corresponding EmailJS templates in the dashboard whenever they change.
+
 ```js
 const CONFIG = {
-  emailjs: { publicKey, serviceId, templateId, stripTemplateId },
-  godaddy: { tipUrl }
+  emailjs_public_key:       '...',
+  emailjs_service_id:       '...',
+  emailjs_template_single:  '...',   // single-photo EmailJS template ID
+  emailjs_template_strip:   '...',   // strip EmailJS template ID
+  godaddy_payment_url:      '...',
 }
 ```
-These values are **not in the repo** — ask the client for them.
 
 ---
 
@@ -99,6 +110,7 @@ These values are **not in the repo** — ask the client for them.
 | Variable | Used In | Description |
 |----------|---------|-------------|
 | `ANTHROPIC_API_KEY` | `api/chat.js` | Anthropic API key for chat assistant |
+| `BLOB_READ_WRITE_TOKEN` | `api/upload-photo.js` | Vercel Blob store token for photo storage |
 
 Set these in **Vercel project settings**, not in the repo.
 
@@ -253,6 +265,9 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - **Wines mobile layout**: `.wines-inner` now stacks to a single column at 768px with correct image height and background positioning.
 - **Mobile hero padding**: `live-music-sundays.html` and `contact.html` had no mobile override for large desktop side padding — added responsive breakpoints so hero content isn't squeezed on phone.
 - **Chatbot**: Added `EVENTS CALENDAR` section to system prompt directing users to the live events page for specific upcoming events and artist lineups.
+- **Photo booth — image delivery**: Switched from base64 attachments to Vercel Blob storage. Photos are uploaded via `api/upload-photo.js` and emailed as public URLs, eliminating EmailJS payload size limits.
+- **Photo booth — film strip**: 3-photo sessions now composite all three frames into a single vertical strip image on canvas (dark background, gaps, FRC logo) before upload. One image stored, one image emailed — just like a traditional photo booth print.
+- **Email templates**: Added `tools/email-template-single.html` and `tools/email-template-strip.html` as source-of-truth for EmailJS template HTML. Both include a "View & download your photo →" fallback link for email clients that block external images.
 
 ---
 
