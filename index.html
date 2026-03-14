@@ -762,12 +762,24 @@ nav.solid .hamburger span { background: #333; }
     background-position: center 45% !important;
     background-size: cover !important;
   }
+  /* Wines section — stack to single column */
+  .wines { padding: 60px 24px !important; }
+  .wines-inner { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .wines-img { height: 320px !important; }
+  .wines-img-bg {
+    background-position: center 40% !important;
+    background-size: cover !important;
+  }
+  /* Hero body — reduce side padding so headline doesn't over-wrap */
+  .hero-body { padding: 0 24px 80px !important; }
 }
 
 @media (max-width: 480px) {
   .hero-bg { background-position: 55% center !important; }
+  .hero-body { padding: 0 20px 60px !important; }
   .story-img { height: 280px !important; }
   .photo-break { height: 220px !important; }
+  .wines-img { height: 260px !important; }
 }
 
 </style>
