@@ -198,14 +198,17 @@ When editing styles, check both the desktop and mobile (`max-width: 768px`) sect
 
 Every page includes the same global navigation HTML. When updating navigation (adding pages, changing labels), **update all HTML files** — there is no shared nav component.
 
-Primary nav links:
-- Home (`/index.html`)
-- Wines (`/pages/wines.html`)
-- Events (`/pages/events-calendar.html`)
-- About (`/pages/about.html`)
-- Gallery (`/pages/gallery.html`)
-- Contact (`/pages/contact.html`)
-- Private Events (`/pages/event-packages.html`)
+Primary nav links (clean URLs — no `.html` extension needed):
+- Home (`/`)
+- Wines (`/pages/wines`)
+- Events (`/pages/events-calendar`)
+- About (`/pages/about`)
+- Gallery (`/pages/gallery`)
+- Contact (`/pages/contact`)
+- Private Events (`/pages/event-packages`)
+
+### Hamburger Menu
+The mobile nav is toggled by a single `<script>` block at the bottom of each page's `<body>`. The CSS lives inside a `@media (max-width: 960px)` block. **Do not add duplicate nav CSS outside a media query** — it will override the desktop styles and break the layout.
 
 ---
 
@@ -238,6 +241,13 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - [ ] No Instagram link confirmed (assumed `@freeruncellars`)
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
+
+## Recent Fixes (March 2026)
+
+- **Hamburger menu**: Removed leaked CSS outside `@media` queries that was overriding desktop styles on all pages. Removed broken `links`/`burger` event listeners that threw `ReferenceError` before the nav IIFE could execute.
+- **Events calendar**: Removed unclosed `(function() {` IIFE that caused a silent JS syntax error, leaving the events list permanently blank.
+- **Clean URLs**: Added `"cleanUrls": true` to `vercel.json` — pages now resolve at `/pages/about` without the `.html` extension. Old `.html` links 308-redirect automatically.
+- **Wines mobile layout**: `.wines-inner` now stacks to a single column at 768px with correct image height and background positioning.
 
 ---
 
