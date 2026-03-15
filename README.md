@@ -250,10 +250,10 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Google Analytics 4 added to all pages (G-T51K1F9DVS)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
-- [ ] Josh Bishop (preferred caterer) — add to site once permission confirmed
-- [ ] Instagram handle confirmation (@freeruncellars assumed)
+- [x] Josh Bishop (preferred caterer) — section live on event-packages.html
+- [x] Instagram handle confirmed — @freeruncellars live in nav, contact, and reviews pages
+- [x] AI chatbot / inquiry assistant — fully live (api/chat.js + embedded on all pages)
 - [ ] Blog: Chikmagalur coffee terroir vs SW Michigan wine terroir
-- [ ] AI chatbot / inquiry assistant
 - [ ] Partnership page for neighboring vineyards
 - [ ] Favicon — export `FR_WinePress.png` as 512×512 square transparent PNG, generate favicon.ico + apple-touch-icon
 

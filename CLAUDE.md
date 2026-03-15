@@ -258,7 +258,7 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - [ ] Newsletter signup uses `mailto:` fallback — needs Mailchimp or EmailJS integration
 - [ ] Reviews page has placeholder content — needs real Google/Facebook reviews
 - [x] `freeruncellars.com` DNS migrated to Vercel — `frcwine.com` and `www.frcwine.com` now permanently redirect to `freeruncellars.com`
-- [ ] No Instagram link confirmed (assumed `@freeruncellars`)
+- [x] Instagram confirmed — `@freeruncellars` live in index, contact, and reviews pages
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
 
