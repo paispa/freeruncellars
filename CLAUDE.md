@@ -136,11 +136,18 @@ Set these in **Vercel project settings**, not in the repo.
 Both fonts are loaded via Google Fonts CDN in each HTML file's `<head>`.
 
 ### Logo
+Self-hosted horizontal logo:
 ```
-https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png
+/public/images/free-run-cellars-logo-horizontal-black-323a89.webp
 ```
+Use the full absolute URL in email templates and canvas contexts (photobooth film strip):
+```
+https://freeruncellars.com/public/images/free-run-cellars-logo-horizontal-black-323a89.webp
+```
+Wine press logo: pending export — will be added to `/public/images/` once available.
 
 ### Image CDN Base URL
+Large hero/gallery photos only — **not** for logos or brand assets:
 ```
 https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/
 ```
@@ -269,6 +276,7 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - **Photo booth — image delivery**: Switched from base64 attachments to Vercel Blob storage. Photos are uploaded via `api/upload-photo.js` and emailed as public URLs, eliminating EmailJS payload size limits.
 - **Photo booth — film strip**: 3-photo sessions now composite all three frames into a single vertical strip image on canvas (dark background, gaps, FRC logo) before upload. One image stored, one image emailed — just like a traditional photo booth print.
 - **Email templates**: Added `tools/email-template-single.html` and `tools/email-template-strip.html` as source-of-truth for EmailJS template HTML. Both include a "View & download your photo →" fallback link for email clients that block external images.
+- **Logo**: Replaced GoDaddy CDN logo (`blob-d682120.png`) with self-hosted horizontal logo at `/public/images/free-run-cellars-logo-horizontal-black-323a89.webp` across all four tools pages. Email templates use the full absolute URL; HTML `src` attributes use the root-relative path.
 
 ---
 
