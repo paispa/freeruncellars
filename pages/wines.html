@@ -42,7 +42,8 @@ nav {
 }
 nav.solid { background:rgba(255,255,255,.97); box-shadow:0 1px 0 rgba(0,0,0,.07); }
 .nav-logo { height:34px; transition:filter .35s; }
-nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-press { height:38px; width:auto; transition:filter .35s; }
+nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
 .nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
 .nav-links a {
   font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
@@ -566,9 +567,10 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="../index.html" style="line-height:0"><img class="nav-logo"
-    src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-    alt="Free Run Cellars"></a>
+  <a href="../index.html" style="line-height:0;display:flex;align-items:center;gap:12px;">
+    <img class="nav-press" src="../public/images/FR_WinePress.png" alt="">
+    <img class="nav-logo" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+  </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="about.html">Our Story</a></li>
     <li><a href="wines.html" style="color:var(--teal-lt)">Wines</a></li>
