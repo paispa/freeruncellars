@@ -142,7 +142,7 @@ CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e
 **Primary font:** Uniform → web substitute: **Jost**  
 **Accent font:** Znikomitno24 → web substitute: **Cormorant Garamond**  
 **Logo:** `/public/images/free-run-cellars-logo-horizontal-black-323a89.webp` (self-hosted)
-**Wine press logo:** To be added to `/public/images/` once exported
+**Wine press logo:** `/public/images/FR_WinePress.png` — used in nav (48px, left of wordmark) and as a centred footer stamp (90px) on all pages
 
 ---
 
@@ -242,6 +242,10 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Email templates: added fallback "view photo" links for image-blocking email clients
 - [x] Switch `freeruncellars.com` DNS to Vercel — complete
 - [x] Logo replaced with self-hosted horizontal logo (removed GoDaddy CDN logo dependency)
+- [x] Wine press logo added to nav on all pages (left of wordmark, flex container, gap 12px)
+- [x] Wine press footer stamp added to all pages (90px, centred, above copyright bar)
+- [x] Live Music page mobile layout overhauled (767px breakpoint, reduced paddings, Season/Time/Admission 2-col grid)
+- [x] Johnny Poracky artist photo on Live Music page (600px max-width, 12px corners, caption)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
 - [ ] Josh Bishop (preferred caterer) — add to site once permission confirmed
@@ -249,6 +253,7 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [ ] Blog: Chikmagalur coffee terroir vs SW Michigan wine terroir
 - [ ] AI chatbot / inquiry assistant
 - [ ] Partnership page for neighboring vineyards
+- [ ] Favicon — export `FR_WinePress.png` as 512×512 square transparent PNG, generate favicon.ico + apple-touch-icon
 
 ---
 
