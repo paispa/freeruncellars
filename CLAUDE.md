@@ -144,7 +144,7 @@ Use the full absolute URL in email templates and canvas contexts (photobooth fil
 ```
 https://freeruncellars.com/public/images/free-run-cellars-logo-horizontal-black-323a89.webp
 ```
-Wine press logo: pending export — will be added to `/public/images/` once available.
+Wine press logo: `/public/images/FR_WinePress.png` (self-hosted PNG). Used in the nav (`.nav-press`, 48px, `margin-top:4px` for visual alignment) and as a footer stamp (90px, centred, `opacity:.3`) on all pages.
 
 ### Image CDN Base URL
 Large hero/gallery photos only — **not** for logos or brand assets:
@@ -205,11 +205,11 @@ npx vercel dev   # starts local dev server at localhost:3000
 All CSS is **inline in `<style>` blocks** within each HTML file. There is no shared stylesheet.
 
 - Use CSS custom properties (`--variable-name`) for repeated values within a page
-- Responsive breakpoints use `@media (max-width: 768px)` for mobile
+- Responsive breakpoints use `@media (max-width: 767px)` for mobile (some older pages use `768px` — use `767px` on all new work)
 - Animations use `@keyframes` defined inline
 - Hover transitions typically `transition: all 0.3s ease`
 
-When editing styles, check both the desktop and mobile (`max-width: 768px`) sections.
+When editing styles, check both the desktop and mobile (`max-width: 767px`) sections.
 
 ---
 
@@ -260,6 +260,13 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - [ ] No Instagram link confirmed (assumed `@freeruncellars`)
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
+
+## Recent Fixes (March 2026 — continued)
+
+- **Wine press logo — nav**: Added `FR_WinePress.png` to all page navs, left of the horizontal wordmark, in a flex container with `gap:12px`. Applied `margin-top:4px` globally for visual centring against the wordmark.
+- **Wine press logo — footer stamp**: All pages now show a centred 90px wine press mark above the copyright bar. Inner pages use a new `.footer-bottom` wrapper; homepage uses `.f-stamp` between the footer grid and `.f-bottom`.
+- **Live Music mobile layout**: Replaced `@media (max-width:600px)` with a comprehensive `@media (max-width:767px)` block — section paddings reduced ~25–30%, `expect-inner` stacks to one column, Season/Time/Admission detail list reflows to a 2-column grid, Happy Hour stat block shrunk, decorative spacers halved.
+- **Live Music artist photo**: Johnny Poracky photo (`/public/images/IMG_8852.jpeg`) placed below the "Familiar faces" heading — 600px max-width, 12px rounded corners, muted uppercase caption.
 
 ## Recent Fixes (March 2026)
 
