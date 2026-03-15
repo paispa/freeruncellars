@@ -248,6 +248,7 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Live Music page mobile layout overhauled (767px breakpoint, reduced paddings, Season/Time/Admission 2-col grid)
 - [x] Johnny Poracky artist photo on Live Music page (600px max-width, 12px corners, caption)
 - [x] Google Analytics 4 added to all pages (G-T51K1F9DVS)
+- [x] Contact page: email mailto with subject line, Google Maps directions, mobile single-column layout, tel:+1 links, Facebook card, updated social copy
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
 - [x] Josh Bishop (preferred caterer) — section live on event-packages.html
@@ -259,4 +260,4 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 ---
 
-*Last updated: March 15, 2026*
+*Last updated: March 15, 2026 (contact page fixes + social links)*

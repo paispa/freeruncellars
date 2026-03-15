@@ -259,8 +259,19 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - [ ] Reviews page has placeholder content — needs real Google/Facebook reviews
 - [x] `freeruncellars.com` DNS migrated to Vercel — `frcwine.com` and `www.frcwine.com` now permanently redirect to `freeruncellars.com`
 - [x] Instagram confirmed — `@freeruncellars` live in index, contact, and reviews pages
+- [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
+
+## Recent Fixes (March 2026 — continued, part 3)
+
+- **Contact page — email link**: Wrapped `contact@frcwine.com` in a full `.contact-method` card with `mailto:?subject=Visit%20Inquiry%20-%20Free%20Run%20Cellars`. Inherits existing text styling — no blue underline.
+- **Contact page — maps link**: Replaced Apple Maps `href` on Get Directions with the Google Maps universal URL (`google.com/maps/dir/?api=1&destination=...`) — works on iOS, Android, and desktop.
+- **Contact page — mobile layout**: Added `@media (max-width:767px)` — `.main-inner` collapses to single column (`grid-template-columns:1fr`), photo strip stacks vertically with 12px gap between panels, section padding reduced to `56px 20px`.
+- **Contact page — tel links**: Corrected both phone `href` values from `tel:2698156885` to `tel:+12698156885` (E.164 format).
+- **Contact page — live music photo**: Replaced `untitled-31.jpeg` (trumpet player) in the photo strip with `AS259847.jpeg`.
+- **Contact page — Facebook card**: Added Facebook `.contact-method` card linking to `facebook.com/FreRunCellars` with sub-text "Last-minute event news & announcements". Added `.cm-icon.facebook { background:#1877f2 }` style.
+- **Contact page — Instagram copy**: Updated sub-text from "Follow for updates & events" to "Stories, behind-the-scenes & last-minute updates".
 
 ## Recent Fixes (March 2026 — continued, part 2)
 
