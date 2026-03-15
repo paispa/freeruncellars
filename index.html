@@ -71,7 +71,8 @@ nav.solid {
   box-shadow:0 1px 0 rgba(0,0,0,.07);
 }
 .nav-logo { height:34px; transition:filter .35s; }
-nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-press { height:38px; width:auto; transition:filter .35s; }
+nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
 
 .nav-links {
   display:flex; align-items:center; gap:30px; list-style:none;
@@ -352,7 +353,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 
 /* ── EVENTS BANNER ── */
 .events-banner {
-  position:relative; height:460px;
+  position:relative; min-height:460px;
   display:flex; align-items:center; justify-content:center; overflow:hidden;
 }
 .eb-bg {
@@ -709,7 +710,7 @@ nav.solid .hamburger span { background: #333; }
     background-size: cover !important;
   }
   /* Events banner — FR_Outside_LiveMusic */
-  .events-banner { height: 340px !important; }
+  .events-banner { min-height: 340px !important; }
   .events-banner {
     background-position: center 25% !important;
     background-size: cover !important;
@@ -746,6 +747,61 @@ nav.solid .hamburger span { background: #333; }
   .wines-img { height: 260px !important; }
 }
 
+/* ── MOBILE LAYOUT — reduce vertical length ── */
+@media (max-width: 767px) {
+  /* Strip — halve item padding (decorative spacer row) */
+  .strip-item { padding: 10px 14px; }
+
+  /* Our Story — stack image above text, tighten internal spacing */
+  .story { grid-template-columns: 1fr !important; }
+  .story-img { min-height: 280px !important; }
+  .story-content { padding: 52px 24px !important; }
+  .story-quote { margin: 16px 0 !important; }
+  .owners { margin-top: 20px !important; padding-top: 16px !important; }
+
+  /* Experience — reduce section padding ~29% */
+  .experience { padding: 68px 24px !important; }
+  .exp-header { margin-bottom: 40px !important; }
+
+  /* Private Events — reduce padding, stack split, collapse packages to 1 col */
+  .private { padding: 68px 24px !important; }
+  .private-split {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    margin-bottom: 36px !important;
+  }
+  .packages { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+  /* Grounds — stack image above content, reduce padding ~30% */
+  .grounds-inner { grid-template-columns: 1fr !important; }
+  .grounds-content { padding: 56px 24px !important; }
+  /* Stats row: confirm 2×2 grid (already 1fr 1fr at desktop, stays that way) */
+  .facts {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+    margin-top: 28px !important;
+  }
+
+  /* Reviews — reduce padding ~29% */
+  .reviews { padding: 68px 24px !important; }
+  .reviews-header { margin-bottom: 36px !important; }
+
+  /* Visit — stack image above content, reduce padding ~30% */
+  .visit { grid-template-columns: 1fr !important; }
+  .visit-img { min-height: 240px !important; }
+  .visit-content { padding: 52px 24px !important; }
+
+  /* Fruitful Vine — reduce padding ~29% */
+  .fruitful { padding: 40px 24px !important; }
+
+  /* Newsletter — reduce padding ~30% */
+  .newsletter { padding: 50px 24px !important; }
+
+  /* Footer — reduce padding ~30% */
+  footer { padding: 36px 24px 20px !important; }
+}
+
 </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -753,9 +809,10 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="/" style="line-height:0"><img class="nav-logo"
-    src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-    alt="Free Run Cellars"></a>
+  <a href="/" style="line-height:0;display:flex;align-items:center;gap:12px;">
+    <img class="nav-press" src="/public/images/FR_WinePress.png" alt="">
+    <img class="nav-logo" src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+  </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="pages/about.html">Our Story</a></li>
     <li><a href="pages/wines.html">Wines</a></li>
@@ -940,6 +997,11 @@ nav.solid .hamburger span { background: #333; }
     <p class="s-label lt center">Live Music &amp; Events</p>
     <h2 class="on-dark">Something's always <em>happening</em></h2>
     <p>From laid-back Sunday sessions to ticketed special events, Free Run brings the best of Southwest Michigan's music scene to the vineyard patio every week.</p>
+    <figure style="margin:28px auto 32px;max-width:600px;width:100%;text-align:center;">
+      <img src="/public/images/IMG_8852.jpeg" alt="Johnny performing live music at Free Run Cellars"
+        style="width:100%;border-radius:12px;display:block;">
+      <figcaption style="margin-top:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);">Live Music Every Sunday</figcaption>
+    </figure>
     <a href="pages/events-calendar.html" class="btn-fill">View Upcoming Events</a>
   </div>
 </section>
