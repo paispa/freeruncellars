@@ -42,7 +42,7 @@ nav {
 }
 nav.solid { background:rgba(255,255,255,.97); box-shadow:0 1px 0 rgba(0,0,0,.07); }
 .nav-logo { height:34px; transition:filter .35s; }
-.nav-press { height:38px; width:auto; transition:filter .35s; }
+.nav-press { height:48px; width:auto; transition:filter .35s; }
 nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
 .nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
 .nav-links a {
@@ -457,6 +457,19 @@ h2.on-dark em { color:var(--teal-lt); }
 
 /* ── RESPONSIVE ── */
 /* ── MOBILE NAV ── */
+
+@media (max-width:768px) {
+  .hero-body { padding:0 24px 60px; }
+  .filter-section { padding:0 20px; }
+  .wine-section { padding:52px 24px; }
+  .flights-section { padding:60px 24px; }
+  .flights-grid { grid-template-columns:1fr; }
+  .cocktails-section { padding:60px 24px; }
+  .cocktail-grid { grid-template-columns:1fr; }
+  .online-section { padding:52px 24px; }
+  .page-footer { padding:24px 20px; flex-direction:column; text-align:center; }
+  .footer-links { justify-content:center; }
+}
 
 @media (max-width:560px) {
   .btn-line { margin-left:0; margin-top:10px; }
