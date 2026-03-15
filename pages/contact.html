@@ -322,7 +322,7 @@ h2.on-dark em { color:var(--teal-lt); }
   background-image:url('../public/images/IMG_4029.jpeg');
   background-position:center 60%;
 }
-.ps-item-3 .ps-bg { background-image:url('../public/images/untitled-31.jpeg'); }
+.ps-item-3 .ps-bg { background-image:url('../public/images/AS259847.jpeg'); }
 .ps-scrim {
   position:absolute; inset:0;
   background:linear-gradient(to top, rgba(8,18,12,.5), transparent 60%);
@@ -380,9 +380,25 @@ h2.on-dark em { color:var(--teal-lt); }
   .footer-links { flex-wrap:wrap; }
 }
 
+@media (max-width:767px) {
+  /* Two-column → single column */
+  .main-content { padding:56px 20px; }
+  .main-inner { grid-template-columns:1fr; gap:40px; }
+
+  /* Photo strip — full width, consistent sizing */
+  .photo-strip { grid-template-columns:1fr; height:auto; gap:0; }
+  .ps-item {
+    height:220px;
+    width:100%;
+    border-radius:0;
+    overflow:hidden;
+    margin-bottom:0;
+  }
+  .ps-item + .ps-item { margin-top:12px; }
+}
+
 @media (max-width:560px) {
-  .photo-strip { grid-template-columns:1fr; height:auto; }
-  .ps-item { height:200px; }
+  /* already handled above at 767px */
 }
 
 
@@ -583,9 +599,9 @@ nav.solid .hamburger span { background: #333; }
           <div class="directions-meta">
             <div class="dm-item"><span class="dm-icon">🚗</span> 90 minutes from Chicago</div>
             <div class="dm-item"><span class="dm-icon">📍</span> Southwest Michigan · Lake Michigan Shore AVA</div>
-            <div class="dm-item"><span class="dm-icon">📞</span> <a href="tel:2698156885" style="color:rgba(255,255,255,.45)">(269) 815-6885</a></div>
+            <div class="dm-item"><span class="dm-icon">📞</span> <a href="tel:+12698156885" style="color:rgba(255,255,255,.45)">(269) 815-6885</a></div>
           </div>
-          <a href="https://maps.apple.com/?address=10062+Burgoyne+Road,+Berrien+Springs,+MI+49103&dirflg=d"
+          <a href="https://www.google.com/maps/dir/?api=1&destination=10062+Burgoyne+Road+Berrien+Springs+MI+49103"
              class="btn-directions" target="_blank" rel="noopener">
             ↗ Get Directions
           </a>
@@ -602,7 +618,7 @@ nav.solid .hamburger span { background: #333; }
       </div>
 
       <div class="contact-methods">
-        <a href="tel:2698156885" class="contact-method">
+        <a href="tel:+12698156885" class="contact-method">
           <div class="cm-icon phone">📞</div>
           <div class="cm-text">
             <div class="cm-label">Phone</div>
@@ -612,7 +628,15 @@ nav.solid .hamburger span { background: #333; }
           <div class="cm-arrow">→</div>
         </a>
 
-        <a href="mailto:contact@frcwine.com">contact@frcwine.com</a>
+        <a href="mailto:contact@frcwine.com?subject=Visit%20Inquiry%20-%20Free%20Run%20Cellars" class="contact-method">
+          <div class="cm-icon email">✉️</div>
+          <div class="cm-text">
+            <div class="cm-label">Email</div>
+            <div class="cm-value">contact@frcwine.com</div>
+            <div class="cm-sub">We'll get back to you within 24 hours</div>
+          </div>
+          <div class="cm-arrow">→</div>
+        </a>
 
         <a href="https://www.instagram.com/freeruncellars" target="_blank" rel="noopener" class="contact-method">
           <div class="cm-icon instagram">
