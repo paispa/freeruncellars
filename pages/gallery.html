@@ -39,7 +39,7 @@ nav {
 }
 nav.solid { background:rgba(10,10,10,.97); box-shadow:0 1px 0 rgba(255,255,255,.06); }
 .nav-logo { height:34px; transition:filter .35s; }
-.nav-press { height:48px; width:auto; transition:filter .35s; }
+.nav-press { height:48px; width:auto; transition:filter .35s; margin-top:4px; }
 nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
 .nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
 .nav-links a {
@@ -239,10 +239,11 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 .page-footer {
   background:var(--black); color:rgba(255,255,255,.25);
   border-top:1px solid rgba(255,255,255,.05);
-  padding:28px 56px;
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:wrap; gap:16px; font-size:11px;
+  padding:44px 56px 28px;
+  display:flex; flex-direction:column; align-items:center; gap:0; font-size:11px;
 }
+.footer-press { height:90px; width:auto; filter:brightness(0) invert(1); opacity:.3; margin-bottom:28px; }
+.footer-bottom { width:100%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; border-top:1px solid rgba(255,255,255,.07); padding-top:20px; }
 .footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.3; }
 .footer-links { display:flex; gap:20px; }
 .page-footer a:hover { color:rgba(255,255,255,.6); }
@@ -253,6 +254,12 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 @media (max-width:480px) {
   .masonry { columns:2 140px; column-gap:8px; }
   .gallery-item { margin-bottom:8px; }
+}
+
+@media (max-width:768px) {
+  .page-footer { padding:32px 20px 24px; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; gap:12px; }
+  .footer-links { flex-wrap:wrap; }
 }
 
 
@@ -548,6 +555,8 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- FOOTER -->
 <footer class="page-footer">
+  <img class="footer-press" src="/public/images/FR_WinePress.png" alt="">
+  <div class="footer-bottom">
   <img class="footer-logo"
     src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
     alt="Free Run Cellars">
@@ -557,6 +566,7 @@ nav.solid .hamburger span { background: #333; }
     <a href="about.html">Our Story</a>
     <a href="wines.html">Wines</a>
     <a href="contact.html">Visit Us</a>
+  </div>
   </div>
 </footer>
 
