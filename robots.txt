@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /tools/
+Disallow: /api/
+
+Sitemap: https://freeruncellars.com/sitemap.xml
