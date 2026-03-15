@@ -1,23 +1,15 @@
 {
-  "outputDirectory": ".",
-  "cleanUrls": true,
   "redirects": [
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "frcwine.com" }],
-      "destination": "https://www.freeruncellars.com/$1",
+      "destination": "https://freeruncellars.com/$1",
       "permanent": true
     },
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "www.frcwine.com" }],
-      "destination": "https://www.freeruncellars.com/$1",
-      "permanent": true
-    },
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "freeruncellars.com" }],
-      "destination": "https://www.freeruncellars.com/$1",
+      "destination": "https://freeruncellars.com/$1",
       "permanent": true
     }
   ]
