@@ -353,7 +353,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 
 /* ── EVENTS BANNER ── */
 .events-banner {
-  position:relative; height:460px;
+  position:relative; min-height:460px;
   display:flex; align-items:center; justify-content:center; overflow:hidden;
 }
 .eb-bg {
@@ -710,7 +710,7 @@ nav.solid .hamburger span { background: #333; }
     background-size: cover !important;
   }
   /* Events banner — FR_Outside_LiveMusic */
-  .events-banner { height: 340px !important; }
+  .events-banner { min-height: 340px !important; }
   .events-banner {
     background-position: center 25% !important;
     background-size: cover !important;
@@ -997,6 +997,11 @@ nav.solid .hamburger span { background: #333; }
     <p class="s-label lt center">Live Music &amp; Events</p>
     <h2 class="on-dark">Something's always <em>happening</em></h2>
     <p>From laid-back Sunday sessions to ticketed special events, Free Run brings the best of Southwest Michigan's music scene to the vineyard patio every week.</p>
+    <figure style="margin:28px auto 32px;max-width:600px;width:100%;text-align:center;">
+      <img src="/public/images/IMG_8852.jpeg" alt="Johnny performing live music at Free Run Cellars"
+        style="width:100%;border-radius:12px;display:block;">
+      <figcaption style="margin-top:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);">Live Music Every Sunday</figcaption>
+    </figure>
     <a href="pages/events-calendar.html" class="btn-fill">View Upcoming Events</a>
   </div>
 </section>
