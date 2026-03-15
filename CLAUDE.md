@@ -24,6 +24,7 @@ This is a **pure static HTML website** — no npm, no build process, no framewor
 | Serverless API | Node.js (Vercel Functions in `/api/`) |
 | AI Chat | Anthropic Claude API (claude-haiku model) |
 | Email | EmailJS (photo booth) |
+| Analytics | Google Analytics 4 (G-T51K1F9DVS) |
 | DNS redirect | vercel.json (frcwine.com + www.frcwine.com → freeruncellars.com) |
 | Images | Local `/public/images/` + GoDaddy CDN |
 
@@ -260,6 +261,10 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - [ ] No Instagram link confirmed (assumed `@freeruncellars`)
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
+
+## Recent Fixes (March 2026 — continued, part 2)
+
+- **Google Analytics**: Added GA4 tag (`G-T51K1F9DVS`) to all 11 public HTML pages (`index.html`, all `pages/`, `tools/post-generator.html`, `tools/photobooth.html`). Snippet placed at the top of `<head>` on each page.
 
 ## Recent Fixes (March 2026 — continued)
 

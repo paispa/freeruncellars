@@ -15,6 +15,7 @@
 Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michigan. Built as static HTML hosted on Vercel at `www.freeruncellars.com`. `frcwine.com` and `www.frcwine.com` redirect here. Future plan is to migrate to WordPress.
 
 **Current stack:** Static HTML → GitHub → Vercel → www.freeruncellars.com
+**Analytics:** Google Analytics 4 — Measurement ID `G-T51K1F9DVS`
 **Target stack:** WordPress (WP Engine or Kinsta) + custom theme based on these prototypes
 **DNS:** freeruncellars.com and frcwine.com managed via Cloudflare · A record `216.198.79.1` · CNAME `www` → Vercel
 **Redirects:** `frcwine.com` and `www.frcwine.com` → `freeruncellars.com` (308 permanent) handled by `vercel.json`
@@ -246,6 +247,7 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Wine press footer stamp added to all pages (90px, centred, above copyright bar)
 - [x] Live Music page mobile layout overhauled (767px breakpoint, reduced paddings, Season/Time/Admission 2-col grid)
 - [x] Johnny Poracky artist photo on Live Music page (600px max-width, 12px corners, caption)
+- [x] Google Analytics 4 added to all pages (G-T51K1F9DVS)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
 - [ ] Josh Bishop (preferred caterer) — add to site once permission confirmed
