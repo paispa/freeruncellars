@@ -17,7 +17,7 @@ Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michiga
 **Current stack:** Static HTML → GitHub → Vercel → www.freeruncellars.com
 **Target stack:** WordPress (WP Engine or Kinsta) + custom theme based on these prototypes
 **DNS:** freeruncellars.com and frcwine.com managed via Cloudflare · A record `216.198.79.1` · CNAME `www` → Vercel
-**Redirects:** `frcwine.com` and `freeruncellars.com` → `www.freeruncellars.com` handled by `vercel.json`
+**Redirects:** `frcwine.com` and `www.frcwine.com` → `freeruncellars.com` (308 permanent) handled by `vercel.json`
 **Clean URLs:** `"cleanUrls": true` in `vercel.json` — pages served at `/pages/about` (no `.html`)
 
 ---
@@ -27,7 +27,7 @@ Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michiga
 ```
 freeruncellars/
 ├── index.html                  ← Homepage
-├── vercel.json                 ← Redirect config (frcwine.com → www.freeruncellars.com)
+├── vercel.json                 ← Redirect config (frcwine.com → freeruncellars.com)
 ├── pages/
 │   ├── about.html              ← Our Story
 │   ├── wines.html              ← Full wine menu + seasonal cocktails
@@ -65,7 +65,7 @@ freeruncellars/
 | Visit Us | `pages/contact.html` | ✅ Live |
 | Reviews | `pages/reviews.html` | ✅ Live |
 | Post Generator | `tools/post-generator.html` | ✅ Internal tool |
-| Photo Booth | `tools/photobooth.html` | ⚙️ Built — needs EmailJS keys |
+| Photo Booth | `tools/photobooth.html` | ✅ Live — EmailJS + Vercel Blob |
 
 ---
 

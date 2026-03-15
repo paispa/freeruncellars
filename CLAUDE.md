@@ -6,7 +6,7 @@ This document provides guidance for AI assistants working on the Free Run Cellar
 
 **Free Run Cellars** is a boutique winery website for a family-owned estate in Berrien Springs, Michigan (90 minutes from Chicago), owned by Trish Slevin & Prashanth Pais. The philosophy is *Atithidevo Bhav* — "the guest is akin to God."
 
-- **Live site:** https://www.frcwine.com
+- **Live site:** https://freeruncellars.com
 - **GitHub:** https://github.com/paispa/freeruncellars
 - **Hosting:** Vercel (auto-deploys from GitHub `main` branch)
 - **Preview URL:** https://freeruncellars.vercel.app
@@ -24,7 +24,7 @@ This is a **pure static HTML website** — no npm, no build process, no framewor
 | Serverless API | Node.js (Vercel Functions in `/api/`) |
 | AI Chat | Anthropic Claude API (claude-haiku model) |
 | Email | EmailJS (photo booth) |
-| DNS redirect | vercel.json (frcwine.com → www.frcwine.com) |
+| DNS redirect | vercel.json (frcwine.com + www.frcwine.com → freeruncellars.com) |
 | Images | Local `/public/images/` + GoDaddy CDN |
 
 **There is no package.json, no build step, no transpilation.** Edit files directly.
@@ -249,13 +249,14 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 
 - [ ] Newsletter signup uses `mailto:` fallback — needs Mailchimp or EmailJS integration
 - [ ] Reviews page has placeholder content — needs real Google/Facebook reviews
-- [ ] `freeruncellars.com` DNS not yet pointed to Vercel (only `frcwine.com` is live)
+- [x] `freeruncellars.com` DNS migrated to Vercel — `frcwine.com` and `www.frcwine.com` now permanently redirect to `freeruncellars.com`
 - [ ] No Instagram link confirmed (assumed `@freeruncellars`)
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
 
 ## Recent Fixes (March 2026)
 
+- **Domain migration**: Primary domain moved from `frcwine.com` to `freeruncellars.com`. Both `frcwine.com` and `www.frcwine.com` permanently redirect (308) to `freeruncellars.com` via `vercel.json`. Contact email (`contact@frcwine.com`) and Microsoft 365 tenant remain on `@frcwine.com`.
 - **Hamburger menu (all pages)**: Removed leaked CSS outside `@media` queries overriding desktop styles. Removed broken `links`/`burger` event listeners. Added missing `id="navLinks"` to `<ul>` on `events-calendar.html` and `reviews.html` so `getElementById` resolves correctly.
 - **Gallery filter + hamburger**: Removed unclosed `(function() {` stub that caused a JS SyntaxError, killing both the filter and hamburger in the same script block.
 - **Events calendar**: Removed unclosed `(function() {` IIFE that caused a silent JS syntax error, leaving the events list permanently blank.
