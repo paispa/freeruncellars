@@ -1,6 +1,6 @@
 # Free Run Cellars — Website
 
-**Live site:** https://www.frcwine.com  
+**Live site:** https://www.freeruncellars.com
 **Vercel preview:** https://freeruncellars.vercel.app  
 **GitHub repo:** https://github.com/paispa/freeruncellars  
 **Owners:** Trish Slevin & Prashanth Pais  
@@ -12,12 +12,12 @@
 
 ## Project Overview
 
-Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michigan. Currently built as static HTML hosted on Vercel, connected to `frcwine.com` (test domain) while `freeruncellars.com` remains on the existing GoDaddy site. Future plan is to migrate to WordPress.
+Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michigan. Built as static HTML hosted on Vercel at `www.freeruncellars.com`. `frcwine.com` and `www.frcwine.com` redirect here. Future plan is to migrate to WordPress.
 
-**Current stack:** Static HTML → GitHub → Vercel → frcwine.com
+**Current stack:** Static HTML → GitHub → Vercel → www.freeruncellars.com
 **Target stack:** WordPress (WP Engine or Kinsta) + custom theme based on these prototypes
-**DNS:** frcwine.com managed via GoDaddy · A record `216.198.79.1` · CNAME `www` → Vercel
-**Redirect:** `frcwine.com` → `www.frcwine.com` handled by `vercel.json` in repo root
+**DNS:** freeruncellars.com and frcwine.com managed via Cloudflare · A record `216.198.79.1` · CNAME `www` → Vercel
+**Redirects:** `frcwine.com` and `freeruncellars.com` → `www.freeruncellars.com` handled by `vercel.json`
 **Clean URLs:** `"cleanUrls": true` in `vercel.json` — pages served at `/pages/about` (no `.html`)
 
 ---
@@ -27,7 +27,7 @@ Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michiga
 ```
 freeruncellars/
 ├── index.html                  ← Homepage
-├── vercel.json                 ← Redirect config (frcwine.com → www.frcwine.com)
+├── vercel.json                 ← Redirect config (frcwine.com → www.freeruncellars.com)
 ├── pages/
 │   ├── about.html              ← Our Story
 │   ├── wines.html              ← Full wine menu + seasonal cocktails
@@ -239,7 +239,7 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Photo booth: switched to Vercel Blob storage + URL-based email delivery
 - [x] Photo booth: 3-photo strip composited into single film-strip image client-side
 - [x] Email templates: added fallback "view photo" links for image-blocking email clients
-- [ ] Switch `freeruncellars.com` DNS to Vercel when ready
+- [x] Switch `freeruncellars.com` DNS to Vercel — complete
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
 - [ ] Josh Bishop (preferred caterer) — add to site once permission confirmed
@@ -250,4 +250,4 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 ---
 
-*Last updated: March 14, 2026*
+*Last updated: March 15, 2026*

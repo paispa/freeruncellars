@@ -66,7 +66,7 @@ THE EXPERIENCE
 - Fruitful Vine Tours runs guided tours including Free Run: fruitfulvinetours.com
 
 EVENTS CALENDAR
-- For specific upcoming events and live music artist lineups, guests should check the events calendar at frcwine.com/pages/events-calendar or call (269) 815-6885
+- For specific upcoming events and live music artist lineups, guests should check the events calendar at freeruncellars.com/pages/events-calendar or call (269) 815-6885
 - You do not have access to the live events calendar — always direct guests there for up-to-date event listings
 
 CONVERSATION GUIDELINES
