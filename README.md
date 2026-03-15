@@ -118,7 +118,7 @@ Supported types: `live-music` · `tasting` · `special`
 
 ## Image Swap Guide
 
-Images are CSS variables at the top of each HTML file. To swap: upload to GoDaddy Image Manager → copy CDN URL → paste in.
+Images are CSS variables at the top of each HTML file. To swap: upload to GoDaddy Image Manager → copy CDN URL → paste in. GoDaddy CDN is used for large hero/gallery photos only; logos and brand assets are self-hosted in `/public/images/`.
 
 CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/FILENAME.jpeg`
 
@@ -141,7 +141,8 @@ CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e
 **Secondary:** `#707271` grey · `#cbc7c7` light grey · `#000000` black  
 **Primary font:** Uniform → web substitute: **Jost**  
 **Accent font:** Znikomitno24 → web substitute: **Cormorant Garamond**  
-**Logo CDN:** `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png`
+**Logo:** `/public/images/free-run-cellars-logo-horizontal-black-323a89.webp` (self-hosted)
+**Wine press logo:** To be added to `/public/images/` once exported
 
 ---
 
@@ -240,6 +241,7 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Photo booth: 3-photo strip composited into single film-strip image client-side
 - [x] Email templates: added fallback "view photo" links for image-blocking email clients
 - [x] Switch `freeruncellars.com` DNS to Vercel — complete
+- [x] Logo replaced with self-hosted horizontal logo (removed GoDaddy CDN logo dependency)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
 - [ ] Josh Bishop (preferred caterer) — add to site once permission confirmed
