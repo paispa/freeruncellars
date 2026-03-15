@@ -395,10 +395,50 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 /* ── RESPONSIVE ── */
 /* ── MOBILE NAV ── */
 
-@media (max-width:600px) {
-  .hero-body { padding:0 24px 60px; }
-  .artists-grid { grid-template-columns:1fr; max-width:400px; margin:0 auto 48px; }
-  .hero-details { flex-direction:column; gap:12px; }
+@media (max-width: 767px) {
+  /* ── Nav ── */
+  nav { padding: 0 20px; }
+
+  /* ── Hero ── */
+  .hero-body { padding: 0 24px 56px; }
+  .hero-details { flex-direction: column; gap: 10px; }
+
+  /* ── What to Expect ── */
+  .expect { padding: 68px 24px; }
+  .expect-inner { grid-template-columns: 1fr; gap: 40px; }
+  .expect-img-main { height: 280px; }
+  .expect-badge { bottom: 10px; right: 10px; }
+
+  /* Season / Time / Admission → 2-col grid; Rain or Shine stays full-width */
+  .detail-list { display: grid; grid-template-columns: 1fr 1fr; }
+  .detail-list .detail-item:nth-child(1),
+  .detail-list .detail-item:nth-child(4) { grid-column: 1 / -1; }
+  .detail-list .detail-item:nth-child(3) { padding-left: 12px; border-left: 1px solid rgba(0,0,0,.06); }
+
+  /* ── Happy Hour — shrink the ½ stat block ── */
+  .happy-hour { padding: 44px 24px; }
+  .hh-stat { padding: 20px 28px; align-self: flex-start; }
+  .hh-num { font-size: 52px; }
+
+  /* ── Artists ── */
+  .artists { padding: 68px 24px; }
+  .artists-header { margin-bottom: 28px; }
+  .artists-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto 24px; }
+  .artists figure { margin-bottom: 24px !important; }
+
+  /* ── DD bar ── */
+  .dd-bar { padding: 20px 24px; }
+
+  /* ── Policies ── */
+  .policies { padding: 56px 24px; }
+  .policies-header { margin-bottom: 24px; }
+
+  /* ── Visit CTA ── */
+  .visit-cta-body { padding: 0 24px; }
+
+  /* ── Footer ── */
+  .page-footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .footer-links { flex-wrap: wrap; gap: 12px; }
 }
 
 
