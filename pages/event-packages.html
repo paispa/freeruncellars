@@ -433,6 +433,21 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 /* ── RESPONSIVE ── */
 /* ── MOBILE NAV ── */
 
+@media (max-width:768px) {
+  .hero-body { padding:0 24px 60px; }
+  .intro-inner { grid-template-columns:1fr; }
+  .intro-content { padding:52px 24px; }
+  .intro-imgs { grid-template-rows:auto; min-height:0; }
+  .intro-img { height:280px; }
+  .included { padding:60px 24px; }
+  .caterer { padding:60px 24px; }
+  .caterer-inner { grid-template-columns:1fr; gap:32px; }
+  .contact-section { padding:64px 24px; }
+  .contact-inner { grid-template-columns:1fr; gap:40px; }
+  .page-footer { padding:24px 20px; flex-direction:column; text-align:center; }
+  .footer-links { justify-content:center; }
+}
+
 @media (max-width:600px) {
   .included-grid { grid-template-columns:1fr; }
   .intro-imgs { grid-template-columns:1fr; }
