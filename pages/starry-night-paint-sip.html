@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-T51K1F9DVS');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starry Night Paint & Sip · Free Run Cellars · May 8th</title>
+<meta name="description" content="Join us Thursday, May 8th at 6 PM for a Starry Night wine glass painting evening at Free Run Cellars. $35 includes a hand-painted stemless glass to take home and a Starry Night cocktail.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #060e20;
+  --deep:    #04090f;
+  --teal:    #537f71;
+  --teal-dk: #3d6155;
+  --teal-lt: #7aab9a;
+  --gold:    #c8940e;
+  --gold-lt: #e8b830;
+  --cream:   #f0ece2;
+  --muted:   rgba(240,236,226,0.45);
+  --blue:    #1a3a8a;
+  --cobalt:  #2a55cc;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--deep);
+  font-family: 'Jost', sans-serif;
+  color: var(--cream);
+  overflow-x: hidden;
+}
+/* ── Canvas starfield ── */
+#starCanvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+/* ── Layout ── */
+.page { position: relative; z-index: 1; }
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+  background: linear-gradient(180deg, rgba(4,9,15,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(8px);
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none; line-height: 0;
+}
+.nav-press {
+  height: 44px; width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  margin-top: 4px;
+}
+.nav-logo {
+  height: 28px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+.nav-back {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; font-weight: 500;
+  transition: color 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-back:hover { color: var(--teal-lt); }
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 24px 80px;
+  text-align: center;
+  position: relative;
+}
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--teal); font-weight: 500; margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 10vw, 88px);
+  font-weight: 300; font-style: italic;
+  line-height: 1.0; letter-spacing: 2px;
+  color: var(--cream);
+  margin-bottom: 8px;
+  opacity: 0; animation: fadeUp 0.8s 0.35s ease forwards;
+  text-shadow: 0 0 60px rgba(60,100,220,0.25);
+}
+.hero-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 300;
+  color: var(--teal-lt); letter-spacing: 3px;
+  margin-bottom: 36px;
+  opacity: 0; animation: fadeUp 0.8s 0.5s ease forwards;
+}
+/* Wine glass SVG hero */
+.hero-glass {
+  width: min(280px, 65vw);
+  margin: 0 auto 40px;
+  opacity: 0; animation: fadeUp 0.8s 0.65s ease forwards;
+  filter: drop-shadow(0 0 40px rgba(40,80,200,0.35)) drop-shadow(0 0 80px rgba(20,50,150,0.2));
+}
+.hero-date-badge {
+  display: inline-flex; flex-direction: column; align-items: center;
+  background: rgba(83,127,113,0.1);
+  border: 1px solid rgba(83,127,113,0.35);
+  border-radius: 16px;
+  padding: 20px 40px;
+  margin-bottom: 36px;
+  opacity: 0; animation: fadeUp 0.8s 0.8s ease forwards;
+}
+.badge-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 300; font-style: italic;
+  color: var(--cream); line-height: 1;
+}
+.badge-detail {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--teal); margin-top: 4px; font-weight: 500;
+}
+.hero-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--teal), var(--teal-lt));
+  color: #000;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  text-decoration: none;
+  padding: 18px 48px;
+  border-radius: 50px;
+  transition: all 0.3s;
+  opacity: 0; animation: fadeUp 0.8s 0.95s ease forwards;
+  box-shadow: 0 8px 32px rgba(83,127,113,0.25);
+}
+.hero-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(83,127,113,0.35);
+}
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0; animation: fadeUp 1s 1.4s ease forwards;
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(180deg, var(--teal), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 0.8; transform: scaleY(1.1); }
+}
+/* ── DIVIDER ── */
+.section-divider {
+  width: 80px; height: 1px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+}
+/* ── WHAT'S INCLUDED ── */
+.includes-section {
+  padding: 100px 24px;
+  max-width: 900px; margin: 0 auto;
+}
+.section-label {
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--teal); font-weight: 500; text-align: center;
+  margin-bottom: 16px;
+}
+.section-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 48px); font-weight: 300; font-style: italic;
+  color: var(--cream); text-align: center; line-height: 1.2;
+  margin-bottom: 56px;
+}
+.includes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.include-card {
+  background: linear-gradient(145deg, rgba(15,25,50,0.8), rgba(6,14,32,0.9));
+  border: 1px solid rgba(83,127,113,0.2);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.include-card::before {
+  content: '';
+  position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(83,127,113,0.5), transparent);
+}
+.include-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(83,127,113,0.4);
+}
+.include-icon {
+  font-size: 32px; margin-bottom: 16px; display: block;
+  filter: drop-shadow(0 0 8px rgba(200,148,14,0.3));
+}
+.include-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-style: italic; font-weight: 400;
+  color: var(--cream); margin-bottom: 10px;
+}
+.include-desc {
+  font-size: 12px; line-height: 1.7; color: var(--muted); font-weight: 300;
+}
+/* ── COCKTAIL SECTION ── */
+.cocktail-section {
+  padding: 100px 24px;
+  background: linear-gradient(180deg, transparent, rgba(10,20,50,0.4), transparent);
+}
+.cocktail-inner {
+  max-width: 800px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.cocktail-text .section-label { text-align: left; }
+.cocktail-text .section-heading { text-align: left; margin-bottom: 20px; }
+.cocktail-desc {
+  font-size: 15px; line-height: 1.9; color: var(--muted); font-weight: 300;
+  margin-bottom: 24px;
+}
+.cocktail-ingredients {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.cocktail-ingredients li {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; color: var(--cream); font-weight: 400;
+}
+.ing-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal); flex-shrink: 0;
+}
+/* Cocktail glass illustration */
+.cocktail-visual {
+  display: flex; align-items: center; justify-content: center;
+}
+/* ── PAINTING STEPS ── */
+.steps-section {
+  padding: 100px 24px;
+  max-width: 760px; margin: 0 auto;
+}
+.steps-list {
+  display: flex; flex-direction: column; gap: 0;
+  margin-top: 48px;
+  position: relative;
+}
+.steps-list::before {
+  content: '';
+  position: absolute; left: 22px; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(180deg, var(--teal), rgba(83,127,113,0.1));
+}
+.step {
+  display: flex; gap: 24px; align-items: flex-start;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(83,127,113,0.1);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(83,127,113,0.1);
+  border: 1px solid rgba(83,127,113,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 300; font-style: italic;
+  color: var(--teal);
+  position: relative; z-index: 1;
+}
+.step-content { flex: 1; padding-top: 8px; }
+.step-title {
+  font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+  color: var(--cream); margin-bottom: 6px;
+}
+.step-desc {
+  font-size: 13px; line-height: 1.7; color: var(--muted); font-weight: 300;
+}
+.step-tip {
+  display: inline-block; margin-top: 8px;
+  background: rgba(200,148,14,0.1);
+  border: 1px solid rgba(200,148,14,0.25);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px; color: var(--gold-lt); letter-spacing: 0.5px;
+}
+/* ── DETAILS / TICKET ── */
+.ticket-section {
+  padding: 100px 24px;
+  max-width: 600px; margin: 0 auto; text-align: center;
+}
+.ticket-card {
+  background: linear-gradient(145deg, rgba(15,28,55,0.9), rgba(6,14,32,0.95));
+  border: 1px solid rgba(83,127,113,0.3);
+  border-radius: 24px;
+  padding: 48px 40px;
+  position: relative; overflow: hidden;
+}
+.ticket-card::before {
+  content: '';
+  position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+}
+.ticket-card::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 24px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(83,127,113,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ticket-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px; font-weight: 300; line-height: 1;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.ticket-price sup {
+  font-size: 32px; vertical-align: super; color: var(--teal);
+}
+.ticket-label {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 32px; font-weight: 500;
+}
+.ticket-details {
+  list-style: none; margin-bottom: 36px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.ticket-details li {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-size: 13px; color: var(--muted); font-weight: 300;
+}
+.ticket-details li span:first-child { color: var(--teal); font-size: 14px; }
+.ticket-dashes {
+  border: none; border-top: 2px dashed rgba(83,127,113,0.2);
+  margin: 28px 0;
+}
+.seats-warning {
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 28px; font-weight: 500;
+}
+.btn-reserve {
+  display: block; width: 100%;
+  background: linear-gradient(135deg, var(--teal), var(--teal-lt));
+  color: #000;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  text-decoration: none;
+  padding: 20px;
+  border-radius: 12px;
+  transition: all 0.3s;
+  box-shadow: 0 8px 32px rgba(83,127,113,0.25);
+  cursor: pointer; border: none;
+}
+.btn-reserve:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(83,127,113,0.35);
+}
+.reserve-note {
+  font-size: 11px; color: var(--muted); margin-top: 14px; font-weight: 300;
+}
+/* ── FOOTER ── */
+footer {
+  padding: 48px 24px;
+  text-align: center;
+  border-top: 1px solid rgba(83,127,113,0.1);
+}
+.footer-stamp {
+  width: 90px; height: auto;
+  display: block; margin: 0 auto 20px;
+  opacity: 0.3;
+  filter: brightness(0) invert(1);
+}
+.footer-logo {
+  height: 24px; filter: brightness(0) invert(1); opacity: 0.4;
+  margin-bottom: 16px; display: block; margin-left: auto; margin-right: auto;
+}
+.footer-address {
+  font-size: 11px; color: var(--muted); letter-spacing: 1px; line-height: 2;
+}
+.footer-links {
+  display: flex; gap: 24px; justify-content: center; margin-top: 20px;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(83,127,113,0.5); text-decoration: none; font-weight: 500;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--teal-lt); }
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+/* ── RESPONSIVE ── */
+@media (max-width: 767px) {
+  nav { padding: 12px 20px; }
+  .nav-press { height: 36px; }
+  .nav-logo { height: 22px; }
+  .hero { padding: 100px 20px 60px; }
+  .includes-grid { grid-template-columns: 1fr; gap: 16px; }
+  .cocktail-inner { grid-template-columns: 1fr; gap: 40px; }
+  .cocktail-text .section-label,
+  .cocktail-text .section-heading { text-align: center; }
+  .cocktail-visual { display: none; }
+  .ticket-card { padding: 36px 24px; }
+  .ticket-price { font-size: 56px; }
+  .includes-section,
+  .cocktail-section,
+  .steps-section,
+  .ticket-section { padding: 70px 20px; }
+}
+</style>
+</head>
+<body>
+<canvas id="starCanvas"></canvas>
+<div class="page">
+  <!-- Nav -->
+  <nav>
+    <a class="nav-brand" href="../index.html">
+      <img class="nav-press" src="../public/images/FR_WinePress.png" alt="">
+      <img class="nav-logo" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+    </a>
+    <a class="nav-back" href="events-calendar.html">
+      ← All Events
+    </a>
+  </nav>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">Free Run Cellars · Berrien Springs, Michigan</div>
+    <div class="hero-title">Starry Night</div>
+    <div class="hero-subtitle">Paint &amp; Sip Evening</div>
+    <!-- Wine glass SVG -->
+    <div class="hero-glass">
+      <!-- Stemless wine glass: wide mouth, gently curved sides, flat base, no stem -->
+      <svg viewBox="0 0 240 230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Stemless glass shape: wide top, curved inward slightly, flat rounded base -->
+          <clipPath id="gc">
+            <path d="M42,10 L198,10 Q200,10 200,12 L186,195 Q183,210 160,215 L80,215 Q57,210 54,195 L40,12 Q40,10 42,10 Z"/>
+          </clipPath>
+          <filter id="glow2">
+            <feGaussianBlur stdDeviation="3.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="sg">
+            <feGaussianBlur stdDeviation="5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <radialGradient id="mg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fffde0"/>
+            <stop offset="35%" stop-color="#f5e070" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#c8a000" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="purp" cx="50%" cy="80%" r="70%">
+            <stop offset="0%" stop-color="#3a1060" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#0a1428" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Glass body (stemless shape) -->
+        <path d="M42,10 L198,10 Q200,10 200,12 L186,195 Q183,210 160,215 L80,215 Q57,210 54,195 L40,12 Q40,10 42,10 Z"
+              fill="rgba(8,16,40,0.18)" stroke="rgba(180,210,255,0.22)" stroke-width="1.5"/>
+        <g clip-path="url(#gc)">
+          <!-- Night sky background -->
+          <rect x="38" y="8" width="164" height="148" fill="#080e1e"/>
+          <rect x="38" y="8" width="164" height="148" fill="url(#purp)"/>
+          <!-- Swirling sky currents -->
+          <path d="M44,36 Q68,24 95,34 Q122,44 150,28 Q172,14 196,26"
+                fill="none" stroke="#1a3a8a" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+          <path d="M44,36 Q68,24 95,34 Q122,44 150,28 Q172,14 196,26"
+                fill="none" stroke="#2a55cc" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+          <path d="M44,52 Q70,40 100,50 Q128,60 156,44 Q176,32 196,44"
+                fill="none" stroke="#1a3a8a" stroke-width="4.5" stroke-linecap="round" opacity="0.7"/>
+          <path d="M44,52 Q70,40 100,50 Q128,60 156,44 Q176,32 196,44"
+                fill="none" stroke="#3366cc" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+          <path d="M44,68 Q72,56 104,66 Q134,76 162,60 Q180,50 196,58"
+                fill="none" stroke="#1d3f8f" stroke-width="4" stroke-linecap="round" opacity="0.65"/>
+          <path d="M44,84 Q76,72 110,82 Q142,92 170,76 L196,80"
+                fill="none" stroke="#152e6e" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/>
+          <path d="M44,100 Q80,88 115,98 Q148,108 178,92 L196,96"
+                fill="none" stroke="#112460" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+          <!-- Large swirl (Van Gogh focal) -->
+          <g filter="url(#glow2)">
+            <circle cx="105" cy="55" r="30" fill="none" stroke="#1e3f9a" stroke-width="7" opacity="0.8"/>
+            <circle cx="105" cy="55" r="23" fill="none" stroke="#2a55cc" stroke-width="5" opacity="0.7"/>
+            <circle cx="105" cy="55" r="16" fill="none" stroke="#3d70e0" stroke-width="3.5" opacity="0.65"/>
+            <circle cx="105" cy="55" r="10" fill="none" stroke="#5588ee" stroke-width="2.5" opacity="0.6"/>
+            <circle cx="105" cy="55" r="5"  fill="#4470cc" opacity="0.5"/>
+          </g>
+          <!-- Moon -->
+          <circle cx="170" cy="28" r="22" fill="url(#mg)" filter="url(#sg)"/>
+          <circle cx="170" cy="28" r="14" fill="#fffde8"/>
+          <circle cx="170" cy="28" r="18" fill="none" stroke="#f0d840" stroke-width="1.5" opacity="0.5"/>
+          <circle cx="170" cy="28" r="24" fill="none" stroke="#c8a000" stroke-width="1" opacity="0.3"/>
+          <circle cx="170" cy="28" r="28" fill="none" stroke="#c8a000" stroke-width="0.8" opacity="0.2"/>
+          <!-- Stars -->
+          <circle cx="52"  cy="16" r="2.5" fill="#fff" filter="url(#glow2)" opacity="0.95"/>
+          <circle cx="68"  cy="10" r="1.8" fill="#fff" filter="url(#glow2)" opacity="0.85"/>
+          <circle cx="125" cy="12" r="2.2" fill="#fff" filter="url(#glow2)" opacity="0.9"/>
+          <circle cx="148" cy="18" r="1.5" fill="#fff" opacity="0.75"/>
+          <circle cx="192" cy="48" r="1.8" fill="#fff" filter="url(#glow2)" opacity="0.8"/>
+          <circle cx="48"  cy="66" r="1.2" fill="#fff" opacity="0.6"/>
+          <circle cx="192" cy="70" r="1.2" fill="#fff" opacity="0.55"/>
+          <circle cx="155" cy="90" r="1"   fill="#fff" opacity="0.5"/>
+          <!-- Hills / dark landscape -->
+          <path d="M38,118 Q68,96 98,110 Q124,122 152,102 Q174,86 202,108 L202,150 L38,150 Z"
+                fill="#0b1f12"/>
+          <path d="M38,132 Q72,112 108,126 Q140,138 172,116 Q188,106 202,118 L202,158 L38,158 Z"
+                fill="#0d2416"/>
+          <!-- Teal water waves -->
+          <path d="M38,150 Q72,134 110,144 Q146,154 180,136 L202,142 L202,178 L38,178 Z"
+                fill="#0c3d38"/>
+          <path d="M38,165 Q76,150 116,160 Q154,170 190,152 L202,158 L202,188 L38,188 Z"
+                fill="#0e4540"/>
+          <path d="M38,178 Q82,164 122,174 Q162,184 202,168 L202,220 L38,220 Z"
+                fill="#0a3830"/>
+          <!-- Teal wave highlights -->
+          <path d="M44,145 Q80,130 116,142 Q150,154 186,134 L198,140"
+                fill="none" stroke="#1a6b60" stroke-width="2" opacity="0.65"/>
+          <path d="M44,160 Q84,146 120,158 Q156,170 192,150"
+                fill="none" stroke="#1a7060" stroke-width="1.8" opacity="0.55"/>
+          <path d="M44,174 Q88,160 126,170 Q164,180 198,164"
+                fill="none" stroke="#156055" stroke-width="1.5" opacity="0.45"/>
+          <!-- Gold outlines (stained glass effect) -->
+          <path d="M38,118 Q70,96 100,110 Q128,124 158,104 Q178,88 202,106"
+                fill="none" stroke="#c8940e" stroke-width="2" opacity="0.8"/>
+          <path d="M38,132 Q74,112 110,126 Q144,140 176,118 L202,124"
+                fill="none" stroke="#d4a010" stroke-width="1.8" opacity="0.75"/>
+          <path d="M38,150 Q76,134 114,146 Q150,158 188,138 L202,144"
+                fill="none" stroke="#c8940e" stroke-width="1.5" opacity="0.7"/>
+          <path d="M38,165 Q80,150 120,162 Q158,174 196,154"
+                fill="none" stroke="#b88010" stroke-width="1.5" opacity="0.65"/>
+          <!-- Gold moon ring -->
+          <path d="M148,28 Q152,6 170,4 Q192,2 196,20 Q200,40 182,50 Q164,58 150,46 Q140,36 148,28"
+                fill="none" stroke="#c8940e" stroke-width="1.5" opacity="0.6"/>
+          <!-- Blueberry glow at base -->
+          <ellipse cx="120" cy="205" rx="70" ry="20" fill="rgba(80,20,160,0.2)"/>
+        </g>
+        <!-- Glass rim highlight -->
+        <line x1="42" y1="10" x2="198" y2="10" stroke="rgba(200,220,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Gold rim accent -->
+        <line x1="42" y1="10" x2="198" y2="10" stroke="#c8940e" stroke-width="1" opacity="0.5"/>
+        <!-- Left edge sheen -->
+        <path d="M48,14 Q46,80 48,140" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12" stroke-linecap="round"/>
+        <!-- Glass side edges -->
+        <path d="M42,10 L54,195 Q57,210 80,215" fill="none" stroke="rgba(200,220,255,0.12)" stroke-width="1.2"/>
+        <path d="M198,10 L186,195 Q183,210 160,215" fill="none" stroke="rgba(200,220,255,0.08)" stroke-width="1.2"/>
+        <!-- Flat base of stemless glass -->
+        <path d="M54,215 Q57,222 80,224 L160,224 Q183,222 186,215"
+              fill="rgba(160,190,255,0.08)" stroke="rgba(200,220,255,0.2)" stroke-width="1.2"/>
+        <!-- Base bottom edge -->
+        <ellipse cx="120" cy="224" rx="66" ry="5" fill="rgba(160,190,255,0.06)" stroke="rgba(200,220,255,0.15)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="hero-date-badge">
+      <div class="badge-date">Thursday, May 8th</div>
+      <div class="badge-detail">6:00 PM · Free Run Cellars</div>
+    </div>
+    <a class="hero-cta" href="#reserve">Reserve Your Seat — $35</a>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+  <!-- What's Included -->
+  <section class="includes-section">
+    <div class="section-label">What's Included</div>
+    <div class="section-heading">Everything you need<br>for a perfect evening</div>
+    <div class="includes-grid">
+      <div class="include-card reveal">
+        <span class="include-icon">🎨</span>
+        <div class="include-title">Guided Painting</div>
+        <p class="include-desc">Step-by-step instruction to paint Van Gogh's Starry Night on your stemless wine glass. No experience needed — just show up ready to create.</p>
+      </div>
+      <div class="include-card reveal">
+        <span class="include-icon">🌙</span>
+        <div class="include-title">Starry Night Cocktail</div>
+        <p class="include-desc">One glass of our signature Starry Night cocktail — our Mezzo wine with blueberry and sparkling water. Deep purple, perfectly sweet.</p>
+      </div>
+      <div class="include-card reveal">
+        <span class="include-icon">🥂</span>
+        <div class="include-title">Your Masterpiece</div>
+        <p class="include-desc">The hand-painted stemless glass is yours to take home. A one-of-a-kind keepsake from a night at the vineyard — the best kind of souvenir.</p>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider reveal"></div>
+  <!-- Cocktail Section -->
+  <section class="cocktail-section">
+    <div class="cocktail-inner">
+      <div class="cocktail-text">
+        <div class="section-label">The Cocktail</div>
+        <div class="section-heading">The Starry Night</div>
+        <p class="cocktail-desc">We made a cocktail for the occasion. Our Mezzo — with notes of orange blossom, lime, and apple — pairs with blueberry and sparkling water into something deep, purple, and a little magical.</p>
+        <ul class="cocktail-ingredients">
+          <li><span class="ing-dot"></span> Free Run Cellars Mezzo</li>
+          <li><span class="ing-dot"></span> Fresh blueberry</li>
+          <li><span class="ing-dot"></span> Sparkling water</li>
+          <li><span class="ing-dot"></span> Blueberry garnish</li>
+        </ul>
+      </div>
+      <div class="cocktail-visual">
+        <!-- Stemless cocktail glass -->
+        <svg viewBox="0 0 160 185" width="160" height="185" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cocktailGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#2a0860" stop-opacity="0.9"/>
+              <stop offset="60%" stop-color="#3d1080" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#1a0540" stop-opacity="1"/>
+            </linearGradient>
+            <!-- Stemless shape: wide, gently tapering to flat base -->
+            <clipPath id="glassClip2">
+              <path d="M18,8 Q18,6 20,6 L140,6 Q142,6 142,8 L132,162 Q129,172 105,175 L55,175 Q31,172 28,162 Z"/>
+            </clipPath>
+            <filter id="purpGlow">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Glass outline (stemless) -->
+          <path d="M18,8 Q18,6 20,6 L140,6 Q142,6 142,8 L132,162 Q129,172 105,175 L55,175 Q31,172 28,162 Z"
+                fill="rgba(8,10,20,0.15)" stroke="rgba(180,190,255,0.2)" stroke-width="1.2"/>
+          <g clip-path="url(#glassClip2)">
+            <!-- Cocktail liquid — fills the whole stemless body -->
+            <rect x="16" y="4" width="128" height="175" fill="url(#cocktailGrad)"/>
+            <!-- Shimmer on left -->
+            <path d="M24,20 Q26,80 24,150" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10" stroke-linecap="round"/>
+            <!-- Bubbles -->
+            <circle cx="55"  cy="130" r="3"   fill="rgba(180,100,255,0.3)" filter="url(#purpGlow)"/>
+            <circle cx="95"  cy="110" r="2"   fill="rgba(180,100,255,0.25)"/>
+            <circle cx="72"  cy="90"  r="2.5" fill="rgba(180,100,255,0.2)"/>
+            <circle cx="108" cy="140" r="1.5" fill="rgba(180,100,255,0.3)"/>
+            <circle cx="45"  cy="150" r="2"   fill="rgba(180,100,255,0.2)"/>
+            <!-- Blueberries floating near top -->
+            <circle cx="72"  cy="40" r="8"  fill="#2a0a5a" stroke="#4a1a8a" stroke-width="1"/>
+            <circle cx="96"  cy="55" r="7"  fill="#260858" stroke="#44188a" stroke-width="1"/>
+            <circle cx="60"  cy="58" r="6"  fill="#2c0c60" stroke="#4c1c90" stroke-width="1"/>
+            <!-- Highlight on berries -->
+            <circle cx="70" cy="37" r="2.5" fill="rgba(200,150,255,0.35)"/>
+            <circle cx="94" cy="52" r="2"   fill="rgba(200,150,255,0.28)"/>
+          </g>
+          <!-- Rim highlight -->
+          <line x1="18" y1="8" x2="142" y2="8" stroke="rgba(200,210,255,0.32)" stroke-width="1.2"/>
+          <!-- Glass side edges -->
+          <path d="M18,8 L28,162 Q31,172 55,175" fill="none" stroke="rgba(200,210,255,0.1)" stroke-width="1"/>
+          <path d="M142,8 L132,162 Q129,172 105,175" fill="none" stroke="rgba(200,210,255,0.07)" stroke-width="1"/>
+          <!-- Flat base bottom -->
+          <path d="M28,175 Q31,182 55,184 L105,184 Q129,182 132,175"
+                fill="rgba(160,180,255,0.07)" stroke="rgba(200,210,255,0.18)" stroke-width="1"/>
+          <ellipse cx="80" cy="184" rx="52" ry="4" fill="rgba(160,180,255,0.05)" stroke="rgba(200,210,255,0.12)" stroke-width="1"/>
+          <!-- Glow under glass -->
+          <ellipse cx="80" cy="186" rx="48" ry="7" fill="rgba(80,20,160,0.18)" filter="url(#purpGlow)"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider reveal"></div>
+  <!-- Painting Steps -->
+  <section class="steps-section">
+    <div class="section-label reveal">The Painting Process</div>
+    <div class="section-heading reveal">How we'll paint<br>your Starry Night</div>
+    <div class="steps-list">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Draw your gold outlines</div>
+          <p class="step-desc">Using a gold outliner pen, you'll trace the composition onto your glass — the rolling hills, swirling sky, and moon circle. This is what gives the finished piece its beautiful stained-glass look.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Fill the night sky</div>
+          <p class="step-desc">Using navy and cobalt blue acrylic, you'll dab and swirl to fill the sky sections. We'll guide you through the Van Gogh swirling technique — it's easier than it looks.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Paint the moon</div>
+          <p class="step-desc">Yellow center fading to white, with a golden halo. This is the centerpiece of your composition.</p>
+          <span class="step-tip">✦ Use the tip of your brush handle to dot the stars</span>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Dark hills &amp; teal water</div>
+          <p class="step-desc">Deep green-black for the rolling hills, sweeping teal strokes for the water below. This contrast is what makes the night sky pop.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Final touches &amp; take it home</div>
+          <p class="step-desc">Add any finishing stars, step back, and admire what you made. Your hand-painted glass goes home with you that night.</p>
+          <span class="step-tip">✦ Bake at 325°F for 40 min at home to make it dishwasher safe</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider reveal"></div>
+  <!-- Ticket / Reserve -->
+  <section class="ticket-section" id="reserve">
+    <div class="section-label reveal" style="margin-bottom:32px;">Reserve Your Seat</div>
+    <div class="ticket-card reveal">
+      <div class="ticket-price"><sup>$</sup>35</div>
+      <div class="ticket-label">Per Person · All Inclusive</div>
+      <ul class="ticket-details">
+        <li><span>🎨</span> <span>Guided Starry Night glass painting</span></li>
+        <li><span>🌙</span> <span>One Starry Night cocktail included</span></li>
+        <li><span>🥂</span> <span>Hand-painted stemless glass to take home</span></li>
+        <li><span>📅</span> <span>Thursday, May 8th · 6:00 PM</span></li>
+        <li><span>📍</span> <span>10062 Burgoyne Rd, Berrien Springs, MI</span></li>
+      </ul>
+      <hr class="ticket-dashes">
+      <div class="seats-warning">⚑ Only 20 seats available</div>
+      <!-- Replace href below with your payment link -->
+      <a class="btn-reserve" href="PAYMENT_LINK_HERE" id="reserveBtn">
+        Reserve My Seat
+      </a>
+      <p class="reserve-note">Questions? Call us at (269) 815-6885</p>
+    </div>
+  </section>
+  <!-- Footer -->
+  <footer>
+    <img class="footer-stamp" src="../public/images/FR_WinePress.png" alt="">
+    <img class="footer-logo"
+      src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+      alt="Free Run Cellars">
+    <div class="footer-address">
+      10062 Burgoyne Road · Berrien Springs, MI 49103<br>
+      (269) 815-6885 · contact@frcwine.com
+    </div>
+    <div class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="events-calendar.html">All Events</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://www.facebook.com/FreRunCellars">Facebook</a>
+    </div>
+  </footer>
+</div>
+<script>
+// ── Starfield canvas ──────────────────────────────────────────────
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 160; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      a: Math.random() * 0.7 + 0.1,
+      speed: Math.random() * 0.008 + 0.003,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars();
+requestAnimationFrame(drawStars);
+// ── Scroll reveal ─────────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
