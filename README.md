@@ -209,7 +209,7 @@ Prashanth grew up at Mathathota, his grandparents' coffee estate in Chikmagalur,
 | Harbor Country Chamber | https://business.harborcountry.org/list/member/free-run-cellars-145 |
 | Moody on the Market | https://www.moodyonthemarket.com/free-run-cellars-to-begin-new-chapter-as-independent-winery/ |
 | Lake Michigan Shore AVA | https://www.lmswine.com |
-| Moersch Hospitality (wine sales) | https://www.moerschhospitalitygroup.com |
+| Drink Michigan (wine sales) | https://drinkmichigan.com/collections/freeruncellars#/ |
 
 **Podcast — If Vines Could Talk, Episode 108:**
 - Spotify: https://open.spotify.com/episode/2QQvuKemIWH9dlWREocD2u
@@ -233,7 +233,7 @@ Prashanth grew up at Mathathota, his grandparents' coffee estate in Chikmagalur,
 
 ## E-Commerce Notes
 
-Wine currently sold online via Moersch Hospitality to avoid multi-state sales tax complexity. Future plan: WooCommerce + TaxJar/Avalara once licensing confirmed. Do not build an in-house shop until that decision is made.
+Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/). Do not build an in-house shop without explicit approval.
 
 ---
 
