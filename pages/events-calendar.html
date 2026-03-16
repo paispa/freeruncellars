@@ -172,7 +172,7 @@
   /* ── Event card ── */
   .event-card {
     display: grid;
-    grid-template-columns: 80px 1fr 110px;
+    grid-template-columns: 80px 1fr;
     background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
     border: 1px solid rgba(115,152,133,0.18);
     border-radius: 14px;
@@ -240,44 +240,6 @@
     font-size: 9px; letter-spacing: 1px; color: var(--sage);
   }
 
-  /* Image */
-  .event-image {
-    flex-shrink: 0; position: relative; overflow: hidden;
-    background: rgba(115,152,133,0.04);
-  }
-  .event-image img {
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: top center;
-    display: block; transition: transform 0.4s ease;
-  }
-  .event-card:hover .event-image img { transform: scale(1.05); }
-  .event-image .placeholder {
-    width: 100%; height: 100%; min-height: 100px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 6px;
-  }
-  .placeholder-note { font-size: 22px; opacity: 0.15; }
-  .placeholder-initial {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px; font-weight: 300; font-style: italic;
-    color: rgba(115,152,133,0.25); line-height: 1;
-  }
-
-  /* ── Ticket badge ── */
-  .ticket-badge {
-    position: absolute; top: 10px; right: 10px;
-    background: rgba(115,152,133,0.15);
-    border: 1px solid rgba(115,152,133,0.3);
-    border-radius: 4px; padding: 2px 6px;
-    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--sage); font-weight: 600;
-  }
-  .ticket-badge.sold-out-badge {
-    background: rgba(160,60,60,0.1);
-    border-color: rgba(160,60,60,0.3);
-    color: #a03c3c;
-  }
-
   /* ── Sold-out button ── */
   .sold-out-btn {
     display: inline-block; margin-top: 10px;
@@ -322,7 +284,6 @@
   /* ── Responsive ── */
   @media (max-width: 560px) {
     .event-card { grid-template-columns: 68px 1fr; }
-    .event-image { display: none; }
     .event-name { font-size: 18px; }
     .event-body { padding: 12px 14px; }
   }
@@ -521,17 +482,18 @@ async function fetchCalendar() {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-//  HOW TO ADD IMAGES & DETAILS TO YOUR EVENTS
+//  HOW TO CONFIGURE EVENTS IN OUTLOOK
 //
-//  In Outlook, open any event → Notes/Body field → add lines like:
+//  Notes/Body field — add any of these lines:
+//    type: live-music        (or tasting | special)
+//    admission: Free         (or "Ticketed · $35", or any text)
+//    status: sold-out        (replaces button with red Sold Out badge)
 //
-//    image: https://yourphoto.com/artist.jpg
-//    desc: Soulful acoustic duo from Kalamazoo, MI.
-//    type: live-music
-//    admission: Free
+//  Location field:
+//    • Street address → shows "Details Coming Soon" (grey disabled button)
+//    • https://... URL → shows teal "Get Tickets" button linking to that URL
 //
-//  Supported types: live-music | tasting | special
-//  If type is omitted, the page will auto-detect from the event title.
+//  If type is omitted, the page auto-detects from the event title.
 // ─────────────────────────────────────────────────────────────────────
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -558,10 +520,9 @@ function parseNotes(raw) {
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>');
-  // ICS descriptions can have \n or literal "\\n"
   const lines = text.replace(/\\n/g, '\n').split(/\r?\n/);
   for (const line of lines) {
-    const m = line.match(/^\s*(image|desc|type|admission|url|status)\s*:\s*(.+)/i);
+    const m = line.match(/^\s*(type|admission|status)\s*:\s*(.+)/i);
     if (m) result[m[1].toLowerCase()] = m[2].trim();
   }
   return result;
@@ -606,7 +567,7 @@ function parseICS(text) {
     const dtend    = get('DTEND');
     const rawDesc  = get('DESCRIPTION');
     const desc     = rawDesc.replace(/\\n/g, '\n').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
-    const url      = get('URL');
+    const location = get('LOCATION').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
 
     if (!summary || !dtstart) continue;
 
@@ -621,20 +582,15 @@ function parseICS(text) {
     let timeStr = formatTime(startDate);
     if (endDate) timeStr += ` – ${formatTime(endDate)}`;
 
-    // Detect ticket events from title or description type field
-    const isTicketed = /ticket/i.test(summary) || /ticket/i.test(notes.type || '');
-    const cleanName  = summary.replace(/\s*-?\s*ticket\s*event/i, '').trim();
+    const cleanName = summary.replace(/\s*-?\s*ticket\s*event/i, '').trim();
 
     events.push({
       name:      cleanName,
       date:      startDate,
       time:      timeStr,
       type,
-      desc:      notes.desc || '',
-      image:     notes.image || '',
-      admission: notes.admission || (isTicketed ? 'Ticketed' : 'Free'),
-      isTicketed,
-      url:       url || notes.url || '',
+      admission: notes.admission || '',
+      location,
       status:    (notes.status || '').toLowerCase().replace(/\s+/g, '-'),
     });
   }
@@ -684,30 +640,19 @@ function renderEvents(events, filter) {
     card.className = 'event-card';
     card.style.animationDelay = `${i * 50}ms`;
 
-    // Initial letter for placeholder
-    const initial = ev.name.charAt(0).toUpperCase();
-
-    const imgHtml = ev.image
-      ? `<img src="${ev.image}" alt="${ev.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=placeholder><div class=placeholder-note>♪</div><div class=placeholder-initial>${initial}</div></div>'">`
-      : `<div class="placeholder"><div class="placeholder-note">♪</div><div class="placeholder-initial">${initial}</div></div>`;
-
     const admHtml = ev.admission
       ? `<span class="admission-badge">${ev.admission}</span>` : '';
 
-    const descHtml = ev.desc
-      ? `<div class="event-desc">${ev.desc}</div>` : '';
-
     const isSoldOut = ev.status === 'sold-out';
-    const ticketBadge = isSoldOut
-      ? `<div class="ticket-badge sold-out-badge">Sold Out</div>`
-      : (ev.isTicketed && !ev.url ? `<div class="ticket-badge">Tickets</div>` : '');
+    const locationIsUrl = /^https?:\/\//i.test(ev.location);
 
-    let urlBtnHtml = '';
+    let btnHtml = '';
     if (isSoldOut) {
-      urlBtnHtml = `<span class="sold-out-btn">Sold Out</span>`;
-    } else if (ev.url) {
-      const label = ev.isTicketed ? 'Get Tickets' : 'Learn More';
-      urlBtnHtml = `<a class="event-url-btn" href="${ev.url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+      btnHtml = `<span class="sold-out-btn">Sold Out</span>`;
+    } else if (ev.admission && locationIsUrl) {
+      btnHtml = `<a class="event-url-btn" href="${ev.location}" target="_blank" rel="noopener noreferrer">Get Tickets</a>`;
+    } else if (ev.admission) {
+      btnHtml = `<span class="sold-out-btn">Details Coming Soon</span>`;
     }
 
     card.innerHTML = `
@@ -719,16 +664,11 @@ function renderEvents(events, filter) {
       <div class="event-body">
         <div class="event-type-tag">${TYPE_LABELS[ev.type] || 'Event'}</div>
         <div class="event-name">${ev.name}</div>
-        ${descHtml}
         <div class="event-meta">
           <span>◷ ${ev.time}</span>
           ${admHtml}
         </div>
-        ${urlBtnHtml}
-      </div>
-      <div class="event-image" style="position:relative;">
-        ${imgHtml}
-        ${ticketBadge}
+        ${btnHtml}
       </div>
     `;
     container.appendChild(card);
