@@ -539,7 +539,7 @@ function parseNotes(raw) {
   // ICS descriptions can have \n or literal "\\n"
   const lines = raw.replace(/\\n/g, '\n').split(/\r?\n/);
   for (const line of lines) {
-    const m = line.match(/^\s*(image|desc|type|admission)\s*:\s*(.+)/i);
+    const m = line.match(/^\s*(image|desc|type|admission|url)\s*:\s*(.+)/i);
     if (m) result[m[1].toLowerCase()] = m[2].trim();
   }
   return result;
@@ -599,8 +599,8 @@ function parseICS(text) {
     let timeStr = formatTime(startDate);
     if (endDate) timeStr += ` – ${formatTime(endDate)}`;
 
-    // Detect ticket events from title
-    const isTicketed = /ticket/i.test(summary);
+    // Detect ticket events from title or description type field
+    const isTicketed = /ticket/i.test(summary) || /ticket/i.test(notes.type || '');
     const cleanName  = summary.replace(/\s*-?\s*ticket\s*event/i, '').trim();
 
     events.push({
@@ -612,7 +612,7 @@ function parseICS(text) {
       image:     notes.image || '',
       admission: notes.admission || (isTicketed ? 'Ticketed' : 'Free'),
       isTicketed,
-      url:       url || '',
+      url:       url || notes.url || '',
     });
   }
 
