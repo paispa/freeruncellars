@@ -159,6 +159,64 @@ https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/
 
 ---
 
+## Wine Menu
+
+All wines are available by glass and bottle unless noted. When adding or changing wines, update both `pages/wines.html` and the system prompt in `api/chat.js`.
+
+### Whites & Off-Whites
+
+| Wine | Style | Tasting Notes | Flag |
+|------|-------|---------------|------|
+| Sur Lie Albariño | Dry · RS 0% | Honeysuckle, Almond Croissant, White Peach | |
+| Dry Riesling | Dry · RS 0% | Apple, White Peach, Limestone | |
+| Pinot Gris | Off-Dry · RS 0.25% | Yellow Pear, Lime Zest, Slate | 🍇 Estate Grown |
+| Fusion | Off-Dry · RS 0.25% | Nectarine, Limestone, Green Apple | |
+| Pinot Blanc | Semi-Dry · RS 0.3% | Apple, Yellow Plum, Honeydew | |
+| Semi-Dry Albariño | Semi-Dry · RS 2.5% | White Peach, Honeysuckle, Lemon | |
+| Mezzo | Sweet · RS 3.5% | Orange Blossom, Lime, Apple | |
+| Valvin Muscat | Sweet · RS 5% | Grapefruit, Lemon, Lime | |
+
+### Rosé & Reds
+
+| Wine | Style | Tasting Notes |
+|------|-------|---------------|
+| Rosé | Dry · RS 0% | Strawberry, Red Currant, Kiwi |
+| Pinot Noir | Dry · RS 0% | Plum, Fig, Cedar |
+| Syrah | Dry · RS 0% | Tomato, Blackberry, Cherry |
+| Lemberger | Dry · RS 0% | Leather, Oak, Chocolate |
+| Meritage | Dry · RS 0% | Forest Floor, Cherry, Leather |
+| Sangiovese Reserve | Dry · RS 0% | Sun-dried Tomato, Cherry, Oregano, Tobacco |
+| Rosso | Semi-Sweet · RS 3% | Salal Berry, Black Plum, Sweet Tobacco |
+
+### Coming Soon (Estate — Circle Members First)
+
+| Wine | Style | Notes |
+|------|-------|-------|
+| Orange Ramato | Skin-contact orange wine | Estate Pinot Gris, first-ever estate release |
+| Cabernet Blanc | TBD | Estate grown, to follow Ramato |
+
+### Flights
+
+| Flight | Price | Recommended Wines |
+|--------|-------|-------------------|
+| Dry Red Flight | $18 | Rosé, Lemberger, Meritage |
+| Dry White Flight | $15 | Dry Riesling, Pinot Gris, Fusion |
+| Sweet Flight | $15 | Mezzo, Valvin Muscat, Rosso |
+
+### Wine Cocktails
+
+| Cocktail | Price | Base |
+|----------|-------|------|
+| Espress-No Regrets | $14 | Pinot Gris · Honey Syrup · Coffee |
+| Blood Orange Mule | $14 | Mezzo · Blood Orange · Ginger Beer |
+| Lemberger Lemon Lift | $14 | Lemberger · Honey · Fresh Lemon |
+| Campfire Confessions | $15 | Syrah · Hot Chocolate · Cacao Bitters |
+
+### Chambong (Sparkling)
+- Single: $12 · Four-pack: $40
+
+---
+
 ## Business Information (Hardcoded in Pages)
 
 **Hours:**
