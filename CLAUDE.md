@@ -23,7 +23,7 @@ This is a **pure static HTML website** — no npm, no build process, no framewor
 | Hosting | Vercel (static + serverless functions) |
 | Serverless API | Node.js (Vercel Functions in `/api/`) |
 | AI Chat | Anthropic Claude API (claude-haiku model) |
-| Email | EmailJS (photo booth) |
+| Email | EmailJS (photo booth) · Brevo (Owners Circle) |
 | Analytics | Google Analytics 4 (G-T51K1F9DVS) |
 | DNS redirect | vercel.json (frcwine.com + www.frcwine.com → freeruncellars.com) |
 | Images | Local `/public/images/` + GoDaddy CDN |
@@ -46,7 +46,8 @@ freeruncellars/
 ├── api/                          # Vercel serverless functions
 │   ├── chat.js                   # AI chat assistant (Anthropic Claude Haiku)
 │   ├── calendar.js               # Outlook ICS calendar proxy (CORS workaround)
-│   └── upload-photo.js           # Photo booth image storage (Vercel Blob)
+│   ├── upload-photo.js           # Photo booth image storage (Vercel Blob)
+│   └── circle-signup.js          # Owners Circle form → Brevo + email notification
 │
 ├── pages/                        # All public content pages
 │   ├── about.html                # Our Story / owner bios
@@ -56,7 +57,8 @@ freeruncellars/
 │   ├── event-packages.html       # Private events & wedding pricing
 │   ├── gallery.html              # Photo gallery with lightbox
 │   ├── contact.html              # Hours, map, contact form
-│   └── reviews.html              # Links to Google/Yelp/Facebook reviews
+│   ├── reviews.html              # Links to Google/Yelp/Facebook reviews
+│   └── circle.html               # ⚠️ Owners Circle — NOT linked publicly, share URL directly
 │
 ├── tools/                        # Internal staff utilities (not linked publicly)
 │   ├── post-generator.html       # AI-powered Facebook post generator
@@ -112,6 +114,8 @@ const CONFIG = {
 |----------|---------|-------------|
 | `ANTHROPIC_API_KEY` | `api/chat.js` | Anthropic API key for chat assistant |
 | `BLOB_READ_WRITE_TOKEN` | `api/upload-photo.js` | Vercel Blob store token for photo storage |
+| `BREVO_API_KEY` | `api/circle-signup.js` | Brevo API key (xkeysib-…) |
+| `BREVO_CIRCLE_LIST_ID` | `api/circle-signup.js` | Numeric ID of the "Owners Circle" Brevo list |
 
 Set these in **Vercel project settings**, not in the repo.
 
@@ -253,6 +257,33 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 
 ---
 
+## Owners Circle (`pages/circle.html`)
+
+Membership landing page shared by private URL only — `freeruncellars.com/pages/circle`. Has `<meta name="robots" content="noindex, nofollow">` and is **not linked anywhere on the main site**.
+
+### What it does
+- Presents the $249/yr membership with $150 credit back
+- Collects interest sign-ups (name, email, phone, interests, message)
+- POSTs to `/api/circle-signup` which:
+  1. Adds/updates the contact in Brevo under the "Owners Circle" list
+  2. Sends a notification email to `contact@frcwine.com` via Brevo transactional email
+
+### Brevo setup checklist
+1. Sign up at brevo.com (free tier handles up to 300 emails/day)
+2. **Settings → API Keys** → Generate new key → add to Vercel as `BREVO_API_KEY`
+3. **Contacts → Lists** → Create list named "Owners Circle" → note the numeric ID → add to Vercel as `BREVO_CIRCLE_LIST_ID`
+4. **Contacts → Settings → Contact Attributes** → add these custom attributes (Text type):
+   - `INTERESTS`
+   - `MEMBERSHIP_TYPE`
+   - `CIRCLE_MESSAGE`
+   (Standard `FIRSTNAME`, `LASTNAME`, `SMS`, `JOIN_DATE` already exist in Brevo)
+5. Optional: build a welcome automation in Brevo triggered when a contact is added to the Owners Circle list
+
+### Legal note
+The "dividend into credits" language has a pending legal review flag visible on the page. Do not remove it until the owners have confirmed legal sign-off on Michigan winery membership regulations.
+
+---
+
 ## Known Limitations & Pending Work
 
 - [ ] Newsletter signup uses `mailto:` fallback — needs Mailchimp or EmailJS integration
@@ -262,6 +293,11 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 - [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
+
+## Recent Additions (March 2026 — part 4)
+
+- **Owners Circle page**: Added `pages/circle.html` — private membership landing page (noindex, not linked from site). Dark-background premium design with FRC branding (Jost body font, self-hosted logo, brand teal palette). Signup form POSTs to new `api/circle-signup.js`.
+- **Brevo integration**: `api/circle-signup.js` serverless function adds contacts to the "Owners Circle" Brevo list and sends a notification email to `contact@frcwine.com`. API key and list ID stored in Vercel env vars (`BREVO_API_KEY`, `BREVO_CIRCLE_LIST_ID`) — never client-side.
 
 ## Recent Fixes (March 2026 — continued, part 3)
 
@@ -308,6 +344,7 @@ Events are pulled live from an Outlook ICS calendar feed via `api/calendar.js`. 
 | Service | Purpose | Config Location |
 |---------|---------|----------------|
 | Anthropic Claude API | AI chat + post generator | `ANTHROPIC_API_KEY` in Vercel env |
+| Brevo | Owners Circle list + notification emails | `BREVO_API_KEY` + `BREVO_CIRCLE_LIST_ID` in Vercel env |
 | EmailJS | Photo booth email delivery | `CONFIG` object in `tools/photobooth.html` |
 | Vercel | Hosting + serverless functions | `vercel.json` + Vercel dashboard |
 | GoDaddy | Domain + image CDN | GoDaddy dashboard |
