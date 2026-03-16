@@ -350,7 +350,7 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [x] Instagram confirmed — `@freeruncellars` live in index, contact, and reviews pages
 - [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
-- [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
+- [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
 ## Recent Additions (March 2026 — part 5)
 
