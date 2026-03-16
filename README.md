@@ -129,9 +129,13 @@ image: https://yourphoto.com/artist.jpg
 desc: Soulful acoustic duo from Kalamazoo.
 type: live-music
 admission: Free
+url: https://tickets.example.com
+status: sold-out
 ```
 
-Supported types: `live-music` · `tasting` · `special`
+**Supported types:** `live-music` · `tasting` · `special` · `ticketed`
+
+**Supported status values:** `sold-out` — replaces the action button with a greyed-out "Sold Out" pill and adds a red "Sold Out" badge on the event image. Omit the field (or leave blank) for normal display.
 
 ---
 

@@ -352,6 +352,33 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally by Moersch Hospitality Group — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 5)
+
+- **Events calendar — ticketed event support**: `parseNotes` now reads `type: ticketed` and `status: sold-out` from Outlook event descriptions. Setting `type: ticketed` marks the event as ticketed (shows "Ticketed" admission badge; changes URL button label to "Get Tickets"). Setting `status: sold-out` replaces the action button with a greyed-out "Sold Out" pill and shows a red "Sold Out" badge on the event image thumbnail.
+- **Events calendar — HTML description parsing**: Outlook exports calendar descriptions as HTML (`<p>type: ticketed</p>`). `parseNotes` now strips HTML block elements (converting to newlines) and inline tags before parsing `key: value` fields, so all metadata fields work regardless of Outlook's formatting.
+
+### Events Calendar — Supported Description Fields
+
+Add these in the Outlook event's Notes/Description field (one per line):
+
+```
+image: https://yourphoto.com/artist.jpg
+desc: Soulful acoustic duo from Kalamazoo.
+type: live-music
+admission: Free
+url: https://tickets.example.com
+status: sold-out
+```
+
+| Field | Values | Effect |
+|-------|--------|--------|
+| `type` | `live-music` · `tasting` · `special` · `ticketed` | Sets filter category and type tag |
+| `admission` | Any text (e.g. `Free`, `$15`, `Ticketed`) | Shows admission badge on event card |
+| `url` | Full URL | Shows "Get Tickets" (if ticketed) or "Learn More" button |
+| `status` | `sold-out` | Replaces button with greyed "Sold Out" pill; adds red badge on image |
+| `image` | Full URL | Event thumbnail photo |
+| `desc` | Plain text | Short event description on card |
+
 ## Recent Additions (March 2026 — part 4)
 
 - **Owners Circle page**: Added `pages/circle.html` — private membership landing page (noindex, not linked from site). Dark-background premium design with FRC branding (Jost body font, self-hosted logo, brand teal palette). Signup form POSTs to new `api/circle-signup.js`.
