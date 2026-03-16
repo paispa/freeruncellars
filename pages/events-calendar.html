@@ -272,6 +272,20 @@
     font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
     color: var(--sage); font-weight: 600;
   }
+  .ticket-badge.sold-out-badge {
+    background: rgba(160,60,60,0.1);
+    border-color: rgba(160,60,60,0.3);
+    color: #a03c3c;
+  }
+
+  /* ── Sold-out button ── */
+  .sold-out-btn {
+    display: inline-block; margin-top: 10px;
+    padding: 7px 16px;
+    background: #ece9e6; color: #aaa;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: 4px; cursor: not-allowed;
+  }
 
   /* ── Event URL button ── */
   .event-url-btn {
@@ -547,7 +561,7 @@ function parseNotes(raw) {
   // ICS descriptions can have \n or literal "\\n"
   const lines = text.replace(/\\n/g, '\n').split(/\r?\n/);
   for (const line of lines) {
-    const m = line.match(/^\s*(image|desc|type|admission|url)\s*:\s*(.+)/i);
+    const m = line.match(/^\s*(image|desc|type|admission|url|status)\s*:\s*(.+)/i);
     if (m) result[m[1].toLowerCase()] = m[2].trim();
   }
   return result;
@@ -621,6 +635,7 @@ function parseICS(text) {
       admission: notes.admission || (isTicketed ? 'Ticketed' : 'Free'),
       isTicketed,
       url:       url || notes.url || '',
+      status:    (notes.status || '').toLowerCase().replace(/\s+/g, '-'),
     });
   }
 
@@ -682,12 +697,18 @@ function renderEvents(events, filter) {
     const descHtml = ev.desc
       ? `<div class="event-desc">${ev.desc}</div>` : '';
 
-    const ticketBadge = ev.isTicketed && !ev.url
-      ? `<div class="ticket-badge">Tickets</div>` : '';
+    const isSoldOut = ev.status === 'sold-out';
+    const ticketBadge = isSoldOut
+      ? `<div class="ticket-badge sold-out-badge">Sold Out</div>`
+      : (ev.isTicketed && !ev.url ? `<div class="ticket-badge">Tickets</div>` : '');
 
-    const urlBtnLabel = ev.isTicketed ? 'Get Tickets' : 'Learn More';
-    const urlBtnHtml = ev.url
-      ? `<a class="event-url-btn" href="${ev.url}" target="_blank" rel="noopener noreferrer">${urlBtnLabel}</a>` : '';
+    let urlBtnHtml = '';
+    if (isSoldOut) {
+      urlBtnHtml = `<span class="sold-out-btn">Sold Out</span>`;
+    } else if (ev.url) {
+      const label = ev.isTicketed ? 'Get Tickets' : 'Learn More';
+      urlBtnHtml = `<a class="event-url-btn" href="${ev.url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    }
 
     card.innerHTML = `
       <div class="event-date">
