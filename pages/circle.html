@@ -274,8 +274,8 @@
   .perk-icon { font-size: 26px; margin-bottom: 14px; display: block; }
   .perk-card.wide .perk-icon { font-size: 32px; margin-bottom: 0; flex-shrink: 0; margin-top: 4px; }
 
-  .perk-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; font-style: italic; color: var(--cream); margin-bottom: 8px; line-height: 1.25; }
-  .perk-desc { font-size: 11px; color: var(--muted); line-height: 1.75; }
+  .perk-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; font-style: italic; color: var(--cream); margin-bottom: 8px; line-height: 1.25; text-align: left; word-spacing: normal; letter-spacing: normal; }
+  .perk-desc { font-size: 11px; color: var(--muted); line-height: 1.75; text-align: left; word-spacing: normal; letter-spacing: normal; }
   .perk-desc strong { color: rgba(232,240,235,0.75); font-weight: 600; }
   .perk-detail { display: inline-block; margin-top: 10px; font-size: 9.5px; letter-spacing: 1px; color: rgba(201,169,110,0.55); border-top: 1px solid rgba(201,169,110,0.1); padding-top: 8px; width: 100%; }
 
@@ -375,6 +375,10 @@
 
   .spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff; animation: spin 0.7s linear infinite; display: inline-block; }
 
+  /* ── Wine press logo ── */
+  .press-header { display: block; margin: 0 auto 28px; width: 120px; opacity: 0.55; filter: brightness(0) invert(1); }
+  .press-footer { display: block; margin: 0 auto 18px; width: 90px; opacity: 0.3; filter: brightness(0) invert(1); }
+
   /* ── Footer ── */
   .footer-note { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid rgba(83,127,113,0.07); }
   .footer-note p { font-size: 8.5px; color: rgba(83,127,113,0.32); letter-spacing: 2px; text-transform: uppercase; line-height: 2.1; }
@@ -415,6 +419,9 @@
       <div class="orn-diamond"></div>
       <div class="orn-line r"></div>
     </div>
+    <img class="press-header"
+      src="/public/images/FR_WinePress.png"
+      alt="">
     <div class="circle-eyebrow">A private invitation</div>
     <div class="page-title">The Owners<br><span class="gold">Circle</span></div>
     <div class="costco-line">Think of it like Costco — but for wine.</div>
@@ -661,6 +668,9 @@
   </div>
 
   <div class="footer-note">
+    <img class="press-footer"
+      src="/public/images/FR_WinePress.png"
+      alt="">
     <p>
       Free Run Cellars · Local · Independent · Community Driven<br>
       10062 Burgoyne Rd, Berrien Springs MI · freeruncellars.com<br>
