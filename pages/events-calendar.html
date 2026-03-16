@@ -599,8 +599,8 @@ function parseICS(text) {
     let timeStr = formatTime(startDate);
     if (endDate) timeStr += ` – ${formatTime(endDate)}`;
 
-    // Detect ticket events from title
-    const isTicketed = /ticket/i.test(summary);
+    // Detect ticket events from title or description type field
+    const isTicketed = /ticket/i.test(summary) || /ticket/i.test(notes.type || '');
     const cleanName  = summary.replace(/\s*-?\s*ticket\s*event/i, '').trim();
 
     events.push({
