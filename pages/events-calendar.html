@@ -273,6 +273,17 @@
     color: var(--sage); font-weight: 600;
   }
 
+  /* ── Event URL button ── */
+  .event-url-btn {
+    display: inline-block; margin-top: 10px;
+    padding: 7px 16px;
+    background: var(--sage); color: #000;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .event-url-btn:hover { background: var(--sage-dark); color: #fff; }
+
   /* ── Intro text ── */
   .events-intro {
     text-align: center; margin-bottom: 32px; padding: 0 12px;
@@ -573,6 +584,7 @@ function parseICS(text) {
     const dtend    = get('DTEND');
     const rawDesc  = get('DESCRIPTION');
     const desc     = rawDesc.replace(/\\n/g, '\n').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
+    const url      = get('URL');
 
     if (!summary || !dtstart) continue;
 
@@ -600,6 +612,7 @@ function parseICS(text) {
       image:     notes.image || '',
       admission: notes.admission || (isTicketed ? 'Ticketed' : 'Free'),
       isTicketed,
+      url:       url || '',
     });
   }
 
@@ -661,8 +674,12 @@ function renderEvents(events, filter) {
     const descHtml = ev.desc
       ? `<div class="event-desc">${ev.desc}</div>` : '';
 
-    const ticketHtml = ev.isTicketed
+    const ticketBadge = ev.isTicketed && !ev.url
       ? `<div class="ticket-badge">Tickets</div>` : '';
+
+    const urlBtnLabel = ev.isTicketed ? 'Get Tickets' : 'Learn More';
+    const urlBtnHtml = ev.url
+      ? `<a class="event-url-btn" href="${ev.url}" target="_blank" rel="noopener noreferrer">${urlBtnLabel}</a>` : '';
 
     card.innerHTML = `
       <div class="event-date">
@@ -678,10 +695,11 @@ function renderEvents(events, filter) {
           <span>◷ ${ev.time}</span>
           ${admHtml}
         </div>
+        ${urlBtnHtml}
       </div>
       <div class="event-image" style="position:relative;">
         ${imgHtml}
-        ${ticketHtml}
+        ${ticketBadge}
       </div>
     `;
     container.appendChild(card);
