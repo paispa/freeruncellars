@@ -560,6 +560,8 @@ function parseNotes(raw) {
     .replace(/&gt;/g, '>');
   // ICS descriptions can have \n or literal "\\n"
   const lines = text.replace(/\\n/g, '\n').split(/\r?\n/);
+  console.log('[parseNotes] raw input:', JSON.stringify(raw));
+  console.log('[parseNotes] after HTML strip + split, lines:', lines);
   for (const line of lines) {
     const m = line.match(/^\s*(image|desc|type|admission|url|status)\s*:\s*(.+)/i);
     if (m) result[m[1].toLowerCase()] = m[2].trim();
