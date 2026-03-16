@@ -539,7 +539,7 @@ function parseNotes(raw) {
   // ICS descriptions can have \n or literal "\\n"
   const lines = raw.replace(/\\n/g, '\n').split(/\r?\n/);
   for (const line of lines) {
-    const m = line.match(/^\s*(image|desc|type|admission)\s*:\s*(.+)/i);
+    const m = line.match(/^\s*(image|desc|type|admission|url)\s*:\s*(.+)/i);
     if (m) result[m[1].toLowerCase()] = m[2].trim();
   }
   return result;
@@ -612,7 +612,7 @@ function parseICS(text) {
       image:     notes.image || '',
       admission: notes.admission || (isTicketed ? 'Ticketed' : 'Free'),
       isTicketed,
-      url:       url || '',
+      url:       url || notes.url || '',
     });
   }
 
