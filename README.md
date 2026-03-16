@@ -37,7 +37,8 @@ freeruncellars/
 │   ├── event-packages.html     ← Private events & pricing
 │   ├── gallery.html            ← Photo gallery with lightbox
 │   ├── contact.html            ← Visit Us / Hours / Map
-│   └── reviews.html            ← Review landing (Google, Yelp, Facebook)
+│   ├── reviews.html            ← Review landing (Google, Yelp, Facebook)
+│   └── circle.html             ← ⚠️ Owners Circle — private, not linked publicly
 ├── tools/
 │   ├── post-generator.html          ← Internal: AI Facebook post generator
 │   ├── photobooth.html              ← Photo booth with EmailJS + Vercel Blob
@@ -65,6 +66,7 @@ freeruncellars/
 | Gallery | `pages/gallery.html` | ✅ Live |
 | Visit Us | `pages/contact.html` | ✅ Live |
 | Reviews | `pages/reviews.html` | ✅ Live |
+| Owners Circle | `pages/circle.html` | ✅ Live — private URL, not linked from site |
 | Post Generator | `tools/post-generator.html` | ✅ Internal tool |
 | Photo Booth | `tools/photobooth.html` | ✅ Live — EmailJS + Vercel Blob |
 
@@ -81,6 +83,22 @@ CONFIG keys are filled in at the top of `tools/photobooth.html`. Two additional 
 **EmailJS templates** — paste the HTML from `tools/email-template-single.html` and `tools/email-template-strip.html` into the matching templates in the EmailJS dashboard. Set the **To Email** field to `{{to_email}}` and enable the HTML editor.
 
 **3-photo strip** — the browser composites all three frames into one vertical film-strip image (dark background, FRC logo at the bottom) before uploading. One image is stored and emailed, just like a traditional photo booth print.
+
+---
+
+## Owners Circle
+
+Private membership page at `/pages/circle` — shared by direct URL only, not linked from the main site.
+
+**Brevo setup** (one-time, before the page goes live):
+
+1. Sign up at [brevo.com](https://brevo.com) (free tier: 300 emails/day)
+2. **Settings → API Keys** → Generate → add to Vercel as `BREVO_API_KEY`
+3. **Contacts → Lists** → "New List" named `Owners Circle` → copy numeric ID → add to Vercel as `BREVO_CIRCLE_LIST_ID`
+4. **Contacts → Settings → Contact Attributes** → add Text attributes: `INTERESTS`, `MEMBERSHIP_TYPE`, `CIRCLE_MESSAGE`
+5. Optional: build a welcome email automation in Brevo triggered when a contact is added to the Owners Circle list
+
+Signups POST to `api/circle-signup.js` which adds the contact to the Brevo list and sends a notification to `contact@frcwine.com`.
 
 ---
 
@@ -249,6 +267,9 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 - [x] Johnny Poracky artist photo on Live Music page (600px max-width, 12px corners, caption)
 - [x] Google Analytics 4 added to all pages (G-T51K1F9DVS)
 - [x] Contact page: email mailto with subject line, Google Maps directions, mobile single-column layout, tel:+1 links, Facebook card, updated social copy
+- [x] Owners Circle page built (`pages/circle.html`) — awaiting Brevo env vars before sharing URL
+- [ ] Owners Circle: set `BREVO_API_KEY` + `BREVO_CIRCLE_LIST_ID` in Vercel env vars
+- [ ] Owners Circle: legal review of "dividends into credits" language (Michigan winery regs)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
 - [x] Josh Bishop (preferred caterer) — section live on event-packages.html
@@ -260,4 +281,4 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 ---
 
-*Last updated: March 15, 2026 (contact page fixes + social links)*
+*Last updated: March 16, 2026 (Owners Circle page + Brevo integration)*
