@@ -54,7 +54,7 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
 
   body {
     background: var(--bg);
@@ -390,7 +390,7 @@
     .steps       { grid-template-columns: 1fr 1fr; }
     .pricing-card { padding: 32px 24px; }
     .perks-grid  { grid-template-columns: 1fr; }
-    .perk-card.wide { flex-direction: column; }
+    .perk-card.wide { grid-column: auto; flex-direction: column; }
     .ramato-card { padding: 28px 22px; }
     .form-card   { padding: 28px 20px; }
     .field-row   { grid-template-columns: 1fr; }
