@@ -562,27 +562,35 @@ function parseICS(text) {
       const m = block.match(new RegExp('\n' + key + '(?:;[^:]+)?:([^\r\n]+)', 'i'));
       return m ? m[1].trim() : '';
     };
-    const summary  = get('SUMMARY').replace(/\\,/g, ',').replace(/\\;/g, ';');
+    const rawSummary = get('SUMMARY').replace(/\\,/g, ',').replace(/\\;/g, ';');
     const dtstart  = get('DTSTART');
     const dtend    = get('DTEND');
     const rawDesc  = get('DESCRIPTION');
     const desc     = rawDesc.replace(/\\n/g, '\n').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
     const location = get('LOCATION').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
 
-    if (!summary || !dtstart) continue;
+    if (!rawSummary || !dtstart) continue;
+
+    // Parse inline tags from title: "Event Name | admission: Ticketed · $35 | type: special"
+    const titleParts = rawSummary.split('|');
+    const cleanName  = titleParts[0].trim();
+    const titleTags  = {};
+    for (let j = 1; j < titleParts.length; j++) {
+      const m = titleParts[j].trim().match(/^(type|admission|status)\s*:\s*(.+)/i);
+      if (m) titleTags[m[1].toLowerCase()] = m[2].trim();
+    }
 
     const startDate = parseICSDate(dtstart);
     const endDate   = dtend ? parseICSDate(dtend) : null;
-    const notes     = parseNotes(desc);
+    // Description tags override title tags
+    const notes     = Object.assign({}, titleTags, parseNotes(desc));
 
     // Determine type
-    const type = notes.type || guessType(summary);
+    const type = notes.type || guessType(rawSummary);
 
     // Build time display
     let timeStr = formatTime(startDate);
     if (endDate) timeStr += ` – ${formatTime(endDate)}`;
-
-    const cleanName = summary.replace(/\s*-?\s*ticket\s*event/i, '').trim();
 
     events.push({
       name:      cleanName,
