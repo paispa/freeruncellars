@@ -73,7 +73,7 @@ export default async function handler(req, res) {
   if (!contactRes.ok && contactRes.status !== 204) {
     const err = await contactRes.text();
     console.error('Brevo contact error:', err);
-    return res.status(502).json({ error: 'Could not save contact. Please try again.' });
+    return res.status(502).json({ error: 'Could not save contact. Please try again.', brevo: err });
   }
 
   // 2 — Notify Trish & Prashanth
