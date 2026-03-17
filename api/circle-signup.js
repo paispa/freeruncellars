@@ -12,8 +12,8 @@ export default async function handler(req, res) {
 
   const { firstName, lastName, email, phone, message, interests } = req.body || {};
 
-  if (!firstName || !email || !email.includes('@')) {
-    return res.status(400).json({ error: 'First name and valid email are required.' });
+  if (!firstName || !email || !email.includes('@') || !phone) {
+    return res.status(400).json({ error: 'First name, valid email, and phone are required.' });
   }
 
   const apiKey = process.env.BREVO_API_KEY;
