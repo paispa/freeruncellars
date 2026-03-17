@@ -24,15 +24,26 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  const INTEREST_LABELS = {
-    ramato:   'First access to Ramato & Cab Blanc',
-    credits:  '$150 credits + ongoing discount',
-    events:   'Private tastings & owner-only events',
-    tickets:  'Early access to live music tickets',
-    tastings: 'Quarterly complimentary tastings',
-    updates:  'Behind-the-scenes vineyard updates',
+  // Brevo multiple-choice option IDs (must match order defined in Brevo attribute settings)
+  const INTEREST_IDS = {
+    ramato:  1,
+    credits: 2,
+    events:  3,
+    tickets: 4,
+    updates: 5,
   };
 
+  const INTEREST_LABELS = {
+    ramato:  'First access to Ramato & Cab Blanc',
+    credits: '$150 credits + ongoing discount',
+    events:  'Private tastings & owner-only events',
+    tickets: 'Early access to live music tickets',
+    updates: 'Behind-the-scenes vineyard updates',
+  };
+
+  const interestIds  = (interests && interests.length)
+    ? interests.map(i => INTEREST_IDS[i]).filter(Boolean)
+    : [];
   const interestList = (interests && interests.length)
     ? interests.map(i => INTEREST_LABELS[i] || i).join(', ')
     : 'Not specified';
@@ -49,8 +60,8 @@ export default async function handler(req, res) {
         FIRSTNAME:       firstName,
         LASTNAME:        lastName || '',
         SMS:             phone || '',
-        INTERESTS:       interestList,
-        MEMBERSHIP_TYPE: 'Owners Circle Interest',
+        INTERESTS:       interestIds,
+        MEMBERSHIP_TYPE: 1,
         JOIN_DATE:       new Date().toISOString().split('T')[0],
         CIRCLE_MESSAGE:  message || '',
       },
