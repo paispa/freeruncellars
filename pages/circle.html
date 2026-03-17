@@ -621,7 +621,7 @@
         </div>
 
         <div class="field">
-          <label>Phone <span style="color:rgba(83,127,113,0.4);font-weight:400;">(optional)</span></label>
+          <label>Phone *</label>
           <input type="tel" id="phone" placeholder="(269) 555-0100">
         </div>
 
@@ -684,6 +684,7 @@ async function submitForm() {
 
   if (!firstName)                     { showError('Please enter your first name.');        return; }
   if (!email || !email.includes('@')) { showError('Please enter a valid email address.');  return; }
+  if (!phone)                         { showError('Please enter your phone number.');       return; }
 
   const interests = [...document.querySelectorAll('.interest-grid input:checked')].map(cb => cb.value);
 

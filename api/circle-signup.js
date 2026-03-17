@@ -12,8 +12,8 @@ export default async function handler(req, res) {
 
   const { firstName, lastName, email, phone, message, interests } = req.body || {};
 
-  if (!firstName || !email || !email.includes('@')) {
-    return res.status(400).json({ error: 'First name and valid email are required.' });
+  if (!firstName || !email || !email.includes('@') || !phone) {
+    return res.status(400).json({ error: 'First name, valid email, and phone are required.' });
   }
 
   const apiKey = process.env.BREVO_API_KEY;
@@ -50,21 +50,31 @@ export default async function handler(req, res) {
 
   const headers = { 'Content-Type': 'application/json', 'api-key': apiKey };
 
+  // Normalize phone to E.164 for Brevo SMS attribute
+  let smsPhone = undefined;
+  if (phone) {
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 10) smsPhone = `+1${digits}`;
+    else if (digits.length === 11 && digits.startsWith('1')) smsPhone = `+${digits}`;
+  }
+
   // 1 — Add / update contact in Brevo Owners Circle list
+  const contactAttributes = {
+    FIRSTNAME:       firstName,
+    LASTNAME:        lastName || '',
+    INTERESTS:       interestIds,
+    MEMBERSHIP_TYPE: 1,
+    JOIN_DATE:       new Date().toISOString().split('T')[0],
+    CIRCLE_MESSAGE:  message || '',
+    ...(smsPhone ? { SMS: smsPhone } : {}),
+  };
+
   const contactRes = await fetch('https://api.brevo.com/v3/contacts', {
     method: 'POST',
     headers,
     body: JSON.stringify({
       email,
-      attributes: {
-        FIRSTNAME:       firstName,
-        LASTNAME:        lastName || '',
-        SMS:             phone || '',
-        INTERESTS:       interestIds,
-        MEMBERSHIP_TYPE: 1,
-        JOIN_DATE:       new Date().toISOString().split('T')[0],
-        CIRCLE_MESSAGE:  message || '',
-      },
+      attributes: contactAttributes,
       listIds:       [listId],
       updateEnabled: true,
     }),
