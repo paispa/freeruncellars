@@ -24,26 +24,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  // Brevo multiple-choice option IDs (must match order defined in Brevo attribute settings)
-  const INTEREST_IDS = {
-    ramato:  1,
-    credits: 2,
-    events:  3,
-    tickets: 4,
-    updates: 5,
-  };
-
   const INTEREST_LABELS = {
-    ramato:  'First access to Ramato & Cab Blanc',
+    ramato:  'First access to new wines',
     credits: '$150 credits + ongoing discount',
     events:  'Private tastings & owner-only events',
     tickets: 'Early access to live music tickets',
     updates: 'Behind-the-scenes vineyard updates',
   };
 
-  const interestIds  = (interests && interests.length)
-    ? interests.map(i => INTEREST_IDS[i]).filter(Boolean)
-    : [];
   const interestList = (interests && interests.length)
     ? interests.map(i => INTEREST_LABELS[i] || i).join(', ')
     : 'Not specified';
@@ -62,8 +50,8 @@ export default async function handler(req, res) {
   const contactAttributes = {
     FIRSTNAME:       firstName,
     LASTNAME:        lastName || '',
-    INTERESTS:       interestIds,
-    MEMBERSHIP_TYPE: 1,
+    INTERESTS:       interestList,
+    MEMBERSHIP_TYPE: 'Owners Circle',
     JOIN_DATE:       new Date().toISOString().split('T')[0],
     CIRCLE_MESSAGE:  message || '',
     ...(smsPhone ? { SMS: smsPhone } : {}),
@@ -81,9 +69,21 @@ export default async function handler(req, res) {
   });
 
   if (!contactRes.ok && contactRes.status !== 204) {
-    const err = await contactRes.text();
-    console.error('Brevo contact error:', err);
-    return res.status(502).json({ error: 'Could not save contact. Please try again.', brevo: err });
+    const errText = await contactRes.text();
+    console.error('Brevo contact error:', errText);
+
+    let errJson = {};
+    try { errJson = JSON.parse(errText); } catch (_) {}
+
+    if (errJson.code === 'duplicate_parameter') {
+      const dupes = errJson.metadata?.duplicate_identifiers ?? [];
+      const which = dupes.includes('SMS') ? 'phone number' : 'email address';
+      return res.status(409).json({
+        error: `That ${which} is already in our system. If you think this is a mistake, please reach out to us at contact@frcwine.com and we'll sort it out.`,
+      });
+    }
+
+    return res.status(502).json({ error: 'Could not save contact. Please try again.' });
   }
 
   // 2 — Notify Trish & Prashanth

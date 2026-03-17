@@ -271,8 +271,11 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 - [x] Johnny Poracky artist photo on Live Music page (600px max-width, 12px corners, caption)
 - [x] Google Analytics 4 added to all pages (G-T51K1F9DVS)
 - [x] Contact page: email mailto with subject line, Google Maps directions, mobile single-column layout, tel:+1 links, Facebook card, updated social copy
-- [x] Owners Circle page built (`pages/circle.html`) — awaiting Brevo env vars before sharing URL
-- [ ] Owners Circle: set `BREVO_API_KEY` + `BREVO_CIRCLE_LIST_ID` in Vercel env vars
+- [x] Owners Circle page built (`pages/circle.html`) — live at `/pages/circle`
+- [x] Owners Circle: `BREVO_API_KEY` + `BREVO_CIRCLE_LIST_ID` set in Vercel env vars
+- [x] Owners Circle: phone number required (future SMS/Supabase auth)
+- [x] Owners Circle: interests saved to Brevo as text string (INTERESTS attribute)
+- [x] Owners Circle: duplicate phone/email handled gracefully — friendly error with contact@frcwine.com
 - [ ] Owners Circle: legal review of "dividends into credits" language (Michigan winery regs)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
@@ -285,4 +288,4 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 
 ---
 
-*Last updated: March 16, 2026 (Owners Circle page + Brevo integration)*
+*Last updated: March 17, 2026 (Owners Circle: phone required, interests fix, duplicate error handling)*
