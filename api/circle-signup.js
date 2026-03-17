@@ -27,17 +27,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  const INTEREST_LABELS = {
-    ramato:  'First access to new wines',
-    credits: '$150 credits + ongoing discount',
-    events:  'Private tastings & owner-only events',
-    tickets: 'Early access to live music tickets',
-    updates: 'Behind-the-scenes vineyard updates',
+  // Brevo INTERESTS is Multiple-choice (IDs 1–5); MEMBERSHIP_TYPE is Category (ID 1)
+  const INTERESTS_MAP = {
+    ramato:  { id: 1, label: 'First access to wines' },
+    credits: { id: 2, label: '$150 credits + ongoing discount' },
+    events:  { id: 3, label: 'Private tastings & owner-only events' },
+    tickets: { id: 4, label: 'Early access to live music tickets' },
+    updates: { id: 5, label: 'Behind-the-scenes vineyard updates' },
   };
 
   const interestArray = Array.isArray(interests) ? interests : [];
-  const interestList = interestArray.length
-    ? interestArray.map(i => INTEREST_LABELS[i] || i).join(', ')
+  const interestIds   = interestArray.map(i => INTERESTS_MAP[i]?.id).filter(Boolean);
+  const interestList  = interestIds.length
+    ? interestArray.map(i => INTERESTS_MAP[i]?.label || i).join(', ')
     : 'Not specified';
 
   const headers = { 'Content-Type': 'application/json', 'api-key': apiKey };
@@ -54,8 +56,8 @@ export default async function handler(req, res) {
   const contactAttributes = {
     FIRSTNAME:       firstName,
     LASTNAME:        lastName || '',
-    INTERESTS:       interestList,
-    MEMBERSHIP_TYPE: 'Owners Circle',
+    INTERESTS:       interestIds,
+    MEMBERSHIP_TYPE: [1],
     JOIN_DATE:       new Date().toISOString().split('T')[0],
     CIRCLE_MESSAGE:  message || '',
     ...(smsPhone ? { SMS: smsPhone } : {}),
