@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   }
 
   const INTEREST_LABELS = {
-    ramato:  'First access to Ramato & Cab Blanc',
+    ramato:  'First access to new wines',
     credits: '$150 credits + ongoing discount',
     events:  'Private tastings & owner-only events',
     tickets: 'Early access to live music tickets',

@@ -352,6 +352,13 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 6)
+
+- **Owners Circle — phone required**: Phone number is now a required field (label, client-side validation, and API validation). Collected for future SMS-based login (Supabase auth).
+- **Owners Circle — interests fix**: `INTERESTS` is a Text attribute in Brevo. Was incorrectly sending an array of numeric IDs; now sends a human-readable comma-separated string (e.g. `"First access to new wines, $150 credits + ongoing discount"`). Also fixed `MEMBERSHIP_TYPE` from integer `1` to string `"Owners Circle"`.
+- **Owners Circle — duplicate error handling**: Brevo returns `{"code":"duplicate_parameter"}` when a phone or email is already associated with another contact. `api/circle-signup.js` now parses this and returns a friendly 409 message telling the user to contact `contact@frcwine.com` if they think it's a mistake.
+- **Owners Circle — interest label**: "First access to Ramato & Cab Blanc" renamed to "First access to new wines" (more generic, future-proof).
+
 ## Recent Additions (March 2026 — part 5)
 
 - **Events calendar — ticketed event support**: `parseNotes` now reads `type: ticketed` and `status: sold-out` from Outlook event descriptions. Setting `type: ticketed` marks the event as ticketed (shows "Ticketed" admission badge; changes URL button label to "Get Tickets"). Setting `status: sold-out` replaces the action button with a greyed-out "Sold Out" pill and shows a red "Sold Out" badge on the event image thumbnail.
