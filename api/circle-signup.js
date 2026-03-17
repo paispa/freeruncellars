@@ -10,7 +10,10 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { firstName, lastName, email, phone, message, interests } = req.body || {};
+  let body = req.body;
+  if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
+  body = body || {};
+  const { firstName, lastName, email, phone, message, interests } = body;
 
   if (!firstName || !email || !email.includes('@') || !phone) {
     return res.status(400).json({ error: 'First name, valid email, and phone are required.' });
@@ -24,16 +27,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  const INTEREST_LABELS = {
-    ramato:  'First access to new wines',
-    credits: '$150 credits + ongoing discount',
-    events:  'Private tastings & owner-only events',
-    tickets: 'Early access to live music tickets',
-    updates: 'Behind-the-scenes vineyard updates',
+  // Brevo INTERESTS is Multiple-choice (IDs 1–5); MEMBERSHIP_TYPE is Category (ID 1)
+  const INTERESTS_MAP = {
+    ramato:  { id: 1, label: 'First access to wines' },
+    credits: { id: 2, label: '$150 credits + ongoing discount' },
+    events:  { id: 3, label: 'Private tastings & owner-only events' },
+    tickets: { id: 4, label: 'Early access to live music tickets' },
+    updates: { id: 5, label: 'Behind-the-scenes vineyard updates' },
   };
 
-  const interestList = (interests && interests.length)
-    ? interests.map(i => INTEREST_LABELS[i] || i).join(', ')
+  const interestArray = Array.isArray(interests) ? interests : [];
+  const interestIds   = interestArray.map(i => INTERESTS_MAP[i]?.id).filter(Boolean);
+  const interestList  = interestIds.length
+    ? interestArray.map(i => INTERESTS_MAP[i]?.label || i).join(', ')
     : 'Not specified';
 
   const headers = { 'Content-Type': 'application/json', 'api-key': apiKey };
@@ -50,8 +56,8 @@ export default async function handler(req, res) {
   const contactAttributes = {
     FIRSTNAME:       firstName,
     LASTNAME:        lastName || '',
-    INTERESTS:       interestList,
-    MEMBERSHIP_TYPE: 'Owners Circle',
+    INTERESTS:       interestIds,
+    MEMBERSHIP_TYPE: [1],
     JOIN_DATE:       new Date().toISOString().split('T')[0],
     CIRCLE_MESSAGE:  message || '',
     ...(smsPhone ? { SMS: smsPhone } : {}),
