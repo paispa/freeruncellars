@@ -81,9 +81,21 @@ export default async function handler(req, res) {
   });
 
   if (!contactRes.ok && contactRes.status !== 204) {
-    const err = await contactRes.text();
-    console.error('Brevo contact error:', err);
-    return res.status(502).json({ error: 'Could not save contact. Please try again.', brevo: err });
+    const errText = await contactRes.text();
+    console.error('Brevo contact error:', errText);
+
+    let errJson = {};
+    try { errJson = JSON.parse(errText); } catch (_) {}
+
+    if (errJson.code === 'duplicate_parameter') {
+      const dupes = errJson.metadata?.duplicate_identifiers ?? [];
+      const which = dupes.includes('SMS') ? 'phone number' : 'email address';
+      return res.status(409).json({
+        error: `That ${which} is already in our system. If you think this is a mistake, please reach out to us at contact@frcwine.com and we'll sort it out.`,
+      });
+    }
+
+    return res.status(502).json({ error: 'Could not save contact. Please try again.' });
   }
 
   // 2 — Notify Trish & Prashanth
