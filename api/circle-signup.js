@@ -10,7 +10,10 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { firstName, lastName, email, phone, message, interests } = req.body || {};
+  let body = req.body;
+  if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
+  body = body || {};
+  const { firstName, lastName, email, phone, message, interests } = body;
 
   if (!firstName || !email || !email.includes('@') || !phone) {
     return res.status(400).json({ error: 'First name, valid email, and phone are required.' });
@@ -32,8 +35,9 @@ export default async function handler(req, res) {
     updates: 'Behind-the-scenes vineyard updates',
   };
 
-  const interestList = (interests && interests.length)
-    ? interests.map(i => INTEREST_LABELS[i] || i).join(', ')
+  const interestArray = Array.isArray(interests) ? interests : [];
+  const interestList = interestArray.length
+    ? interestArray.map(i => INTEREST_LABELS[i] || i).join(', ')
     : 'Not specified';
 
   const headers = { 'Content-Type': 'application/json', 'api-key': apiKey };
