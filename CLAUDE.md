@@ -41,9 +41,11 @@ freeruncellars/
 ├── vercel.json                   # Vercel config + DNS redirect (frcwine.com → www)
 ├── README.md                     # Project documentation for humans
 ├── CLAUDE.md                     # This file
+├── test-api-handlers.js          # Node.js unit tests for api/_helpers.js logic (run with: node test-api-handlers.js)
 ├── .gitignore                    # Excludes .DS_Store, node_modules, .env, logs
 │
 ├── api/                          # Vercel serverless functions
+│   ├── _helpers.js               # Shared utilities: CORS, rate limiting, escapeHtml, validation constants
 │   ├── chat.js                   # AI chat assistant (Anthropic Claude Haiku)
 │   ├── calendar.js               # Outlook ICS calendar proxy (CORS workaround)
 │   ├── upload-photo.js           # Photo booth image storage (Vercel Blob)
@@ -78,18 +80,31 @@ freeruncellars/
 
 ## Key Files
 
+### `api/_helpers.js`
+Shared utilities imported by all three API handlers. Exports:
+- `ALLOWED_ORIGINS` — CORS allowlist (`freeruncellars.com`, `www.freeruncellars.com`, `freeruncellars.vercel.app`)
+- `applyCors(req, res)` — sets `Access-Control-Allow-Origin` for known browser origins; allows no-Origin requests (curl, server-to-server) through without restriction; returns `false` for unknown browser origins
+- `makeRateLimiter(max, windowMs)` — factory returning a per-IP in-memory rate-limiter function
+- `getClientIp(req)` — reads `x-forwarded-for` or falls back to `socket.remoteAddress`
+- `escapeHtml(str)` — HTML-encodes `& < > " '` for safe email body interpolation
+- `DATA_URI_RE`, `ALLOWED_MIME_TYPES`, `MAX_IMAGE_BYTES` — upload validation constants
+- `INTERESTS_MAP`, `normalizePhone(phone)` — Owners Circle business logic
+
 ### `api/chat.js`
 Anthropic Claude Haiku chatbot for the winery website. Key details:
 - Uses `ANTHROPIC_API_KEY` environment variable (set in Vercel project settings)
 - System prompt contains: wine menu, hours, pricing, property facts, event packages
 - Max 400 tokens per response, maintains 10-message conversation history
-- CORS enabled for browser requests
+- CORS restricted to `ALLOWED_ORIGINS`; rate-limited to 30 requests/IP/min
 
 ### `api/calendar.js`
 CORS proxy for the Outlook ICS calendar feed. Caches for 5 minutes with 10-minute stale-while-revalidate. Falls back through three CORS proxy services if the primary fails.
 
 ### `api/upload-photo.js`
 Receives a base64 image from the photo booth, uploads binary to Vercel Blob, and returns the public URL. Requires `BLOB_READ_WRITE_TOKEN` environment variable (set in Vercel dashboard under Storage → Blob store → token).
+- Validates data URI format and MIME type (`image/jpeg`, `image/png`, `image/webp` only)
+- Enforces a 5 MB cap on the decoded buffer
+- Rate-limited to 10 uploads/IP/min
 
 ### `tools/photobooth.html`
 CONFIG is filled in at the top of the file (keys committed to repo). For a 3-photo session the browser composites all three frames into one vertical film-strip canvas (dark background, FRC logo centred at the bottom) before uploading — so only a single image is stored and emailed.
@@ -351,6 +366,19 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
+
+## Recent Additions (March 2026 — part 7)
+
+Security hardening across all three API handlers (issues #38, #39, #42, #43):
+
+- **CORS allowlist** (`api/_helpers.js` → all handlers): replaced `Access-Control-Allow-Origin: *` with an explicit allowlist. Known browser origins receive the exact `ACAO` header; unknown browser origins receive `403`. Requests with **no** Origin header (curl, server-to-server) are allowed through without restriction.
+- **Rate limiting** (`api/_helpers.js` → all handlers): per-IP in-memory rate limiter via `makeRateLimiter(max, windowMs)`. Limits: 30 req/min for chat, 10/min for uploads, 5 per 10 min for circle-signup. Throttled requests return `429`.
+- **Honeypot** (`pages/circle.html` + `api/circle-signup.js`): hidden `_hp` field on the signup form. Bots that fill it receive a silent `200`; the contact is never saved.
+- **HTML escaping** (`api/circle-signup.js`): all user-provided values are passed through `escapeHtml()` before interpolation into the Brevo HTML notification email, preventing HTML injection.
+- **Email error handling** (`api/circle-signup.js`): Brevo SMTP response is now checked; a failed notification logs a warning and returns `{ ok: true, warning: "signup_saved_notification_failed" }` so the contact record is not lost.
+- **Upload validation** (`api/upload-photo.js`): strict data-URI regex, MIME type allowlist (`image/jpeg`, `image/png`, `image/webp`), 5 MB cap checked on the decoded `Buffer` (not the base64 string). `randomUUID()` sourced via `require('crypto')` for Node 18 compatibility.
+- **Shared helpers** (`api/_helpers.js`): CORS, rate limiting, `escapeHtml`, upload constants, `INTERESTS_MAP`, and `normalizePhone` extracted into a single shared CJS module imported by all handlers. No logic is duplicated.
+- **Unit tests** (`test-api-handlers.js`): 69 tests covering all shared helpers and handler logic. All constants and functions are imported from `api/_helpers.js` — no local copies. Run with `node test-api-handlers.js`.
 
 ## Recent Additions (March 2026 — part 6)
 
