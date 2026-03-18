@@ -2,21 +2,13 @@
 // Owners Circle signup — adds contact to Brevo and notifies Trish & Prashanth
 // Requires env vars: BREVO_API_KEY, BREVO_CIRCLE_LIST_ID
 
-const { applyCors, makeRateLimiter, getClientIp } = require('./_helpers');
+const {
+  applyCors, makeRateLimiter, getClientIp,
+  escapeHtml, INTERESTS_MAP, normalizePhone,
+} = require('./_helpers');
 
 // Max 5 signups per IP per 10 minutes
 const isRateLimited = makeRateLimiter(5, 10 * 60_000);
-
-// Escape HTML special characters to prevent injection in email content
-function escapeHtml(str) {
-  if (typeof str !== 'string') return '';
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -59,28 +51,13 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  const INTERESTS_MAP = {
-    ramato:  { id: 1, label: 'First access to new wines' },
-    credits: { id: 2, label: '$150 credits + ongoing discount' },
-    events:  { id: 3, label: 'Private tastings & owner-only events' },
-    tickets: { id: 4, label: 'Early access to live music tickets' },
-    updates: { id: 5, label: 'Behind-the-scenes vineyard updates' },
-  };
-
   const interestArray = Array.isArray(interests) ? interests : [];
   const interestList  = interestArray.length
     ? interestArray.map(i => INTERESTS_MAP[i]?.label || i).join(', ')
     : 'Not specified';
 
-  const headers = { 'Content-Type': 'application/json', 'api-key': apiKey };
-
-  // Normalize phone to E.164 for Brevo SMS attribute
-  let smsPhone = undefined;
-  if (phone) {
-    const digits = phone.replace(/\D/g, '');
-    if (digits.length === 10) smsPhone = `+1${digits}`;
-    else if (digits.length === 11 && digits.startsWith('1')) smsPhone = `+${digits}`;
-  }
+  const headers  = { 'Content-Type': 'application/json', 'api-key': apiKey };
+  const smsPhone = normalizePhone(phone);
 
   // 1 — Add / update contact in Brevo Owners Circle list
   const contactAttributes = {

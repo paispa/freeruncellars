@@ -1,4 +1,6 @@
-// api/_helpers.js — Shared CORS and rate-limiting utilities for API handlers
+// api/_helpers.js — Shared utilities for API handlers
+
+// ─── CORS ─────────────────────────────────────────────────────────────────────
 
 const ALLOWED_ORIGINS = [
   'https://freeruncellars.com',
@@ -25,13 +27,11 @@ function applyCors(req, res) {
   return false; // unknown browser origin — reject
 }
 
+// ─── Rate limiting ─────────────────────────────────────────────────────────────
+
 /**
  * Returns a stateful per-IP rate-limiter function.
- * State is in-memory, so limits are per serverless instance (good enough to
- * block naive abuse; not a distributed quota).
- *
- * @param {number} max       Maximum requests allowed in the window
- * @param {number} windowMs  Window size in milliseconds
+ * State is in-memory per serverless instance — sufficient to block naive abuse.
  */
 function makeRateLimiter(max, windowMs) {
   const map = new Map();
@@ -58,4 +58,52 @@ function getClientIp(req) {
   );
 }
 
-module.exports = { ALLOWED_ORIGINS, applyCors, makeRateLimiter, getClientIp };
+// ─── HTML escaping (used by circle-signup email builder) ──────────────────────
+
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ─── Upload validation (used by upload-photo) ─────────────────────────────────
+
+const DATA_URI_RE      = /^data:(image\/[a-z]+);base64,([A-Za-z0-9+/=]+)$/;
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_IMAGE_BYTES  = 5 * 1024 * 1024; // 5 MB decoded
+
+// ─── Owners Circle data (used by circle-signup) ───────────────────────────────
+
+const INTERESTS_MAP = {
+  ramato:  { id: 1, label: 'First access to new wines' },
+  credits: { id: 2, label: '$150 credits + ongoing discount' },
+  events:  { id: 3, label: 'Private tastings & owner-only events' },
+  tickets: { id: 4, label: 'Early access to live music tickets' },
+  updates: { id: 5, label: 'Behind-the-scenes vineyard updates' },
+};
+
+/** Normalises a US phone number to E.164 (+1XXXXXXXXXX), or returns undefined. */
+function normalizePhone(phone) {
+  if (!phone) return undefined;
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length === 10) return `+1${digits}`;
+  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
+  return undefined;
+}
+
+module.exports = {
+  // CORS
+  ALLOWED_ORIGINS, applyCors,
+  // Rate limiting
+  makeRateLimiter, getClientIp,
+  // Email
+  escapeHtml,
+  // Upload
+  DATA_URI_RE, ALLOWED_MIME_TYPES, MAX_IMAGE_BYTES,
+  // Circle signup
+  INTERESTS_MAP, normalizePhone,
+};

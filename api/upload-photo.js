@@ -3,16 +3,14 @@
 // Requires BLOB_READ_WRITE_TOKEN env var (auto-created when you add a Blob store
 // in the Vercel dashboard under Storage → Create Database → Blob).
 
-const { randomUUID }                      = require('crypto');
-const { applyCors, makeRateLimiter, getClientIp } = require('./_helpers');
+const { randomUUID } = require('crypto');
+const {
+  applyCors, makeRateLimiter, getClientIp,
+  DATA_URI_RE, ALLOWED_MIME_TYPES, MAX_IMAGE_BYTES,
+} = require('./_helpers');
 
 // Max 10 uploads per IP per 60 seconds
 const isRateLimited = makeRateLimiter(10, 60_000);
-
-// 5 MB cap on the decoded image buffer
-const MAX_IMAGE_BYTES  = 5 * 1024 * 1024;
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const DATA_URI_RE = /^data:(image\/[a-z]+);base64,([A-Za-z0-9+/=]+)$/;
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
