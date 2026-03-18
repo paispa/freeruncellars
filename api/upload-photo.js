@@ -3,6 +3,8 @@
 // Requires BLOB_READ_WRITE_TOKEN env var (auto-created when you add a Blob store
 // in the Vercel dashboard under Storage → Create Database → Blob).
 
+const { randomUUID } = require('crypto');
+
 const ALLOWED_ORIGINS = [
   'https://freeruncellars.com',
   'https://www.freeruncellars.com',
@@ -85,7 +87,7 @@ module.exports = async function handler(req, res) {
   const buffer = Buffer.from(base64Data, 'base64');
 
   const ext = mimeType.split('/')[1];
-  const filename = `photobooth/${Date.now()}-${Math.random().toString(36).slice(2)}-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)}.${ext}`;
+  const filename = `photobooth/${Date.now()}-${Math.random().toString(36).slice(2)}-${randomUUID()}.${ext}`;
 
   const upstream = await fetch(`https://blob.vercel-storage.com/${filename}`, {
     method: 'PUT',
