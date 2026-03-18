@@ -2,18 +2,42 @@
 // Owners Circle signup — adds contact to Brevo and notifies Trish & Prashanth
 // Requires env vars: BREVO_API_KEY, BREVO_CIRCLE_LIST_ID
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+const {
+  applyCors, makeRateLimiter, getClientIp,
+  escapeHtml, INTERESTS_MAP, normalizePhone,
+} = require('./_helpers');
+
+// Max 5 signups per IP per 10 minutes
+const isRateLimited = makeRateLimiter(5, 10 * 60_000);
+
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method === 'OPTIONS') {
+    if (!applyCors(req, res)) return res.status(403).end();
+    return res.status(204).end();
+  }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (!applyCors(req, res)) return res.status(403).json({ error: 'Forbidden' });
+
+  const ip = getClientIp(req);
+  if (isRateLimited(ip)) {
+    console.warn('circle-signup rate limit hit:', ip);
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment and try again.' });
+  }
 
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
   body = body || {};
-  const { firstName, lastName, email, phone, message, interests } = body;
+  const { firstName, lastName, email, phone, message, interests, _hp } = body;
+
+  // Honeypot: bots fill hidden fields, humans don't
+  if (_hp) {
+    console.warn('Honeypot triggered from IP:', ip);
+    return res.status(200).json({ ok: true }); // silent reject
+  }
 
   if (!firstName || !email || !email.includes('@') || !phone) {
     return res.status(400).json({ error: 'First name, valid email, and phone are required.' });
@@ -27,37 +51,20 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  // Brevo INTERESTS is Multiple-choice (IDs 1–5); MEMBERSHIP_TYPE is Category (ID 1)
-  const INTERESTS_MAP = {
-    ramato:  { id: 1, label: 'First access to wines' },
-    credits: { id: 2, label: '$150 credits + ongoing discount' },
-    events:  { id: 3, label: 'Private tastings & owner-only events' },
-    tickets: { id: 4, label: 'Early access to live music tickets' },
-    updates: { id: 5, label: 'Behind-the-scenes vineyard updates' },
-  };
-
   const interestArray = Array.isArray(interests) ? interests : [];
-  const interestIds   = interestArray.map(i => INTERESTS_MAP[i]?.id).filter(Boolean);
-  const interestList  = interestIds.length
+  const interestList  = interestArray.length
     ? interestArray.map(i => INTERESTS_MAP[i]?.label || i).join(', ')
     : 'Not specified';
 
-  const headers = { 'Content-Type': 'application/json', 'api-key': apiKey };
-
-  // Normalize phone to E.164 for Brevo SMS attribute
-  let smsPhone = undefined;
-  if (phone) {
-    const digits = phone.replace(/\D/g, '');
-    if (digits.length === 10) smsPhone = `+1${digits}`;
-    else if (digits.length === 11 && digits.startsWith('1')) smsPhone = `+${digits}`;
-  }
+  const headers  = { 'Content-Type': 'application/json', 'api-key': apiKey };
+  const smsPhone = normalizePhone(phone);
 
   // 1 — Add / update contact in Brevo Owners Circle list
   const contactAttributes = {
     FIRSTNAME:       firstName,
     LASTNAME:        lastName || '',
-    INTERESTS:       interestIds,
-    MEMBERSHIP_TYPE: [1],
+    INTERESTS:       interestList,
+    MEMBERSHIP_TYPE: 'Owners Circle',
     JOIN_DATE:       new Date().toISOString().split('T')[0],
     CIRCLE_MESSAGE:  message || '',
     ...(smsPhone ? { SMS: smsPhone } : {}),
@@ -92,31 +99,42 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: 'Could not save contact. Please try again.' });
   }
 
-  // 2 — Notify Trish & Prashanth
+  // 2 — Notify Trish & Prashanth (HTML-escape all user-provided values)
+  const safeFirst    = escapeHtml(firstName);
+  const safeLast     = escapeHtml(lastName || '');
+  const safeEmail    = escapeHtml(email);
+  const safePhone    = escapeHtml(phone || '');
+  const safeMessage  = escapeHtml(message || '');
+  const safeInterests = escapeHtml(interestList);
+
   const dateStr = new Date().toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
 
-  const phoneRow  = phone   ? `<tr><td style="padding:8px 0;color:#777;">Phone</td><td style="padding:8px 0;color:#222;">${phone}</td></tr>` : '';
-  const msgRow    = message ? `<tr><td style="padding:8px 0;color:#777;vertical-align:top;">Message</td><td style="padding:8px 0;color:#222;font-style:italic;">&ldquo;${message}&rdquo;</td></tr>` : '';
+  const phoneRow = safePhone
+    ? `<tr><td style="padding:8px 0;color:#777;">Phone</td><td style="padding:8px 0;color:#222;">${safePhone}</td></tr>`
+    : '';
+  const msgRow = safeMessage
+    ? `<tr><td style="padding:8px 0;color:#777;vertical-align:top;">Message</td><td style="padding:8px 0;color:#222;font-style:italic;">&ldquo;${safeMessage}&rdquo;</td></tr>`
+    : '';
 
-  await fetch('https://api.brevo.com/v3/smtp/email', {
+  const emailRes = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers,
     body: JSON.stringify({
       sender:      { name: 'Free Run Circle', email: 'contact@frcwine.com' },
       to:          [{ email: 'contact@frcwine.com', name: 'Free Run Cellars' }],
-      replyTo:     { email, name: `${firstName} ${lastName || ''}`.trim() },
-      subject:     `✦ New Owners Circle interest — ${firstName} ${lastName || ''}`.trim(),
+      replyTo:     { email, name: `${safeFirst} ${safeLast}`.trim() },
+      subject:     `✦ New Owners Circle interest — ${safeFirst} ${safeLast}`.trim(),
       htmlContent: `
         <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;padding:32px;background:#f9f7f4;border-radius:12px;">
           <h2 style="color:#3d6155;font-size:22px;margin-bottom:4px;">New Owners Circle Interest</h2>
           <p style="color:#999;font-size:12px;margin-bottom:24px;">${dateStr}</p>
           <table style="width:100%;font-size:14px;border-collapse:collapse;">
-            <tr><td style="padding:8px 0;color:#777;width:110px;">Name</td><td style="padding:8px 0;font-weight:600;color:#222;">${firstName} ${lastName || ''}</td></tr>
-            <tr><td style="padding:8px 0;color:#777;">Email</td><td style="padding:8px 0;"><a href="mailto:${email}" style="color:#537f71;">${email}</a></td></tr>
+            <tr><td style="padding:8px 0;color:#777;width:110px;">Name</td><td style="padding:8px 0;font-weight:600;color:#222;">${safeFirst} ${safeLast}</td></tr>
+            <tr><td style="padding:8px 0;color:#777;">Email</td><td style="padding:8px 0;"><a href="mailto:${safeEmail}" style="color:#537f71;">${safeEmail}</a></td></tr>
             ${phoneRow}
-            <tr><td style="padding:8px 0;color:#777;vertical-align:top;">Interests</td><td style="padding:8px 0;color:#222;">${interestList}</td></tr>
+            <tr><td style="padding:8px 0;color:#777;vertical-align:top;">Interests</td><td style="padding:8px 0;color:#222;">${safeInterests}</td></tr>
             ${msgRow}
           </table>
           <p style="margin-top:24px;padding-top:16px;border-top:1px solid #e0dbd4;font-size:11px;color:#bbb;">Free Run Cellars · freeruncellars.com</p>
@@ -125,5 +143,12 @@ export default async function handler(req, res) {
     }),
   });
 
+  if (!emailRes.ok) {
+    const emailErrText = await emailRes.text();
+    console.error('Brevo email notification failed:', emailRes.status, emailErrText);
+    // Contact was saved; still return ok but flag partial success for logging
+    return res.status(200).json({ ok: true, warning: 'signup_saved_notification_failed' });
+  }
+
   return res.status(200).json({ ok: true });
-}
+};

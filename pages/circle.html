@@ -604,6 +604,12 @@
       </div>
 
       <div id="formWrap">
+        <!-- Honeypot: hidden from real users, bots fill it in -->
+        <div style="display:none;" aria-hidden="true">
+          <label>Leave this blank</label>
+          <input type="text" id="_hp" name="_hp" autocomplete="off" tabindex="-1">
+        </div>
+
         <div class="field-row">
           <div class="field">
             <label>First name *</label>
@@ -697,7 +703,7 @@ async function submitForm() {
     const res = await fetch('/api/circle-signup', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName, email, phone, message, interests }),
+      body: JSON.stringify({ firstName, lastName, email, phone, message, interests, _hp: document.getElementById('_hp').value }),
     });
 
     if (!res.ok) {

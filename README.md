@@ -29,6 +29,13 @@ Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michiga
 freeruncellars/
 ├── index.html                  ← Homepage
 ├── vercel.json                 ← Redirect config (frcwine.com → freeruncellars.com)
+├── test-api-handlers.js        ← Unit tests for api/_helpers.js (run: node test-api-handlers.js)
+├── api/
+│   ├── _helpers.js             ← Shared: CORS allowlist, rate limiting, escapeHtml, upload/signup constants
+│   ├── chat.js                 ← AI chat (Anthropic Claude Haiku) — CORS restricted, rate limited
+│   ├── calendar.js             ← Outlook ICS calendar proxy
+│   ├── upload-photo.js         ← Photo booth storage (Vercel Blob) — MIME + size validated
+│   └── circle-signup.js        ← Owners Circle form → Brevo list + email notification
 ├── pages/
 │   ├── about.html              ← Our Story
 │   ├── wines.html              ← Full wine menu + seasonal cocktails
@@ -276,6 +283,8 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 - [x] Owners Circle: phone number required (future SMS/Supabase auth)
 - [x] Owners Circle: interests saved to Brevo as text string (INTERESTS attribute)
 - [x] Owners Circle: duplicate phone/email handled gracefully — friendly error with contact@frcwine.com
+- [x] API security hardening: CORS allowlist (replaces `*`), per-IP rate limiting, honeypot on circle form, HTML escaping in notification email, upload MIME/size validation — issues #38 #39 #42 #43
+- [x] Shared API helpers extracted to `api/_helpers.js`; unit test suite added (`test-api-handlers.js`, 69 tests)
 - [ ] Owners Circle: legal review of "dividends into credits" language (Michigan winery regs)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
@@ -288,4 +297,4 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 
 ---
 
-*Last updated: March 17, 2026 (Owners Circle: phone required, interests fix, duplicate error handling)*
+*Last updated: March 18, 2026 (API security hardening: CORS allowlist, rate limiting, honeypot, HTML escaping, upload validation; shared helpers + unit tests)*
