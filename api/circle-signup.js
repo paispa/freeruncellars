@@ -2,29 +2,10 @@
 // Owners Circle signup — adds contact to Brevo and notifies Trish & Prashanth
 // Requires env vars: BREVO_API_KEY, BREVO_CIRCLE_LIST_ID
 
-const ALLOWED_ORIGINS = [
-  'https://freeruncellars.com',
-  'https://www.freeruncellars.com',
-  'https://freeruncellars.vercel.app',
-];
+const { applyCors, makeRateLimiter, getClientIp } = require('./_helpers');
 
-// Simple in-memory rate limiter: max 5 signups per IP per 10 minutes
-const signupRateMap = new Map();
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 10 * 60_000;
-
-function isRateLimited(ip) {
-  const now = Date.now();
-  const entry = signupRateMap.get(ip) || { count: 0, windowStart: now };
-  if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    entry.count = 1;
-    entry.windowStart = now;
-  } else {
-    entry.count += 1;
-  }
-  signupRateMap.set(ip, entry);
-  return entry.count > RATE_LIMIT_MAX;
-}
+// Max 5 signups per IP per 10 minutes
+const isRateLimited = makeRateLimiter(5, 10 * 60_000);
 
 // Escape HTML special characters to prevent injection in email content
 function escapeHtml(str) {
@@ -37,27 +18,19 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-export default async function handler(req, res) {
-  const origin = req.headers.origin || '';
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin');
-  }
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    if (ALLOWED_ORIGINS.includes(origin)) return res.status(204).end();
-    return res.status(403).end();
+    if (!applyCors(req, res)) return res.status(403).end();
+    return res.status(204).end();
   }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!ALLOWED_ORIGINS.includes(origin)) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
+  if (!applyCors(req, res)) return res.status(403).json({ error: 'Forbidden' });
 
-  // Rate limiting
-  const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket?.remoteAddress || 'unknown';
+  const ip = getClientIp(req);
   if (isRateLimited(ip)) {
     console.warn('circle-signup rate limit hit:', ip);
     return res.status(429).json({ error: 'Too many requests. Please wait a moment and try again.' });
@@ -196,9 +169,9 @@ export default async function handler(req, res) {
   if (!emailRes.ok) {
     const emailErrText = await emailRes.text();
     console.error('Brevo email notification failed:', emailRes.status, emailErrText);
-    // Contact was saved; log partial success but still return ok to the user
+    // Contact was saved; still return ok but flag partial success for logging
     return res.status(200).json({ ok: true, warning: 'signup_saved_notification_failed' });
   }
 
   return res.status(200).json({ ok: true });
-}
+};

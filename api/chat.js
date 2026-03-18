@@ -1,5 +1,7 @@
 // api/chat.js — Free Run Cellars AI Chat Assistant
 
+const { applyCors, makeRateLimiter, getClientIp } = require('./_helpers');
+
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
 const SYSTEM_PROMPT = `You are the friendly voice of Free Run Cellars, a boutique winery in Berrien Springs, Michigan. You speak warmly and personally — like Trish would when welcoming a guest she's genuinely happy to see. Never robotic, never corporate. You're knowledgeable, unhurried, and make every person feel like they belong here.
@@ -77,29 +79,8 @@ CONVERSATION GUIDELINES
 - Never make up information. If unsure, offer to connect them with the team.
 - Must be 21+ to purchase alcohol`;
 
-const ALLOWED_ORIGINS = [
-  'https://freeruncellars.com',
-  'https://www.freeruncellars.com',
-  'https://freeruncellars.vercel.app',
-];
-
-// Simple in-memory rate limiter: max 30 requests per IP per 60 seconds
-const chatRateMap = new Map();
-const RATE_LIMIT_MAX = 30;
-const RATE_LIMIT_WINDOW_MS = 60_000;
-
-function isRateLimited(ip) {
-  const now = Date.now();
-  const entry = chatRateMap.get(ip) || { count: 0, windowStart: now };
-  if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    entry.count = 1;
-    entry.windowStart = now;
-  } else {
-    entry.count += 1;
-  }
-  chatRateMap.set(ip, entry);
-  return entry.count > RATE_LIMIT_MAX;
-}
+// Max 30 chat requests per IP per 60 seconds
+const isRateLimited = makeRateLimiter(30, 60_000);
 
 // Helper to parse body — Vercel doesn't auto-parse JSON
 async function parseBody(req) {
@@ -116,26 +97,18 @@ async function parseBody(req) {
 }
 
 module.exports = async function handler(req, res) {
-  const origin = req.headers.origin || '';
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin');
-  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    if (ALLOWED_ORIGINS.includes(origin)) return res.status(200).end();
-    return res.status(403).end();
+    if (!applyCors(req, res)) return res.status(403).end();
+    return res.status(200).end();
   }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!ALLOWED_ORIGINS.includes(origin)) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
+  if (!applyCors(req, res)) return res.status(403).json({ error: 'Forbidden' });
 
-  // Rate limiting
-  const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket?.remoteAddress || 'unknown';
+  const ip = getClientIp(req);
   if (isRateLimited(ip)) {
     console.warn('chat rate limit hit:', ip);
     return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
