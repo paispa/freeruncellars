@@ -654,19 +654,19 @@ Tone: ${toneInstructions[selectedTone]}
 Write the complete Facebook post ready to publish.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate-post', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userPrompt }],
-      }),
+      body: JSON.stringify({ systemPrompt, userPrompt }),
     });
 
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error ${res.status}`);
+    }
+
     const data = await res.json();
-    const text = data.content?.map(c => c.text || '').join('') || '';
+    const text = data.post || '';
 
     const output = document.getElementById('postOutput');
     output.value = text.trim();
