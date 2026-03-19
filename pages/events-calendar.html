@@ -327,7 +327,81 @@
     letter-spacing: 2px; text-transform: uppercase; line-height: 2;
   }
 
+  /* ── Weather Strip ── */
+  #weatherStrip { margin-bottom: 32px; }
+
+  .weather-strip-title {
+    font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(115,152,133,0.4); text-align: center; margin-bottom: 12px;
+  }
+
+  .weather-cards {
+    display: flex; gap: 10px;
+    overflow-x: auto; scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .weather-cards::-webkit-scrollbar { display: none; }
+
+  .weather-card {
+    flex: 1; min-width: 110px;
+    background: rgba(10,20,14,0.7);
+    border: 1px solid rgba(115,152,133,0.18);
+    border-radius: 12px; padding: 14px 10px;
+    text-align: center; flex-shrink: 0;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .weather-card.event-day {
+    border-color: #537f71;
+    box-shadow: 0 0 0 1px rgba(83,127,113,0.25), inset 0 0 16px rgba(83,127,113,0.06);
+  }
+
+  .weather-card-day {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(115,152,133,0.65); margin-bottom: 6px; font-weight: 600;
+  }
+  .weather-card-icon { font-size: 26px; margin-bottom: 5px; line-height: 1; }
+  .weather-card-desc {
+    font-size: 9px; color: rgba(115,152,133,0.5);
+    letter-spacing: 0.3px; margin-bottom: 8px;
+  }
+  .weather-card-temps {
+    display: flex; justify-content: center; gap: 8px; align-items: baseline;
+  }
+  .weather-temp-hi {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; font-weight: 400; color: rgba(232,240,235,0.9);
+  }
+  .weather-temp-lo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; color: rgba(115,152,133,0.45);
+  }
+  .weather-card-precip {
+    font-size: 8px; color: rgba(115,152,133,0.4);
+    letter-spacing: 0.3px; margin-top: 6px;
+  }
+
+  /* Skeleton shimmer */
+  .weather-card.skeleton .weather-card-day,
+  .weather-card.skeleton .weather-card-icon,
+  .weather-card.skeleton .weather-card-desc,
+  .weather-card.skeleton .weather-temp-hi,
+  .weather-card.skeleton .weather-temp-lo,
+  .weather-card.skeleton .weather-card-precip {
+    background: rgba(115,152,133,0.1); border-radius: 4px;
+    color: transparent; display: inline-block; min-width: 2em;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1; }
+  }
+
   /* ── Responsive ── */
+  @media (max-width: 767px) {
+    .weather-cards { flex-wrap: nowrap; justify-content: flex-start; }
+    .weather-card  { min-width: 88px; flex: 0 0 88px; padding: 12px 8px; }
+  }
+
   @media (max-width: 560px) {
     .event-card { grid-template-columns: 68px 1fr; }
     .event-name { font-size: 18px; }
@@ -482,6 +556,9 @@ nav.solid .hamburger span { background: #333; }
   <div class="events-intro">
     <p>We're thrilled to bring you the vibrant sounds of live music! Check out the exciting events below for a chance to enjoy fantastic performances and unforgettable moments.</p>
   </div>
+
+  <!-- Weather forecast strip — populated by JS, hidden on API failure -->
+  <div id="weatherStrip"></div>
 
   <div class="filter-bar" id="filterBar">
     <button class="filter-btn active" data-filter="all">All Events</button>
@@ -755,6 +832,19 @@ async function loadCalendar() {
     allEvents = parseICS(text);
     console.log('Events parsed:', allEvents.length);
     renderEvents(allEvents, activeFilter);
+    // Highlight weather cards whose date matches an upcoming event
+    var today = new Date(); today.setHours(0,0,0,0);
+    var eventDates = new Set();
+    allEvents.forEach(function(ev) {
+      var d = new Date(ev.date); d.setHours(0,0,0,0);
+      if (d >= today) {
+        var y = d.getFullYear();
+        var m = String(d.getMonth()+1).padStart(2,'0');
+        var day = String(d.getDate()).padStart(2,'0');
+        eventDates.add(y + '-' + m + '-' + day);
+      }
+    });
+    if (window._highlightWeatherDays) window._highlightWeatherDays(eventDates);
   } catch (e) {
     console.error('Calendar load failed:', e);
     showError();
@@ -773,6 +863,129 @@ document.getElementById('filterBar').addEventListener('click', e => {
 
 loadCalendar();
 
+</script>
+
+<script>
+// ── Weather Widget ───────────────────────────────────────────────────
+(function() {
+  var LAT = 41.9478, LON = -86.3411;
+  var DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  var WMO = {
+    0:  { icon: '☀️',  desc: 'Clear' },
+    1:  { icon: '🌤️', desc: 'Mainly Clear' },
+    2:  { icon: '⛅',  desc: 'Partly Cloudy' },
+    3:  { icon: '☁️',  desc: 'Overcast' },
+    45: { icon: '🌫️', desc: 'Foggy' },
+    48: { icon: '🌫️', desc: 'Freezing Fog' },
+    51: { icon: '🌦️', desc: 'Light Drizzle' },
+    53: { icon: '🌦️', desc: 'Drizzle' },
+    55: { icon: '🌦️', desc: 'Heavy Drizzle' },
+    61: { icon: '🌧️', desc: 'Light Rain' },
+    63: { icon: '🌧️', desc: 'Rain' },
+    65: { icon: '🌧️', desc: 'Heavy Rain' },
+    71: { icon: '🌨️', desc: 'Light Snow' },
+    73: { icon: '🌨️', desc: 'Snow' },
+    75: { icon: '🌨️', desc: 'Heavy Snow' },
+    77: { icon: '🌨️', desc: 'Snow Grains' },
+    80: { icon: '🌦️', desc: 'Showers' },
+    81: { icon: '🌦️', desc: 'Showers' },
+    82: { icon: '⛈️',  desc: 'Heavy Showers' },
+    85: { icon: '🌨️', desc: 'Snow Showers' },
+    86: { icon: '🌨️', desc: 'Heavy Snow' },
+    95: { icon: '⛈️',  desc: 'Thunderstorm' },
+    96: { icon: '⛈️',  desc: 'Thunderstorm' },
+    99: { icon: '⛈️',  desc: 'Thunderstorm' }
+  };
+
+  function wmoInfo(code) {
+    return WMO[code] || { icon: '🌡️', desc: 'Variable' };
+  }
+
+  // Shared state — calendar script calls this after events load
+  window._weatherEventDates = new Set();
+  window._highlightWeatherDays = function(eventDates) {
+    window._weatherEventDates = eventDates;
+    document.querySelectorAll('.weather-card[data-date]').forEach(function(card) {
+      card.classList.toggle('event-day', eventDates.has(card.dataset.date));
+    });
+  };
+
+  function renderSkeleton() {
+    var skeletons = '';
+    for (var i = 0; i < 5; i++) {
+      skeletons += '<div class="weather-card skeleton">' +
+        '<div class="weather-card-day">---</div>' +
+        '<div class="weather-card-icon">☁</div>' +
+        '<div class="weather-card-desc">Loading</div>' +
+        '<div class="weather-card-temps">' +
+          '<span class="weather-temp-hi">72°</span>' +
+          '<span class="weather-temp-lo">55°</span>' +
+        '</div>' +
+        '<div class="weather-card-precip">0% precip</div>' +
+      '</div>';
+    }
+    var strip = document.getElementById('weatherStrip');
+    strip.innerHTML =
+      '<div class="weather-strip-title">5-Day Forecast · Berrien Springs, MI</div>' +
+      '<div class="weather-cards">' + skeletons + '</div>';
+  }
+
+  function renderWeather(data) {
+    var d = data.daily;
+    var cards = '';
+    for (var i = 0; i < d.time.length; i++) {
+      var dateStr = d.time[i];
+      // Parse date parts directly to avoid timezone shift
+      var parts = dateStr.split('-');
+      var dow = new Date(+parts[0], +parts[1] - 1, +parts[2]).getDay();
+      var dayLabel = i === 0 ? 'Today' : DAYS_SHORT[dow];
+      var info = wmoInfo(d.weathercode[i]);
+      var hi = Math.round(d.temperature_2m_max[i]);
+      var lo = Math.round(d.temperature_2m_min[i]);
+      var precip = d.precipitation_probability_max[i] || 0;
+      var isEvent = window._weatherEventDates.has(dateStr);
+      cards +=
+        '<div class="weather-card' + (isEvent ? ' event-day' : '') + '" data-date="' + dateStr + '">' +
+          '<div class="weather-card-day">' + dayLabel + '</div>' +
+          '<div class="weather-card-icon">' + info.icon + '</div>' +
+          '<div class="weather-card-desc">' + info.desc + '</div>' +
+          '<div class="weather-card-temps">' +
+            '<span class="weather-temp-hi">' + hi + '°</span>' +
+            '<span class="weather-temp-lo">' + lo + '°</span>' +
+          '</div>' +
+          '<div class="weather-card-precip">' + precip + '% precip</div>' +
+        '</div>';
+    }
+    var strip = document.getElementById('weatherStrip');
+    strip.innerHTML =
+      '<div class="weather-strip-title">5-Day Forecast · Berrien Springs, MI</div>' +
+      '<div class="weather-cards">' + cards + '</div>';
+  }
+
+  async function loadWeather() {
+    renderSkeleton();
+    try {
+      var url = 'https://api.open-meteo.com/v1/forecast' +
+        '?latitude=' + LAT +
+        '&longitude=' + LON +
+        '&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
+        '&temperature_unit=fahrenheit' +
+        '&timezone=America%2FChicago' +
+        '&forecast_days=5';
+      var res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      if (!res.ok) throw new Error('weather api error');
+      var data = await res.json();
+      renderWeather(data);
+    } catch(e) {
+      // Silent fail — remove strip entirely
+      var strip = document.getElementById('weatherStrip');
+      if (strip) strip.style.display = 'none';
+    }
+  }
+
+  loadWeather();
+})();
 </script>
 
 <script>
