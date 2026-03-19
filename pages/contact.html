@@ -322,6 +322,62 @@ h2.on-dark em { color:var(--teal-lt); }
 .cm-arrow { font-size:16px; color:var(--grey); transition:transform .2s, color .2s; }
 .contact-method:hover .cm-arrow { transform:translateX(4px); color:var(--teal); }
 
+/* ── CONTACT FORM CARD ── */
+.contact-form-card {
+  padding:20px 22px;
+  background:var(--off-white);
+  border:1px solid rgba(83,127,113,.12);
+  border-radius:10px;
+}
+.cf-label {
+  font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  color:var(--grey); margin-bottom:14px;
+}
+.cf-inquiry-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:14px;
+}
+.cf-pill {
+  display:flex; align-items:center; justify-content:center;
+  padding:9px 10px; border-radius:8px; cursor:pointer;
+  border:1.5px solid rgba(83,127,113,.18);
+  background:#fff;
+  font-size:11.5px; font-weight:500; color:var(--grey);
+  transition:border-color .2s, background .2s, color .2s;
+  user-select:none;
+}
+.cf-pill input[type="radio"] { display:none; }
+.cf-pill:hover { border-color:var(--teal); color:var(--teal); }
+.cf-pill:has(input:checked) {
+  border-color:var(--teal); background:rgba(83,127,113,.08); color:var(--teal-dk); font-weight:600;
+}
+.cf-fields { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.cf-input {
+  width:100%; padding:10px 14px;
+  border:1.5px solid rgba(83,127,113,.18); border-radius:8px;
+  font-family:'Jost',sans-serif; font-size:13px; font-weight:300;
+  background:#fff; color:var(--text);
+  outline:none; transition:border-color .2s;
+  box-sizing:border-box;
+}
+.cf-input:focus { border-color:var(--teal); }
+.cf-input::placeholder { color:rgba(120,116,112,.55); }
+.cf-textarea { resize:vertical; min-height:74px; }
+.cf-submit {
+  width:100%; padding:12px;
+  background:var(--teal); color:#fff; border:none; border-radius:8px;
+  font-family:'Jost',sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:1.5px; text-transform:uppercase;
+  cursor:pointer; transition:background .2s, transform .2s;
+}
+.cf-submit:hover { background:var(--teal-dk); transform:translateY(-1px); }
+.cf-submit:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+.cf-status {
+  margin-top:10px; font-size:12px; font-weight:400; text-align:center;
+  min-height:16px; color:var(--grey);
+}
+.cf-status.ok  { color:#3a7d5a; }
+.cf-status.err { color:#b94040; }
+
 /* ── BEFORE YOU ARRIVE ── */
 .before-arrive {
   background:var(--off-white);
@@ -674,15 +730,36 @@ nav.solid .hamburger span { background: #333; }
           <div class="cm-arrow">→</div>
         </a>
 
-        <a href="mailto:contact@frcwine.com?subject=Visit%20Inquiry%20-%20Free%20Run%20Cellars" class="contact-method">
-          <div class="cm-icon email">✉️</div>
-          <div class="cm-text">
-            <div class="cm-label">Email</div>
-            <div class="cm-value">contact@frcwine.com</div>
-            <div class="cm-sub">We'll get back to you within 24 hours</div>
+        <div class="contact-form-card">
+          <div class="cf-label">Send us a message</div>
+          <div class="cf-inquiry-grid">
+            <label class="cf-pill">
+              <input type="radio" name="cfInquiry" value="perform">
+              <span>🎵 Perform here</span>
+            </label>
+            <label class="cf-pill">
+              <input type="radio" name="cfInquiry" value="party">
+              <span>🎉 Host an event</span>
+            </label>
+            <label class="cf-pill">
+              <input type="radio" name="cfInquiry" value="foodtruck">
+              <span>🚚 Food truck</span>
+            </label>
+            <label class="cf-pill">
+              <input type="radio" name="cfInquiry" value="activity">
+              <span>🧘 Host an activity</span>
+            </label>
           </div>
-          <div class="cm-arrow">→</div>
-        </a>
+          <div class="cf-fields">
+            <input class="cf-input" type="text"  id="cfName"    placeholder="Your name"     autocomplete="name">
+            <input class="cf-input" type="email" id="cfEmail"   placeholder="Email address" autocomplete="email">
+            <input class="cf-input" type="tel"   id="cfPhone"   placeholder="Phone (optional)" autocomplete="tel">
+            <textarea class="cf-input cf-textarea" id="cfMessage" placeholder="Tell us a bit more…" rows="3"></textarea>
+            <input type="text" name="_hp" id="cfHp" style="display:none" tabindex="-1" autocomplete="off">
+          </div>
+          <button class="cf-submit" id="cfSubmit" type="button">Send message →</button>
+          <p class="cf-status" id="cfStatus"></p>
+        </div>
 
         <a href="https://www.instagram.com/freeruncellars" target="_blank" rel="noopener" class="contact-method">
           <div class="cm-icon instagram">
@@ -824,6 +901,57 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
   setTimeout(() => io.observe(el), i * 80);
 });
 
+
+// ── Contact form ────────────────────────────────────────
+(function () {
+  const btn    = document.getElementById('cfSubmit');
+  const status = document.getElementById('cfStatus');
+  if (!btn) return;
+
+  btn.addEventListener('click', async function () {
+    status.textContent = '';
+    status.className   = 'cf-status';
+
+    const name    = document.getElementById('cfName').value.trim();
+    const email   = document.getElementById('cfEmail').value.trim();
+    const phone   = document.getElementById('cfPhone').value.trim();
+    const message = document.getElementById('cfMessage').value.trim();
+    const inquiry = (document.querySelector('input[name="cfInquiry"]:checked') || {}).value || 'other';
+    const _hp     = document.getElementById('cfHp').value;
+
+    if (!name || !email || !email.includes('@')) {
+      status.textContent = 'Please enter your name and a valid email address.';
+      status.className   = 'cf-status err';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, inquiry, message, _hp }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error');
+      status.textContent = "Message sent! We'll be in touch within 24 hours.";
+      status.className   = 'cf-status ok';
+      // Clear form
+      ['cfName','cfEmail','cfPhone','cfMessage'].forEach(id => document.getElementById(id).value = '');
+      const checked = document.querySelector('input[name="cfInquiry"]:checked');
+      if (checked) checked.checked = false;
+      btn.textContent = 'Send message →';
+      btn.disabled = false;
+    } catch (err) {
+      status.textContent = err.message || 'Something went wrong. Please call us at (269) 815-6885.';
+      status.className   = 'cf-status err';
+      btn.textContent = 'Send message →';
+      btn.disabled = false;
+    }
+  });
+})();
 
 // ── Mobile nav ──────────────────────────────────────────
 (function() {
