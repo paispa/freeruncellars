@@ -881,7 +881,7 @@ nav.solid .hamburger span { background: #333; }
       </ul>
     </li>
     <li><a href="pages/gallery.html">Gallery</a></li>
-    <li><a href="pages/contact.html">Visit Us</a></li>
+    <li><a href="pages/contact.html">Visit &amp; Contact</a></li>
     <li><a href="pages/reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
   <button class="hamburger" id="burger" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
@@ -1350,7 +1350,7 @@ nav.solid .hamburger span { background: #333; }
 
 // ── Age Gate ──
 (function() {
-  if (sessionStorage.getItem('ageVerified')) return;
+  if (localStorage.getItem('ageVerified')) return;
   const gate = document.createElement('div');
   gate.id = 'age-gate';
   gate.innerHTML = `
@@ -1376,7 +1376,7 @@ nav.solid .hamburger span { background: #333; }
 })();
 
 function ageYes() {
-  sessionStorage.setItem('ageVerified', '1');
+  localStorage.setItem('ageVerified', '1');
   document.getElementById('age-gate').style.opacity = '0';
   document.getElementById('age-gate').style.transition = 'opacity .4s';
   setTimeout(() => document.getElementById('age-gate').remove(), 400);
