@@ -23,7 +23,7 @@ This is a **pure static HTML website** — no npm, no build process, no framewor
 | Hosting | Vercel (static + serverless functions) |
 | Serverless API | Node.js (Vercel Functions in `/api/`) |
 | AI Chat | Anthropic Claude API (claude-haiku model) |
-| Email | EmailJS (photo booth) · Brevo (Owners Circle) |
+| Email | EmailJS (photo booth) · Brevo (Owners Circle, contact form, chat leads) |
 | Analytics | Google Analytics 4 (G-T51K1F9DVS) |
 | DNS redirect | vercel.json (frcwine.com + www.frcwine.com → freeruncellars.com) |
 | Images | Local `/public/images/` + GoDaddy CDN |
@@ -49,7 +49,9 @@ freeruncellars/
 │   ├── chat.js                   # AI chat assistant (Anthropic Claude Haiku)
 │   ├── calendar.js               # Outlook ICS calendar proxy (CORS workaround)
 │   ├── upload-photo.js           # Photo booth image storage (Vercel Blob)
-│   └── circle-signup.js          # Owners Circle form → Brevo + email notification
+│   ├── circle-signup.js          # Owners Circle form → Brevo + email notification
+│   ├── contact.js                # Contact page inquiry form → Brevo email to contact@frcwine.com
+│   └── lead.js                   # Chat widget lead capture → Brevo email to contact@frcwine.com
 │
 ├── pages/                        # All public content pages
 │   ├── about.html                # Our Story / owner bios
@@ -366,6 +368,15 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
+
+## Recent Additions (March 2026 — part 9)
+
+Contact form, chat lead capture, and bug fixes:
+
+- **Contact form** (`pages/contact.html` + `api/contact.js`): replaced the `mailto:` email card with an inline Brevo-powered inquiry form. Visitor picks an inquiry type first — 🎵 Perform here · 🎉 Host an event · 🚚 Food truck · 🧘 Host an activity — then fills in name (required), email (required), phone (optional), and a message. POSTs to `api/contact.js` which sends a notification to `contact@frcwine.com` via Brevo. Subject line and emoji vary by inquiry type; reply-to is set to the visitor's email. Includes honeypot. Uses existing `BREVO_API_KEY` — no new env var needed.
+- **Chat widget lead capture** (`api/lead.js`): the chat widget's lead form was POSTing to `/api/lead` which didn't exist — silently failing every time. Created the endpoint (CORS allowlist, rate limiting, Brevo email to `contact@frcwine.com`).
+- **Contact page hamburger fix** (`pages/contact.html`): a stray `d` character and a duplicate `const io` (IntersectionObserver) declaration caused a JS `SyntaxError` that prevented the mobile nav IIFE from ever running. Both removed.
+- **Age gate persistence** (`index.html`): switched from `sessionStorage` to `localStorage`. `sessionStorage` clears when the browser tab/session closes, so the age prompt was reappearing every visit. `localStorage` persists until the user clears browser data.
 
 ## Recent Additions (March 2026 — part 8)
 
