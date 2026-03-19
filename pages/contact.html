@@ -377,6 +377,10 @@ h2.on-dark em { color:var(--teal-lt); }
 }
 .cf-status.ok  { color:#3a7d5a; }
 .cf-status.err { color:#b94040; }
+.cf-field-lbl {
+  display:block; font-size:9px; font-weight:600; letter-spacing:2px;
+  text-transform:uppercase; color:var(--grey); margin-bottom:4px;
+}
 
 /* ── BEFORE YOU ARRIVE ── */
 .before-arrive {
@@ -754,6 +758,10 @@ nav.solid .hamburger span { background: #333; }
             <input class="cf-input" type="text"  id="cfName"    placeholder="Your name"     autocomplete="name">
             <input class="cf-input" type="email" id="cfEmail"   placeholder="Email address" autocomplete="email">
             <input class="cf-input" type="tel"   id="cfPhone"   placeholder="Phone (optional)" autocomplete="tel">
+            <div id="cfEventDateRow" style="display:none;">
+              <label class="cf-field-lbl" for="cfEventDate">Preferred date (optional)</label>
+              <input class="cf-input" type="date" id="cfEventDate">
+            </div>
             <textarea class="cf-input cf-textarea" id="cfMessage" placeholder="Tell us a bit more…" rows="3"></textarea>
             <input type="text" name="_hp" id="cfHp" style="display:none" tabindex="-1" autocomplete="off">
           </div>
@@ -904,20 +912,31 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
 
 // ── Contact form ────────────────────────────────────────
 (function () {
-  const btn    = document.getElementById('cfSubmit');
-  const status = document.getElementById('cfStatus');
+  const btn         = document.getElementById('cfSubmit');
+  const status      = document.getElementById('cfStatus');
+  const dateRow     = document.getElementById('cfEventDateRow');
+  const DATE_TYPES  = new Set(['party', 'foodtruck', 'activity']);
   if (!btn) return;
+
+  // Show / hide event date field based on inquiry type
+  document.querySelectorAll('input[name="cfInquiry"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      dateRow.style.display = DATE_TYPES.has(this.value) ? '' : 'none';
+      if (!DATE_TYPES.has(this.value)) document.getElementById('cfEventDate').value = '';
+    });
+  });
 
   btn.addEventListener('click', async function () {
     status.textContent = '';
     status.className   = 'cf-status';
 
-    const name    = document.getElementById('cfName').value.trim();
-    const email   = document.getElementById('cfEmail').value.trim();
-    const phone   = document.getElementById('cfPhone').value.trim();
-    const message = document.getElementById('cfMessage').value.trim();
-    const inquiry = (document.querySelector('input[name="cfInquiry"]:checked') || {}).value || 'other';
-    const _hp     = document.getElementById('cfHp').value;
+    const name      = document.getElementById('cfName').value.trim();
+    const email     = document.getElementById('cfEmail').value.trim();
+    const phone     = document.getElementById('cfPhone').value.trim();
+    const eventDate = document.getElementById('cfEventDate').value.trim();
+    const message   = document.getElementById('cfMessage').value.trim();
+    const inquiry   = (document.querySelector('input[name="cfInquiry"]:checked') || {}).value || 'other';
+    const _hp       = document.getElementById('cfHp').value;
 
     if (!name || !email || !email.includes('@')) {
       status.textContent = 'Please enter your name and a valid email address.';
@@ -932,14 +951,17 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, inquiry, message, _hp }),
+        body: JSON.stringify({ name, email, phone, eventDate, inquiry, message, _hp }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error');
       status.textContent = "Message sent! We'll be in touch within 24 hours.";
       status.className   = 'cf-status ok';
       // Clear form
-      ['cfName','cfEmail','cfPhone','cfMessage'].forEach(id => document.getElementById(id).value = '');
+      ['cfName','cfEmail','cfPhone','cfEventDate','cfMessage'].forEach(function (id) {
+        document.getElementById(id).value = '';
+      });
+      dateRow.style.display = 'none';
       const checked = document.querySelector('input[name="cfInquiry"]:checked');
       if (checked) checked.checked = false;
       btn.textContent = 'Send message →';

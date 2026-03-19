@@ -43,7 +43,7 @@ module.exports = async function handler(req, res) {
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
   body = body || {};
 
-  const { name, email, phone, inquiry, message, _hp } = body;
+  const { name, email, phone, eventDate, inquiry, message, _hp } = body;
 
   // Honeypot
   if (_hp) return res.status(200).json({ ok: true });
@@ -62,11 +62,12 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
 
-  const safeName    = escapeHtml(name);
-  const safeEmail   = escapeHtml(email);
-  const safePhone   = escapeHtml(phone || '');
-  const safeMessage = escapeHtml(message || '');
-  const safeInquiry = escapeHtml(inquiryLabel);
+  const safeName      = escapeHtml(name);
+  const safeEmail     = escapeHtml(email);
+  const safePhone     = escapeHtml(phone || '');
+  const safeEventDate = escapeHtml(eventDate || '');
+  const safeMessage   = escapeHtml(message || '');
+  const safeInquiry   = escapeHtml(inquiryLabel);
 
   const dateStr = new Date().toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -75,6 +76,17 @@ module.exports = async function handler(req, res) {
   const phoneRow = safePhone
     ? `<tr><td style="padding:8px 0;color:#777;">Phone</td><td style="padding:8px 0;color:#222;">${safePhone}</td></tr>`
     : '';
+
+  // Format ISO date string (YYYY-MM-DD) as human-readable for the email
+  let formattedDate = '';
+  if (safeEventDate) {
+    const d = new Date(safeEventDate + 'T12:00:00'); // noon to avoid TZ drift
+    formattedDate = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  const eventDateRow = formattedDate
+    ? `<tr><td style="padding:8px 0;color:#777;">Event date</td><td style="padding:8px 0;color:#222;">${escapeHtml(formattedDate)}</td></tr>`
+    : '';
+
   const msgRow = safeMessage
     ? `<tr><td style="padding:8px 0;color:#777;vertical-align:top;">Message</td><td style="padding:8px 0;color:#222;font-style:italic;">&ldquo;${safeMessage}&rdquo;</td></tr>`
     : '';
@@ -96,6 +108,7 @@ module.exports = async function handler(req, res) {
             <tr><td style="padding:8px 0;color:#777;">Name</td><td style="padding:8px 0;font-weight:600;color:#222;">${safeName}</td></tr>
             <tr><td style="padding:8px 0;color:#777;">Email</td><td style="padding:8px 0;"><a href="mailto:${safeEmail}" style="color:#537f71;">${safeEmail}</a></td></tr>
             ${phoneRow}
+            ${eventDateRow}
             ${msgRow}
           </table>
           <p style="margin-top:24px;padding-top:16px;border-top:1px solid #e0dbd4;font-size:11px;color:#bbb;">Free Run Cellars · freeruncellars.com</p>
