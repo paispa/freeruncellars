@@ -2,7 +2,7 @@
 // Contact form submissions → notification email to contact@frcwine.com via Brevo
 // Requires env var: BREVO_API_KEY
 
-const { applyCors, makeRateLimiter, getClientIp, escapeHtml } = require('./_helpers');
+const { applyCors, makeRateLimiter, getClientIp, escapeHtml, normalizePhone } = require('./_helpers');
 
 // 5 submissions per IP per 10 minutes
 const isRateLimited = makeRateLimiter(5, 10 * 60_000);
@@ -43,13 +43,16 @@ module.exports = async function handler(req, res) {
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
   body = body || {};
 
-  const { name, email, phone, eventDate, inquiry, message, _hp } = body;
+  const { name, email, phone, optIn, eventDate, inquiry, message, _hp } = body;
 
   // Honeypot
   if (_hp) return res.status(200).json({ ok: true });
 
   if (!name || !email || !email.includes('@')) {
     return res.status(400).json({ error: 'Name and a valid email address are required.' });
+  }
+  if (optIn && !phone) {
+    return res.status(400).json({ error: 'Phone number is required to join the mailing list.' });
   }
 
   const inquiryKey   = INQUIRY_LABELS[inquiry] ? inquiry : 'other';
@@ -90,6 +93,9 @@ module.exports = async function handler(req, res) {
   const msgRow = safeMessage
     ? `<tr><td style="padding:8px 0;color:#777;vertical-align:top;">Message</td><td style="padding:8px 0;color:#222;font-style:italic;">&ldquo;${safeMessage}&rdquo;</td></tr>`
     : '';
+  const optInRow = optIn
+    ? `<tr><td style="padding:8px 0;color:#777;">Mailing list</td><td style="padding:8px 0;color:#3a7d5a;font-weight:600;">✓ Opted in</td></tr>`
+    : '';
 
   const emailRes = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
@@ -110,6 +116,7 @@ module.exports = async function handler(req, res) {
             ${phoneRow}
             ${eventDateRow}
             ${msgRow}
+            ${optInRow}
           </table>
           <p style="margin-top:24px;padding-top:16px;border-top:1px solid #e0dbd4;font-size:11px;color:#bbb;">Free Run Cellars · freeruncellars.com</p>
         </div>
@@ -121,6 +128,34 @@ module.exports = async function handler(req, res) {
     const errText = await emailRes.text();
     console.error('Brevo contact email failed:', emailRes.status, errText);
     return res.status(502).json({ error: 'Could not send your message. Please try again or call us directly.' });
+  }
+
+  // Add to mailing list if opted in
+  if (optIn) {
+    const nameParts   = name.trim().split(/\s+/);
+    const firstName   = nameParts[0];
+    const lastName    = nameParts.slice(1).join(' ') || '';
+    const normalizedPhone = normalizePhone(phone);
+
+    const listRes = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'api-key': apiKey },
+      body: JSON.stringify({
+        email,
+        attributes: {
+          FIRSTNAME: firstName,
+          LASTNAME:  lastName,
+          SMS:       normalizedPhone,
+        },
+        listIds:       [11],
+        updateEnabled: true,
+      }),
+    });
+
+    if (!listRes.ok) {
+      const errText = await listRes.text();
+      console.warn('Brevo list add failed (non-fatal):', listRes.status, errText);
+    }
   }
 
   return res.status(200).json({ ok: true });

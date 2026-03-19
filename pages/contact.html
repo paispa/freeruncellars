@@ -381,6 +381,13 @@ h2.on-dark em { color:var(--teal-lt); }
   display:block; font-size:9px; font-weight:600; letter-spacing:2px;
   text-transform:uppercase; color:var(--grey); margin-bottom:4px;
 }
+.cf-optin {
+  display:flex; align-items:center; gap:8px;
+  font-size:12px; color:var(--grey); cursor:pointer; padding:2px 0;
+}
+.cf-optin input[type="checkbox"] {
+  width:15px; height:15px; accent-color:var(--teal); cursor:pointer; flex-shrink:0;
+}
 
 /* ── BEFORE YOU ARRIVE ── */
 .before-arrive {
@@ -758,6 +765,10 @@ nav.solid .hamburger span { background: #333; }
             <input class="cf-input" type="text"  id="cfName"    placeholder="Your name"     autocomplete="name">
             <input class="cf-input" type="email" id="cfEmail"   placeholder="Email address" autocomplete="email">
             <input class="cf-input" type="tel"   id="cfPhone"   placeholder="Phone (optional)" autocomplete="tel">
+            <label class="cf-optin">
+              <input type="checkbox" id="cfOptIn">
+              <span>Add me to your mailing list</span>
+            </label>
             <div id="cfEventDateRow" style="display:none;">
               <label class="cf-field-lbl" for="cfEventDate">Preferred date (optional)</label>
               <input class="cf-input" type="date" id="cfEventDate">
@@ -915,6 +926,8 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
   const btn         = document.getElementById('cfSubmit');
   const status      = document.getElementById('cfStatus');
   const dateRow     = document.getElementById('cfEventDateRow');
+  const phoneInput  = document.getElementById('cfPhone');
+  const optInBox    = document.getElementById('cfOptIn');
   const DATE_TYPES  = new Set(['party', 'foodtruck', 'activity']);
   if (!btn) return;
 
@@ -926,13 +939,19 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
     });
   });
 
+  // Toggle phone placeholder based on mailing list opt-in
+  optInBox.addEventListener('change', function () {
+    phoneInput.placeholder = this.checked ? 'Phone (required for mailing list)' : 'Phone (optional)';
+  });
+
   btn.addEventListener('click', async function () {
     status.textContent = '';
     status.className   = 'cf-status';
 
     const name      = document.getElementById('cfName').value.trim();
     const email     = document.getElementById('cfEmail').value.trim();
-    const phone     = document.getElementById('cfPhone').value.trim();
+    const phone     = phoneInput.value.trim();
+    const optIn     = optInBox.checked;
     const eventDate = document.getElementById('cfEventDate').value.trim();
     const message   = document.getElementById('cfMessage').value.trim();
     const inquiry   = (document.querySelector('input[name="cfInquiry"]:checked') || {}).value || 'other';
@@ -943,6 +962,12 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
       status.className   = 'cf-status err';
       return;
     }
+    if (optIn && !phone) {
+      status.textContent = 'Please add your phone number to join the mailing list.';
+      status.className   = 'cf-status err';
+      phoneInput.focus();
+      return;
+    }
 
     btn.disabled = true;
     btn.textContent = 'Sending…';
@@ -951,16 +976,20 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, eventDate, inquiry, message, _hp }),
+        body: JSON.stringify({ name, email, phone, optIn, eventDate, inquiry, message, _hp }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error');
-      status.textContent = "Message sent! We'll be in touch within 24 hours.";
+      status.textContent = optIn
+        ? "Message sent! You've been added to our mailing list."
+        : "Message sent! We'll be in touch within 24 hours.";
       status.className   = 'cf-status ok';
       // Clear form
       ['cfName','cfEmail','cfPhone','cfEventDate','cfMessage'].forEach(function (id) {
         document.getElementById(id).value = '';
       });
+      optInBox.checked = false;
+      phoneInput.placeholder = 'Phone (optional)';
       dateRow.style.display = 'none';
       const checked = document.querySelector('input[name="cfInquiry"]:checked');
       if (checked) checked.checked = false;
