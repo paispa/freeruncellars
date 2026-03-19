@@ -42,13 +42,20 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'API key not configured' });
   }
 
+  const ALLOWED_MODELS = {
+    'claude-haiku-4-5-20251001': true,
+    'claude-sonnet-4-6': true,
+  };
+
   try {
     const body = await parseBody(req);
-    const { systemPrompt, userPrompt } = body;
+    const { systemPrompt, userPrompt, model } = body;
 
     if (!systemPrompt || !userPrompt) {
       return res.status(400).json({ error: 'systemPrompt and userPrompt are required' });
     }
+
+    const selectedModel = ALLOWED_MODELS[model] ? model : 'claude-haiku-4-5-20251001';
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -58,7 +65,7 @@ module.exports = async function handler(req, res) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: selectedModel,
         max_tokens: 1000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
