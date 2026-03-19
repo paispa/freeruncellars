@@ -369,11 +369,19 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 10)
+
+Contact form enhancements and nav rename:
+
+- **Nav rename** (all pages): "Visit Us" nav link renamed to "Visit & Contact" across all 9 HTML files (desktop + hamburger) to reflect that the page serves both purposes.
+- **Event date field** (`pages/contact.html` + `api/contact.js`): optional date picker added to the contact form. Shown only for inquiry types where it's relevant — 🎉 Host an event · 🚚 Food truck · 🧘 Host an activity — hidden for 🎵 Perform here. Date is formatted as human-readable (e.g. *Saturday, April 5, 2026*) in the notification email.
+- **Mailing list opt-in** (`pages/contact.html` + `api/contact.js`): "Add me to your mailing list" checkbox below the phone field. When checked, phone becomes required (client + server validation); placeholder updates to reflect this. On opt-in, contact is added/updated in Brevo list 11 with `FIRSTNAME`, `LASTNAME`, `SMS` attributes via `updateEnabled: true`. List add failure is non-fatal — notification email still succeeds. Success message confirms list signup to the visitor.
+
 ## Recent Additions (March 2026 — part 9)
 
 Contact form, chat lead capture, and bug fixes:
 
-- **Contact form** (`pages/contact.html` + `api/contact.js`): replaced the `mailto:` email card with an inline Brevo-powered inquiry form. Visitor picks an inquiry type first — 🎵 Perform here · 🎉 Host an event · 🚚 Food truck · 🧘 Host an activity — then fills in name (required), email (required), phone (optional), and a message. POSTs to `api/contact.js` which sends a notification to `contact@frcwine.com` via Brevo. Subject line and emoji vary by inquiry type; reply-to is set to the visitor's email. Includes honeypot. Uses existing `BREVO_API_KEY` — no new env var needed.
+- **Contact form** (`pages/contact.html` + `api/contact.js`): replaced the `mailto:` email card with an inline Brevo-powered inquiry form. Visitor picks an inquiry type first — 🎵 Perform here · 🎉 Host an event · 🚚 Food truck · 🧘 Host an activity — then fills in name (required), email (required), phone (optional), and a message. POSTs to `api/contact.js` which sends a notification to `contact@frcwine.com` via Brevo. Subject line and emoji vary by inquiry type; reply-to is set to the visitor's email. Includes honeypot field. Uses existing `BREVO_API_KEY` — no new env var needed.
 - **Chat widget lead capture** (`api/lead.js`): the chat widget's lead form was POSTing to `/api/lead` which didn't exist — silently failing every time. Created the endpoint (CORS allowlist, rate limiting, Brevo email to `contact@frcwine.com`).
 - **Contact page hamburger fix** (`pages/contact.html`): a stray `d` character and a duplicate `const io` (IntersectionObserver) declaration caused a JS `SyntaxError` that prevented the mobile nav IIFE from ever running. Both removed.
 - **Age gate persistence** (`index.html`): switched from `sessionStorage` to `localStorage`. `sessionStorage` clears when the browser tab/session closes, so the age prompt was reappearing every visit. `localStorage` persists until the user clears browser data.
