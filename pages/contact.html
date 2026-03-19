@@ -819,18 +819,6 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.1 });
 
-d
-// Scroll reveal
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1 });
-
 document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i) => {
   el.style.cssText += `opacity:0; transition:opacity .6s ease, transform .6s ease; transform:translateY(20px);`;
   setTimeout(() => io.observe(el), i * 80);
