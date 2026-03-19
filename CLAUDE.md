@@ -367,6 +367,16 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 8)
+
+Post generator improvements (`tools/post-generator.html` + `api/generate-post.js`):
+
+- **CORS fix**: the tool was previously calling the Anthropic API directly from the browser, exposing the API key. All AI calls now go through `api/generate-post.js` (same CORS allowlist + rate limiting as the other handlers). API key stays server-side only.
+- **Model selector**: Haiku is the default (fast, low-cost). A two-button toggle in Step 2 lets Trish switch to Sonnet for richer copy. The server validates the model against an allowlist (`claude-haiku-4-5-20251001`, `claude-sonnet-4-6`) and falls back to Haiku if anything unexpected is sent.
+- **Weather auto-fetch**: on event selection, fetches a forecast from [Open-Meteo](https://open-meteo.com/) (free, no API key) for Berrien Springs, MI (lat 41.9478, lon -86.3483). Available up to 16 days out. Temperature range and a WMO condition icon appear in the event strip; the forecast is injected into the prompt as a soft hint — *"weave the weather in naturally if it fits."* Silently skipped if unavailable or out of range.
+- **Post type toggle**: Announcement (build anticipation, save the date) vs Reminder (event is soon, create urgency). Changes the framing instruction sent to Claude.
+- **Featured wine / special offer**: optional text field passed directly into the prompt so Claude can mention a specific wine or deal naturally within the post.
+
 ## Recent Additions (March 2026 — part 7)
 
 Security hardening across all three API handlers (issues #38, #39, #42, #43):

@@ -74,7 +74,7 @@ freeruncellars/
 | Visit Us | `pages/contact.html` | ✅ Live |
 | Reviews | `pages/reviews.html` | ✅ Live |
 | Owners Circle | `pages/circle.html` | ✅ Live — private URL, not linked from site |
-| Post Generator | `tools/post-generator.html` | ✅ Internal tool |
+| Post Generator | `tools/post-generator.html` | ✅ Internal tool — AI Facebook post generator with weather, model selector, post type |
 | Photo Booth | `tools/photobooth.html` | ✅ Live — EmailJS + Vercel Blob |
 
 ---
@@ -285,6 +285,8 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 - [x] Owners Circle: duplicate phone/email handled gracefully — friendly error with contact@frcwine.com
 - [x] API security hardening: CORS allowlist (replaces `*`), per-IP rate limiting, honeypot on circle form, HTML escaping in notification email, upload MIME/size validation — issues #38 #39 #42 #43
 - [x] Shared API helpers extracted to `api/_helpers.js`; unit test suite added (`test-api-handlers.js`, 69 tests)
+- [x] Post generator: CORS fix (Anthropic calls now proxied through `api/generate-post.js`; API key never exposed client-side)
+- [x] Post generator: model selector (Haiku default / Sonnet toggle), weather auto-fetch (Open-Meteo, 16-day window), post type toggle (Announcement / Reminder), featured wine field
 - [ ] Owners Circle: legal review of "dividends into credits" language (Michigan winery regs)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
@@ -297,4 +299,4 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 
 ---
 
-*Last updated: March 18, 2026 (API security hardening: CORS allowlist, rate limiting, honeypot, HTML escaping, upload validation; shared helpers + unit tests)*
+*Last updated: March 19, 2026 (Post generator: CORS fix, model selector, weather fetch, post type, featured wine field)*
