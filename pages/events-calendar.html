@@ -828,20 +828,18 @@ async function loadCalendar() {
   showLoading();
   try {
     const text = await fetchCalendar();
-    console.log('Calendar fetched, length:', text.length, 'has VCALENDAR:', text.includes('BEGIN:VCALENDAR'));
     allEvents = parseICS(text);
-    console.log('Events parsed:', allEvents.length);
     renderEvents(allEvents, activeFilter);
     // Highlight weather cards whose date matches an upcoming event
-    var today = new Date(); today.setHours(0,0,0,0);
-    var eventDates = new Set();
-    allEvents.forEach(function(ev) {
-      var d = new Date(ev.date); d.setHours(0,0,0,0);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const eventDates = new Set();
+    allEvents.forEach(ev => {
+      const d = new Date(ev.date); d.setHours(0,0,0,0);
       if (d >= today) {
-        var y = d.getFullYear();
-        var m = String(d.getMonth()+1).padStart(2,'0');
-        var day = String(d.getDate()).padStart(2,'0');
-        eventDates.add(y + '-' + m + '-' + day);
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const day = String(d.getDate()).padStart(2,'0');
+        eventDates.add(`${y}-${m}-${day}`);
       }
     });
     if (window._highlightWeatherDays) window._highlightWeatherDays(eventDates);
@@ -868,7 +866,7 @@ loadCalendar();
 <script>
 // ── Weather Widget ───────────────────────────────────────────────────
 (function() {
-  var LAT = 41.9478, LON = -86.3411;
+  var LAT = 41.9478, LON = -86.3483;
   var DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
   var WMO = {
