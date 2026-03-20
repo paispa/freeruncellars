@@ -35,7 +35,9 @@ freeruncellars/
 │   ├── chat.js                 ← AI chat (Anthropic Claude Haiku) — CORS restricted, rate limited
 │   ├── calendar.js             ← Outlook ICS calendar proxy
 │   ├── upload-photo.js         ← Photo booth storage (Vercel Blob) — MIME + size validated
-│   └── circle-signup.js        ← Owners Circle form → Brevo list + email notification
+│   ├── circle-signup.js        ← Owners Circle form → Brevo list + email notification
+│   ├── contact.js              ← Contact page inquiry form → Brevo email to contact@frcwine.com
+│   └── lead.js                 ← Chat widget lead capture → Brevo email to contact@frcwine.com
 ├── pages/
 │   ├── about.html              ← Our Story
 │   ├── wines.html              ← Full wine menu + seasonal cocktails
@@ -287,6 +289,13 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 - [x] Shared API helpers extracted to `api/_helpers.js`; unit test suite added (`test-api-handlers.js`, 69 tests)
 - [x] Post generator: CORS fix (Anthropic calls now proxied through `api/generate-post.js`; API key never exposed client-side)
 - [x] Post generator: model selector (Haiku default / Sonnet toggle), weather auto-fetch (Open-Meteo, 16-day window), post type toggle (Announcement / Reminder), featured wine field
+- [x] Contact page: replaced `mailto:` link with inline Brevo contact form — inquiry types: Perform here, Host an event, Food truck, Host an activity
+- [x] Chat widget lead capture: `/api/lead.js` created — was silently failing before (endpoint didn't exist)
+- [x] Contact page hamburger fixed — stray `d` character + duplicate IntersectionObserver caused JS SyntaxError that prevented mobile nav from attaching
+- [x] Age gate: switched from `sessionStorage` to `localStorage` — now persists across sessions instead of asking every visit
+- [x] Nav link renamed "Visit Us" → "Visit & Contact" across all 9 pages
+- [x] Contact form: optional event date picker (shown only for Host an event / Food truck / Host an activity)
+- [x] Contact form: mailing list opt-in checkbox — phone required when checked, contact added to Brevo list 11
 - [ ] Owners Circle: legal review of "dividends into credits" language (Michigan winery regs)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
@@ -299,4 +308,4 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 
 ---
 
-*Last updated: March 19, 2026 (Post generator: CORS fix, model selector, weather fetch, post type, featured wine field)*
+*Last updated: March 19, 2026 (Nav rename, event date field, mailing list opt-in on contact form)*
