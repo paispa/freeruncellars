@@ -266,7 +266,6 @@ h2.on-dark em { color:var(--teal-lt); }
 .reds .wine-card { background:var(--off-white); }
 .reds .wine-card:hover { background:#fff; }
 .wine-card:hover {
-  transform:translateY(-4px);
   box-shadow:0 12px 32px rgba(83,127,113,.12);
   border-color:rgba(83,127,113,.3);
 }
@@ -1169,6 +1168,28 @@ document.querySelectorAll('.wine-card, .flight-card').forEach((el, i) => {
   el.style.cssText += `opacity:0; transform:translateY(14px); transition:opacity .5s ${i*50}ms ease, transform .5s ${i*50}ms ease;`;
   io.observe(el);
 });
+
+// ── Wine card hover tilt ──────────────────────────────────
+(function() {
+  var MAX_TILT = 8; // degrees
+  document.querySelectorAll('.wine-card').forEach(function(card) {
+    card.addEventListener('mousemove', function(e) {
+      var rect = card.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      var dx = (e.clientX - cx) / (rect.width / 2);
+      var dy = (e.clientY - cy) / (rect.height / 2);
+      var rotX = -dy * MAX_TILT;
+      var rotY =  dx * MAX_TILT;
+      card.style.transform = 'perspective(700px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateZ(6px)';
+      card.style.transition = 'transform .08s ease, box-shadow .25s ease, border-color .25s ease';
+    });
+    card.addEventListener('mouseleave', function() {
+      card.style.transform = '';
+      card.style.transition = 'transform .35s ease, box-shadow .25s ease, border-color .25s ease';
+    });
+  });
+})();
 
 // ── Wine filter ──────────────────────────────────────────
 (function() {

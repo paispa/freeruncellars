@@ -1418,24 +1418,56 @@ onScroll();
 
 
 // Scroll reveal
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      io.unobserve(e.target);
-    }
+(function() {
+  var revealIO = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  // Staggered groups: each selector gets its own delay offset
+  var groups = [
+    { sel: '.strip-item', delay: 60 },
+    { sel: '.exp-header', delay: 0 },
+    { sel: '.exp-card',   delay: 80 },
+    { sel: '.story-content', delay: 0 },
+    { sel: '.story-img',  delay: 80 },
+    { sel: '.wines-content', delay: 0 },
+    { sel: '.wines-img',  delay: 80 },
+    { sel: '.eb-body',    delay: 0 },
+    { sel: '.pkg',        delay: 90 },
+    { sel: '.grounds-content', delay: 0 },
+    { sel: '.fact',       delay: 80 },
+    { sel: '.reviews-header', delay: 0 },
+    { sel: '.r-card',     delay: 90 },
+    { sel: '.visit-content', delay: 0 },
+    { sel: '.fruitful-text', delay: 0 },
+  ];
+
+  groups.forEach(function(g) {
+    document.querySelectorAll(g.sel).forEach(function(el, i) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(22px)';
+      el.style.transition = 'opacity .65s ' + (i * g.delay) + 'ms ease, transform .65s ' + (i * g.delay) + 'ms ease';
+      revealIO.observe(el);
+    });
   });
-}, { threshold:0.12 });
-document.querySelectorAll('.exp-item, .pkg, .fact-item, .r-card, .f-col').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(18px)';
-  el.style.transition = 'opacity .55s ease, transform .55s ease';
-  io.observe(el);
-});
-document.querySelectorAll('.exp-item.visible, .pkg.visible, .fact-item.visible, .r-card.visible, .f-col.visible').forEach(el => {
-  el.style.opacity = '1';
-  el.style.transform = 'translateY(0)';
-});
+})();
+
+// Hero parallax
+(function() {
+  var heroBg = document.querySelector('.hero-bg');
+  if (!heroBg) return;
+  function onHeroScroll() {
+    var offset = window.scrollY * 0.28;
+    heroBg.style.backgroundPosition = 'center calc(30% + ' + offset + 'px)';
+  }
+  addEventListener('scroll', onHeroScroll, { passive: true });
+})();
 
 // ── Mobile nav ──────────────────────────────────────────
 (function() {
