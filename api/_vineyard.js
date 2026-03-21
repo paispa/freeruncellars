@@ -223,8 +223,18 @@ async function sendBrevoEmail({ subject, htmlContent }) {
 // Upstash direct env var names (UPSTASH_REDIS_REST_*).
 // If neither is set, KV features are silently skipped.
 function kvConfig() {
-  const url   = process.env.KV_REST_API_URL   || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  // Check all known env var name patterns in priority order:
+  //   1. Vercel KV (legacy)           KV_REST_API_URL / KV_REST_API_TOKEN
+  //   2. Upstash via Vercel Storage    UPSTASH_REDIS_KV_REST_API_URL / _TOKEN
+  //   3. Upstash direct                UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN
+  const url =
+    process.env.KV_REST_API_URL ||
+    process.env.UPSTASH_REDIS_KV_REST_API_URL ||
+    process.env.UPSTASH_REDIS_REST_URL;
+  const token =
+    process.env.KV_REST_API_TOKEN ||
+    process.env.UPSTASH_REDIS_KV_REST_API_TOKEN ||
+    process.env.UPSTASH_REDIS_REST_TOKEN;
   return (url && token) ? { url, token } : null;
 }
 
