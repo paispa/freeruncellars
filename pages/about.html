@@ -495,6 +495,83 @@ nav.solid .hamburger span { background: #333; }
 }
 .drop-menu li a:hover { color: #537f71 !important; background: rgba(83,127,113,.06); }
 
+/* ── LIFE IN THE VINEYARD WIDGET ── */
+.vineyard-widget {
+  background: var(--off-white);
+  padding: 96px 56px;
+}
+.vineyard-widget-inner { max-width: 1100px; margin: 0 auto; }
+.vineyard-header { text-align: center; margin-bottom: 52px; }
+.vineyard-header h2 { margin-bottom: 0; }
+
+.vineyard-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.vw-panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  border: 1px solid rgba(83,127,113,.12);
+}
+
+.vw-stage-icon { font-size: 36px; margin-bottom: 12px; }
+.vw-stage-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 300; font-style: italic;
+  color: var(--black); line-height: 1.2;
+  margin-bottom: 8px;
+}
+.vw-stage-sub {
+  font-size: 12px; color: var(--grey);
+  font-weight: 300; margin-bottom: 20px;
+}
+.vw-next {
+  padding: 14px 16px;
+  background: var(--teal-pale);
+  border-radius: 8px;
+  border-left: 3px solid var(--teal);
+  font-size: 13px; color: var(--grey); line-height: 1.5;
+}
+.vw-next strong { color: var(--teal); font-weight: 600; }
+
+.vw-today {
+  font-size: 13px; color: var(--grey); margin-bottom: 16px;
+  line-height: 1.6;
+}
+.vw-today .vw-today-emoji { font-size: 22px; margin-right: 6px; }
+.vw-today-temps {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-style: italic; color: var(--black);
+  margin-bottom: 4px;
+}
+.vw-today-desc { font-size: 12px; color: var(--grey); }
+
+.vw-frost-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 16px;
+  padding: 10px 16px;
+  background: rgba(253,141,60,.08);
+  border: 1px solid rgba(253,141,60,.3);
+  border-radius: 8px;
+  font-size: 12px; color: #d68910; font-weight: 600;
+}
+
+.vw-quiet {
+  margin-top: 16px;
+  font-size: 13px; color: var(--grey);
+  font-style: italic;
+}
+
+@media (max-width: 767px) {
+  .vineyard-widget { padding: 64px 24px; }
+  .vineyard-cols { grid-template-columns: 1fr; }
+}
+
 </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -680,6 +757,22 @@ nav.solid .hamburger span { background: #333; }
   </div>
 </section>
 
+<!-- LIFE IN THE VINEYARD WIDGET -->
+<section class="vineyard-widget" id="vineyardWidgetSection" style="display:none">
+  <div class="vineyard-widget-inner">
+    <div class="vineyard-header">
+      <p class="s-label center">Life in the Vineyard</p>
+      <h2>Our Pinot Gris vines · <em>2026 growing season</em></h2>
+    </div>
+    <div class="vineyard-cols">
+      <!-- Left: Vineyard Status -->
+      <div class="vw-panel" id="vwStatus"></div>
+      <!-- Right: Conditions -->
+      <div class="vw-panel" id="vwConditions"></div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section">
   <div class="cta-inner">
@@ -729,6 +822,192 @@ document.querySelectorAll('.value-item, .prop-item, .story-content').forEach((el
   el.style.cssText += `opacity:0; transition:opacity .6s ease, transform .6s ease; transform:translateY(20px);`;
   setTimeout(() => io.observe(el), i * 80);
 });
+
+// ── Life in the Vineyard Widget ──────────────────────────────────────────────
+(function() {
+  const STAGES = [
+    { key:'pruning',   label:'Pruning',   gdd:0,    icon:'✂️'  },
+    { key:'bud_swell', label:'Bud Swell', gdd:50,   icon:'🌱'  },
+    { key:'bud_break', label:'Bud Break', gdd:100,  icon:'🌿'  },
+    { key:'shoot_3in', label:'3″ Shoot',  gdd:200,  icon:'🌾'  },
+    { key:'bloom',     label:'Bloom',     gdd:370,  icon:'🌸'  },
+    { key:'fruit_set', label:'Fruit Set', gdd:500,  icon:'🍇'  },
+    { key:'veraison',  label:'Veraison',  gdd:1900, icon:'🫐'  },
+    { key:'harvest',   label:'Harvest',   gdd:2400, icon:'🍷'  },
+  ];
+  const VISITOR_LABELS = {
+    pruning:   'Resting after pruning',
+    bud_swell: 'Vines waking up',
+    bud_break: 'First buds of the season',
+    shoot_3in: 'Young shoots growing',
+    bloom:     'Vines in bloom',
+    fruit_set: 'Grapes forming',
+    veraison:  'Grapes changing color',
+    harvest:   'Harvest time',
+  };
+  const LAT = 41.9478, LON = -86.3483, GDD_BASE = 50;
+
+  function calcDayGDD(tmax, tmin) { return Math.max(0, ((tmax + tmin) / 2) - GDD_BASE); }
+
+  function getCurrentStageIdx(gdd) {
+    let idx = 0;
+    for (let i = 0; i < STAGES.length; i++) { if (gdd >= STAGES[i].gdd) idx = i; else break; }
+    return idx;
+  }
+
+  function predictNext(stageGDD, currentGDD, history) {
+    const recent  = history.slice(-14);
+    const avgRate = recent.length > 0 ? recent.reduce((a,b) => a+b,0) / recent.length : 0;
+    if (avgRate < 0.1 || stageGDD <= currentGDD) return null;
+    const days   = Math.round((stageGDD - currentGDD) / avgRate);
+    const spread = avgRate < 0.5 ? 14 : 7;
+    const mid    = new Date(Date.now() + days * 86400000);
+    const early  = new Date(mid.getTime() - spread * 86400000);
+    const late   = new Date(mid.getTime() + spread * 86400000);
+    const fmtShort = d => d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    const rangeStr = early.getMonth() === late.getMonth()
+      ? `${fmtShort(early)}–${late.getDate()}`
+      : `${fmtShort(early)}–${fmtShort(late)}`;
+    return rangeStr;
+  }
+
+  function seasonalQuiet(month) {
+    if (month >= 2 && month <= 4) return '🌿 Vines resting well';
+    if (month >= 5 && month <= 7) return '☀️ A beautiful growing season';
+    if (month >= 8 && month <= 10) return '🍂 Moving toward harvest';
+    return '❄️ Vines in winter dormancy';
+  }
+
+  function weatherEmoji(code) {
+    if (code === 0) return '☀️';
+    if (code <= 2)  return '🌤️';
+    if (code === 3) return '☁️';
+    if (code >= 51 && code <= 57) return '🌦️';
+    if (code >= 61 && code <= 65) return '🌧️';
+    if (code >= 71 && code <= 77) return '🌨️';
+    if (code >= 80 && code <= 82) return '🌦️';
+    if (code >= 95) return '⛈️';
+    return '🌤️';
+  }
+
+  function weatherDesc(code) {
+    if (code === 0) return 'Clear skies';
+    if (code <= 2)  return 'Partly cloudy';
+    if (code === 3) return 'Overcast';
+    if (code >= 51 && code <= 57) return 'Light drizzle';
+    if (code >= 61 && code <= 65) return 'Rainy';
+    if (code >= 71 && code <= 77) return 'Snowy';
+    if (code >= 80 && code <= 82) return 'Scattered showers';
+    if (code >= 95) return 'Thunderstorms';
+    return 'Mixed conditions';
+  }
+
+  function daysSincePruning() {
+    const pruning = new Date('2026-03-17T00:00:00');
+    const today = new Date(); today.setHours(0,0,0,0);
+    return Math.max(1, Math.floor((today - pruning) / 86400000) + 1);
+  }
+
+  async function renderWidget(gdd, gddHistory, forecastDay, hasFrost) {
+    const stageIdx   = getCurrentStageIdx(gdd);
+    const stage      = STAGES[stageIdx];
+    const nextStage  = STAGES[stageIdx + 1];
+    const friendlyLabel = VISITOR_LABELS[stage.key] || stage.label;
+    const days       = daysSincePruning();
+
+    // Left panel
+    let nextHtml = '';
+    if (nextStage) {
+      const range = gddHistory ? predictNext(nextStage.gdd, gdd, gddHistory) : null;
+      const rangeStr = range ? ` · est. ${range}` : '';
+      nextHtml = `<div class="vw-next">Next up: <strong>${VISITOR_LABELS[nextStage.key]}</strong>${rangeStr}</div>`;
+    }
+    document.getElementById('vwStatus').innerHTML = `
+      <div class="vw-stage-icon">${stage.icon}</div>
+      <div class="vw-stage-label">${friendlyLabel}</div>
+      <div class="vw-stage-sub">Day ${days} of the 2026 growing season</div>
+      ${nextHtml}`;
+
+    // Right panel
+    const today = forecastDay;
+    const month = new Date().getMonth();
+    let condHtml = '';
+    if (today) {
+      const emoji = weatherEmoji(today.code);
+      const desc  = weatherDesc(today.code);
+      condHtml = `
+        <div class="vw-today">
+          <span class="vw-today-emoji">${emoji}</span>${desc}
+        </div>
+        <div class="vw-today-temps">${Math.round(today.tmax)}° / ${Math.round(today.tmin)}°F</div>
+        <div class="vw-today-desc">High / Low · Berrien Springs, MI</div>`;
+    }
+    const frostHtml = hasFrost
+      ? `<div class="vw-frost-badge">❄️ Frost watch this week</div>`
+      : `<div class="vw-quiet">${seasonalQuiet(month)}</div>`;
+
+    document.getElementById('vwConditions').innerHTML = condHtml + frostHtml;
+
+    // Show the section
+    document.getElementById('vineyardWidgetSection').style.display = '';
+  }
+
+  async function initWidget() {
+    try {
+      // Try localStorage cache first (written by staff tool)
+      const raw = localStorage.getItem('frc_gdd_cache');
+      let gdd = null, gddHistory = null;
+      if (raw) {
+        const cache = JSON.parse(raw);
+        if (cache && cache.timestamp && (Date.now() - cache.timestamp) < 6 * 3600 * 1000) {
+          gdd = cache.gdd;
+        }
+      }
+
+      // Fetch forecast (always fresh — lightweight)
+      const fcRes  = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
+        `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode` +
+        `&temperature_unit=fahrenheit&timezone=America%2FChicago&forecast_days=7`
+      );
+      const fcData = await fcRes.json();
+      const days   = fcData.daily.time.map((date, i) => ({
+        date, tmax: fcData.daily.temperature_2m_max[i],
+        tmin: fcData.daily.temperature_2m_min[i],
+        precip: fcData.daily.precipitation_probability_max[i],
+        code: fcData.daily.weathercode[i],
+      }));
+
+      // GDD from archive if cache stale/missing
+      if (gdd === null) {
+        const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+        const yStr = yesterday.toISOString().slice(0, 10);
+        const hRes = await fetch(
+          `https://archive-api.open-meteo.com/v1/archive?latitude=${LAT}&longitude=${LON}` +
+          `&start_date=2026-01-01&end_date=${yStr}` +
+          `&daily=temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=America%2FChicago`
+        );
+        const hData = await hRes.json();
+        const dailyGDDs = hData.daily.time.map((_, i) =>
+          calcDayGDD(hData.daily.temperature_2m_max[i], hData.daily.temperature_2m_min[i])
+        );
+        gdd = dailyGDDs.reduce((a, b) => a + b, 0);
+        gddHistory = dailyGDDs;
+      }
+
+      const hasFrost = days.some(d => d.tmin <= 36);
+      await renderWidget(gdd, gddHistory, days[0], hasFrost);
+    } catch (e) {
+      // Silent failure — never show errors to visitors
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWidget);
+  } else {
+    initWidget();
+  }
+})();
 
 
 // ── Mobile nav ──────────────────────────────────────────
