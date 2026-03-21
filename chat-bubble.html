@@ -350,10 +350,16 @@
   closeBtn.addEventListener('click', toggle);
 
   // ── Add messages ─────────────────────────────────────────
+  function linkify(text) {
+    return text
+      .replace(/\n/g, '<br>')
+      .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+
   function addBotMessage(text, showForm) {
     const div = document.createElement('div');
     div.className = 'frc-msg bot';
-    div.innerHTML = `<div class="frc-bubble">${text.replace(/\n/g, '<br>')}</div>`;
+    div.innerHTML = `<div class="frc-bubble">${linkify(text)}</div>`;
     msgList.appendChild(div);
 
     if (showForm) {
