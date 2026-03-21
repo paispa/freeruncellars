@@ -218,13 +218,22 @@ async function sendBrevoEmail({ subject, htmlContent }) {
   return res.json();
 }
 
-// ── Vercel KV helpers with graceful fallback ────────────────────────────────
-// Requires process.env.KV_REST_API_URL + KV_REST_API_TOKEN
+// ── Vercel KV / Upstash Redis helpers with graceful fallback ─────────────────
+// Supports both Vercel KV env var names (KV_REST_API_*) and
+// Upstash direct env var names (UPSTASH_REDIS_REST_*).
+// If neither is set, KV features are silently skipped.
+function kvConfig() {
+  const url   = process.env.KV_REST_API_URL   || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  return (url && token) ? { url, token } : null;
+}
+
 async function kvGet(key) {
   try {
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) return null;
-    const res  = await fetch(`${process.env.KV_REST_API_URL}/get/${key}`, {
-      headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` },
+    const cfg = kvConfig();
+    if (!cfg) return null;
+    const res  = await fetch(`${cfg.url}/get/${key}`, {
+      headers: { Authorization: `Bearer ${cfg.token}` },
     });
     const data = await res.json();
     return data.result ?? null;
@@ -236,13 +245,14 @@ async function kvGet(key) {
 
 async function kvSet(key, value) {
   try {
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    const cfg = kvConfig();
+    if (!cfg) {
       console.warn('[_vineyard] KV not configured — skipping kvSet');
       return;
     }
     await fetch(
-      `${process.env.KV_REST_API_URL}/set/${key}/${encodeURIComponent(String(value))}`,
-      { method: 'POST', headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` } },
+      `${cfg.url}/set/${key}/${encodeURIComponent(String(value))}`,
+      { method: 'POST', headers: { Authorization: `Bearer ${cfg.token}` } },
     );
   } catch (e) {
     console.warn('[_vineyard] KV set failed:', e.message);
