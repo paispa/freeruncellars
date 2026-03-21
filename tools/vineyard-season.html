@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vineyard Season · Free Run Cellars</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage:       #739885;
+    --sage-dark:  #4e6e5d;
+    --sage-light: #a0b8a8;
+    --bg:         #000000;
+    --bg2:        #0a0a0a;
+    --text:       #e8f0eb;
+    --muted:      #4e6e5d;
+    --cream:      #ffffff;
+    --amber:      #fd8d3c;
+    --teal:       #537f71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(115,152,133,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(78,110,93,0.07) 0%, transparent 50%);
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .page-header { text-align: center; margin-bottom: 40px; }
+
+  .site-logo {
+    height: 34px;
+    filter: brightness(0) invert(1);
+    margin-bottom: 16px;
+    display: block; margin-left: auto; margin-right: auto;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 300; font-style: italic;
+    color: var(--cream); letter-spacing: 1px; line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .page-sub {
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
+  }
+
+  .header-divider {
+    width: 60px; height: 1px; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, var(--sage), transparent);
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sage-dark), var(--sage), var(--sage-dark), transparent);
+  }
+
+  .card-title {
+    font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--sage); font-weight: 600; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .card-title-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(115,152,133,0.15);
+    border: 1px solid rgba(115,152,133,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--sage); font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── Skeleton loading ── */
+  .skeleton {
+    background: linear-gradient(90deg,
+      rgba(115,152,133,0.05) 25%,
+      rgba(115,152,133,0.12) 50%,
+      rgba(115,152,133,0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+    border-radius: 6px;
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+  .skel-line { height: 14px; margin-bottom: 10px; }
+  .skel-lg   { height: 64px; margin-bottom: 14px; width: 160px; }
+  .skel-md   { height: 18px; width: 220px; }
+  .skel-sm   { height: 12px; width: 140px; margin-bottom: 8px; }
+
+  /* ── Error state ── */
+  .card-error {
+    font-size: 11px; color: var(--muted); letter-spacing: 1px;
+    padding: 12px 0; display: flex; align-items: center; gap: 8px;
+  }
+  .card-error::before { content: '—'; opacity: 0.5; }
+
+  /* ── Section 1: Season Status ── */
+  .gdd-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px; font-style: italic; font-weight: 300;
+    color: var(--sage); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .gdd-label {
+    font-size: 9px; color: var(--muted); letter-spacing: 2.5px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .stage-current {
+    font-size: 13px; color: var(--text); margin-bottom: 8px;
+    font-weight: 400;
+  }
+  .stage-current strong { color: var(--sage-light); }
+  .days-line {
+    font-size: 11px; color: var(--muted); letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+
+  /* Bud break toggle */
+  .toggle-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    background: rgba(115,152,133,0.06);
+    border: 1px solid rgba(115,152,133,0.15);
+    border-radius: 10px;
+  }
+  .toggle-label {
+    font-size: 11px; color: var(--text); flex: 1;
+  }
+  .toggle-label small {
+    display: block; font-size: 9px; color: var(--muted);
+    letter-spacing: 1px; margin-top: 2px;
+  }
+  .toggle {
+    position: relative; width: 40px; height: 22px; cursor: pointer;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-track {
+    position: absolute; inset: 0; border-radius: 22px;
+    background: rgba(115,152,133,0.2);
+    border: 1px solid rgba(115,152,133,0.3);
+    transition: background 0.25s;
+  }
+  .toggle input:checked + .toggle-track { background: var(--sage); border-color: var(--sage); }
+  .toggle-thumb {
+    position: absolute; left: 3px; top: 3px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--text); transition: transform 0.25s;
+    pointer-events: none;
+  }
+  .toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
+  .confirm-msg {
+    font-size: 10px; color: var(--sage); letter-spacing: 1px;
+    margin-top: 8px; min-height: 16px; transition: opacity 0.3s;
+  }
+
+  /* ── Section 2: Timeline ── */
+  .timeline-wrap {
+    overflow-x: auto;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .timeline-track {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    min-width: 640px;
+    padding: 20px 8px 8px;
+    position: relative;
+  }
+  /* Connecting bar */
+  .timeline-track::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 8px; right: 8px;
+    height: 2px;
+    background: rgba(115,152,133,0.15);
+    z-index: 0;
+  }
+  .timeline-fill {
+    position: absolute;
+    top: 36px; left: 8px;
+    height: 2px;
+    background: var(--sage);
+    z-index: 1;
+    transition: width 0.5s ease;
+  }
+
+  .t-stage {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    position: relative; z-index: 2;
+  }
+  .t-node {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    border: 2px solid rgba(115,152,133,0.3);
+    background: var(--bg2);
+    margin-bottom: 8px;
+    transition: all 0.3s;
+  }
+  .t-stage.completed .t-node {
+    background: var(--sage-dark);
+    border-color: var(--sage);
+  }
+  .t-stage.current .t-node {
+    border-color: var(--sage);
+    background: rgba(115,152,133,0.15);
+    box-shadow: 0 0 0 4px rgba(115,152,133,0.15);
+    animation: pulse-ring 2s ease-in-out infinite;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(115,152,133,0.15); }
+    50%       { box-shadow: 0 0 0 8px rgba(115,152,133,0.05); }
+  }
+  .t-stage-label {
+    font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); text-align: center; line-height: 1.3;
+  }
+  .t-stage.completed .t-stage-label { color: var(--sage-light); }
+  .t-stage.current   .t-stage-label { color: var(--sage); }
+  .t-date {
+    font-size: 8px; color: var(--muted); margin-top: 4px;
+    text-align: center; min-height: 10px;
+  }
+  .t-stage.completed .t-date { color: var(--sage); }
+
+  /* ── Section 3: Warnings ── */
+  .warning-item {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(115,152,133,0.1);
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .warning-item:last-child { border-bottom: none; }
+  .warning-icon {
+    font-size: 18px; flex-shrink: 0; margin-top: 2px;
+  }
+  .warning-body {}
+  .warning-label {
+    font-size: 11px; font-weight: 700; color: var(--amber);
+    letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .warning-label.critical { color: #e74c3c; }
+  .warning-date {
+    font-size: 10px; color: var(--muted); margin-bottom: 4px;
+  }
+  .warning-msg { font-size: 12px; color: var(--text); line-height: 1.6; }
+
+  .no-warnings {
+    font-size: 11px; color: var(--muted); letter-spacing: 1px;
+    padding: 6px 0;
+  }
+
+  /* Send alert button */
+  .btn-alert {
+    margin-top: 18px; width: 100%;
+    background: linear-gradient(135deg, rgba(253,141,60,0.15), rgba(253,141,60,0.25));
+    border: 1px solid rgba(253,141,60,0.4);
+    border-radius: 10px;
+    color: var(--amber);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-alert:hover { background: rgba(253,141,60,0.3); }
+  .btn-alert:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── Section 4: Forecast Strip ── */
+  .forecast-strip {
+    display: flex; gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .fc-day {
+    flex-shrink: 0;
+    width: 88px;
+    background: rgba(115,152,133,0.05);
+    border: 1px solid rgba(115,152,133,0.15);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .fc-day.warn-frost {
+    border-color: rgba(253,141,60,0.5);
+    border-left: 3px solid var(--amber);
+  }
+  .fc-day-name {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .fc-day.today .fc-day-name { color: var(--sage); }
+  .fc-emoji { font-size: 22px; margin-bottom: 6px; }
+  .fc-temps {
+    font-size: 12px; font-weight: 600; color: var(--text);
+    margin-bottom: 4px;
+  }
+  .fc-low { color: var(--muted); }
+  .fc-precip {
+    font-size: 9px; color: var(--muted); letter-spacing: 0.5px;
+  }
+  .fc-precip.high { color: var(--amber); }
+
+  /* ── Section 5: GDD Progress ── */
+  .sparkline-wrap {
+    width: 100%; height: 180px; margin-bottom: 20px;
+    position: relative;
+  }
+  canvas#gddChart {
+    width: 100%; height: 100%;
+    border-radius: 8px;
+  }
+
+  .stage-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  .stage-table th {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+    padding: 8px 10px; text-align: left;
+    border-bottom: 1px solid rgba(115,152,133,0.15);
+  }
+  .stage-table td {
+    padding: 10px 10px;
+    border-bottom: 1px solid rgba(115,152,133,0.08);
+    color: var(--text);
+    vertical-align: middle;
+  }
+  .stage-table tr:last-child td { border-bottom: none; }
+  .stage-table tr.past td { color: var(--muted); }
+  .stage-table tr.next td { color: var(--sage-light); }
+  .stage-imminent {
+    display: inline-block;
+    padding: 1px 7px; border-radius: 8px;
+    background: rgba(115,152,133,0.2);
+    color: var(--sage); font-size: 8px; letter-spacing: 1px;
+    text-transform: uppercase; font-weight: 700;
+    margin-left: 6px;
+  }
+
+  /* ── Section 6: Quick Actions ── */
+  .quick-actions {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .btn-quick {
+    flex: 1; min-width: 160px;
+    background: rgba(115,152,133,0.06);
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 16px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .btn-quick span { display: block; font-size: 18px; margin-bottom: 6px; }
+  .btn-quick:hover {
+    background: rgba(115,152,133,0.12);
+    border-color: rgba(115,152,133,0.4);
+    transform: translateY(-2px);
+  }
+  .btn-quick:active { transform: translateY(0); }
+  .btn-quick:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .action-confirm {
+    font-size: 10px; color: var(--sage); letter-spacing: 1px;
+    margin-top: 10px; min-height: 14px; text-align: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 767px) {
+    .page { padding: 32px 16px 60px; }
+    .gdd-big { font-size: 48px; }
+    .quick-actions { flex-direction: column; }
+    .btn-quick { min-width: unset; }
+    .stage-table th:nth-child(4),
+    .stage-table td:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <img class="site-logo"
+      src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+      alt="Free Run Cellars">
+    <div class="page-title">Vineyard Season</div>
+    <div class="page-sub">Free Run Cellars · 2026 Season · Staff Tool</div>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- ── Section 1: Season Status ── -->
+  <div class="card" id="statusCard">
+    <div class="card-title">
+      <span class="card-title-num">1</span>
+      Season Status
+    </div>
+    <div id="statusBody">
+      <div class="skeleton skel-lg"></div>
+      <div class="skeleton skel-md"></div>
+    </div>
+  </div>
+
+  <!-- ── Section 2: Phenological Timeline ── -->
+  <div class="card" id="timelineCard">
+    <div class="card-title">
+      <span class="card-title-num">2</span>
+      Phenological Timeline
+    </div>
+    <div id="timelineBody">
+      <div class="skeleton skel-line" style="width:100%;height:40px;"></div>
+    </div>
+  </div>
+
+  <!-- ── Section 3: Active Warnings ── -->
+  <div class="card" id="warningsCard">
+    <div class="card-title">
+      <span class="card-title-num">3</span>
+      Active Warnings
+    </div>
+    <div id="warningsBody">
+      <div class="skeleton skel-line" style="width:70%;"></div>
+      <div class="skeleton skel-line" style="width:50%;"></div>
+    </div>
+  </div>
+
+  <!-- ── Section 4: 10-Day Forecast ── -->
+  <div class="card" id="forecastCard">
+    <div class="card-title">
+      <span class="card-title-num">4</span>
+      10-Day Forecast
+    </div>
+    <div id="forecastBody">
+      <div class="skeleton skel-line" style="width:100%;height:80px;border-radius:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ── Section 5: GDD Progress ── -->
+  <div class="card" id="progressCard">
+    <div class="card-title">
+      <span class="card-title-num">5</span>
+      GDD Progress · 2026
+    </div>
+    <div id="progressBody">
+      <div class="skeleton skel-line" style="width:100%;height:180px;border-radius:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ── Section 6: Quick Actions ── -->
+  <div class="card" id="actionsCard">
+    <div class="card-title">
+      <span class="card-title-num">6</span>
+      Quick Actions
+    </div>
+    <div class="quick-actions">
+      <button class="btn-quick" id="btnBudBreak" disabled>
+        <span>🌿</span>Mark Bud Break Today
+      </button>
+      <button class="btn-quick" id="btnTestAlert" disabled>
+        <span>📧</span>Send Test Alert
+      </button>
+      <button class="btn-quick" id="btnExport" disabled>
+        <span>💾</span>Export Season Data
+      </button>
+    </div>
+    <div class="action-confirm" id="actionConfirm"></div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────────────────────────────────────
+const LAT = 41.9478, LON = -86.3483;
+const PRUNING_DATE = new Date('2026-03-17T00:00:00');
+const GDD_BASE = 50;
+const STAGES = [
+  { key:'pruning',   label:'Pruning',   gdd:0,    icon:'✂️',  recorded:true, date:'2026-03-17', date2:'2026-03-18' },
+  { key:'bud_swell', label:'Bud Swell', gdd:50,   icon:'🌱' },
+  { key:'bud_break', label:'Bud Break', gdd:100,  icon:'🌿' },
+  { key:'shoot_3in', label:'3″ Shoot',  gdd:200,  icon:'🌾' },
+  { key:'bloom',     label:'Bloom',     gdd:370,  icon:'🌸' },
+  { key:'fruit_set', label:'Fruit Set', gdd:500,  icon:'🍇' },
+  { key:'veraison',  label:'Veraison',  gdd:1900, icon:'🫐' },
+  { key:'harvest',   label:'Harvest',   gdd:2400, icon:'🍷' },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let state = {
+  currentGDD: 0,
+  gddHistory: [],    // daily GDD values Jan 1 → yesterday
+  forecastDays: [],  // 10-day forecast objects
+  warnings: [],
+  budBreakRecorded: false,
+  stageIdx: 0,
+  loaded: false,
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+function calcDayGDD(tmax, tmin) {
+  return Math.max(0, ((tmax + tmin) / 2) - GDD_BASE);
+}
+
+function getCurrentStageIdx(gdd) {
+  let idx = 0;
+  for (let i = 0; i < STAGES.length; i++) {
+    if (gdd >= STAGES[i].gdd) idx = i; else break;
+  }
+  return idx;
+}
+
+function daysSincePruning() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.max(1, Math.floor((today - PRUNING_DATE) / 86400000) + 1);
+}
+
+function yesterdayStr() {
+  const d = new Date(); d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+function fmtDateShort(date) {
+  return date.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+}
+
+function fmtDateRange(early, late) {
+  const em = early.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  const ld = late.getDate();
+  if (early.getMonth() === late.getMonth()) return `~${em}–${ld}`;
+  const lm = late.toLocaleDateString('en-US', { month:'short' });
+  return `~${em}–${lm} ${ld}`;
+}
+
+function predictStageDate(stageGDD, currentGDD, history) {
+  const recent = history.slice(-14);
+  const avgRate = recent.length > 0 ? recent.reduce((a,b) => a+b,0) / recent.length : 0;
+  if (avgRate < 0.1) return null;
+  const rem = stageGDD - currentGDD;
+  if (rem <= 0) return null;
+  const daysUntil = rem / avgRate;
+  const mid = new Date(Date.now() + daysUntil * 86400000);
+  const isImminent = rem <= 50;
+  const spread = avgRate < 0.5 ? 14 : (isImminent ? 3 : 7);
+  const early = new Date(mid.getTime() - spread * 86400000);
+  const late  = new Date(mid.getTime() + spread * 86400000);
+  return { mid, early, late, daysUntil: Math.round(daysUntil), avgRate, isImminent };
+}
+
+function weatherEmoji(code) {
+  if (code === 0)                return '☀️';
+  if (code <= 2)                 return '🌤️';
+  if (code === 3)                return '☁️';
+  if (code >= 45 && code <= 48)  return '🌫️';
+  if (code >= 51 && code <= 57)  return '🌦️';
+  if (code >= 61 && code <= 65)  return '🌧️';
+  if (code >= 71 && code <= 77)  return '🌨️';
+  if (code >= 80 && code <= 82)  return '🌦️';
+  if (code >= 85 && code <= 86)  return '🌨️';
+  if (code >= 95)                return '⛈️';
+  return '🌡️';
+}
+
+function getFrostWarnings(days) {
+  const w = [];
+  for (const d of days) {
+    if (d.tmin <= 32) w.push({ type:'hard_frost', label:'Hard Frost Warning', date:d.date, tmin:d.tmin, severity:'critical', msg:`Low of ${Math.round(d.tmin)}°F — hard frost likely. Protect susceptible growth.` });
+    else if (d.tmin <= 36) w.push({ type:'frost', label:'Frost Watch', date:d.date, tmin:d.tmin, severity:'warning', msg:`Low of ${Math.round(d.tmin)}°F — light frost possible. Monitor overnight.` });
+  }
+  return w;
+}
+
+function growthStageContext(stageKey, warningType) {
+  if (stageKey === 'pruning') return 'Dormant vines tolerate hard frost well.';
+  if (stageKey === 'bud_swell') return 'Swelling buds are frost-tolerant below 20°F.';
+  if (stageKey === 'bud_break') return 'Young buds are susceptible — damage possible below 28°F.';
+  if (stageKey === 'shoot_3in') return 'Active shoot growth is highly frost-sensitive.';
+  if (stageKey === 'bloom') return 'Critical period — even light frost can damage flower clusters.';
+  return 'Monitor closely given current growth stage.';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DATA FETCH
+// ─────────────────────────────────────────────────────────────────────────────
+async function loadData() {
+  const yesterday = yesterdayStr();
+
+  const histUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${LAT}&longitude=${LON}&start_date=2026-01-01&end_date=${yesterday}&daily=temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=America%2FChicago`;
+  const fcUrl   = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode,shortwave_radiation_sum&temperature_unit=fahrenheit&timezone=America%2FChicago&forecast_days=10`;
+
+  const [histRes, fcRes] = await Promise.all([fetch(histUrl), fetch(fcUrl)]);
+  const [histData, fcData] = await Promise.all([histRes.json(), fcRes.json()]);
+
+  // Build historical GDD series
+  const dailyGDD = histData.daily.time.map((date, i) =>
+    calcDayGDD(histData.daily.temperature_2m_max[i], histData.daily.temperature_2m_min[i])
+  );
+
+  let cumGDD = 0;
+  const gddSeries = dailyGDD.map(g => { cumGDD += g; return cumGDD; });
+  state.currentGDD  = cumGDD;
+  state.gddHistory  = dailyGDD;
+  state.gddDateSeries = histData.daily.time;
+  state.gddCumSeries  = gddSeries;
+
+  // Forecast days
+  state.forecastDays = fcData.daily.time.map((date, i) => ({
+    date,
+    tmax:   fcData.daily.temperature_2m_max[i],
+    tmin:   fcData.daily.temperature_2m_min[i],
+    precip: fcData.daily.precipitation_probability_max[i],
+    code:   fcData.daily.weathercode[i],
+  }));
+
+  state.warnings         = getFrostWarnings(state.forecastDays);
+  state.stageIdx         = getCurrentStageIdx(state.currentGDD);
+  state.budBreakRecorded = localStorage.getItem('frc_bud_break_recorded') === '1';
+
+  // Write GDD cache for about page widget
+  localStorage.setItem('frc_gdd_cache', JSON.stringify({
+    gdd:       state.currentGDD,
+    stage:     STAGES[state.stageIdx].key,
+    timestamp: Date.now(),
+  }));
+
+  state.loaded = true;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER — Section 1: Season Status
+// ─────────────────────────────────────────────────────────────────────────────
+function renderStatus() {
+  const { currentGDD, stageIdx, gddHistory } = state;
+  const stage     = STAGES[stageIdx];
+  const nextStage = STAGES[stageIdx + 1];
+  const days      = daysSincePruning();
+
+  let nextInfo = '';
+  if (nextStage) {
+    const pred = predictStageDate(nextStage.gdd, currentGDD, gddHistory);
+    if (pred) {
+      nextInfo = `, est. ${Math.round(pred.daysUntil)} day${pred.daysUntil !== 1 ? 's' : ''} away`;
+    }
+  }
+
+  const budChecked = state.budBreakRecorded ? 'checked' : '';
+
+  document.getElementById('statusBody').innerHTML = `
+    <div class="gdd-big">${Math.round(currentGDD)}</div>
+    <div class="gdd-label">Growing Degree Days · 2026 Season</div>
+    <div class="stage-current">
+      Currently: ${stage.icon} Between <strong>${stage.label}</strong>${nextStage ? ` and <strong>${nextStage.label}</strong>` : ''}
+    </div>
+    <div class="days-line">
+      Day ${days} since pruning${nextStage ? ` · ${nextStage.label} typically${nextInfo}` : ''}
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-label">
+        Bud break observed
+        <small>Upgrades frost alerts to critical severity</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="budBreakToggle" ${budChecked}>
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+    </div>
+    <div class="confirm-msg" id="budBreakConfirm"></div>
+  `;
+
+  document.getElementById('budBreakToggle').addEventListener('change', onBudBreakToggle);
+}
+
+async function onBudBreakToggle(e) {
+  const val = e.target.checked;
+  state.budBreakRecorded = val;
+  localStorage.setItem('frc_bud_break_recorded', val ? '1' : '0');
+  const msg = document.getElementById('budBreakConfirm');
+  msg.style.opacity = '0';
+
+  try {
+    await fetch('/api/frost-alert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'set_bud_break', value: val }),
+    });
+    msg.textContent = val
+      ? '✓ Bud break recorded — frost alerts upgraded'
+      : '✓ Bud break cleared';
+    msg.style.opacity = '1';
+    setTimeout(() => { msg.style.opacity = '0'; }, 4000);
+  } catch (err) {
+    msg.textContent = '⚠ Sync failed — saved locally only';
+    msg.style.opacity = '1';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER — Section 2: Timeline
+// ─────────────────────────────────────────────────────────────────────────────
+function renderTimeline() {
+  const { currentGDD, stageIdx, gddHistory } = state;
+
+  // Calculate progress bar width
+  const maxGDD   = STAGES[STAGES.length - 1].gdd;
+  const fillPct  = Math.min(100, (currentGDD / maxGDD) * 100);
+
+  const nodes = STAGES.map((s, i) => {
+    let cls = 't-stage';
+    if (i < stageIdx) cls += ' completed';
+    else if (i === stageIdx) cls += ' current';
+
+    let dateHtml = '';
+    if (s.recorded) {
+      dateHtml = s.date ? s.date.slice(5).replace('-', '/') : '';
+    } else if (i < stageIdx) {
+      // Stage was passed — show rough date from GDD history
+      dateHtml = '';
+    } else if (i > stageIdx) {
+      const pred = predictStageDate(s.gdd, currentGDD, gddHistory);
+      if (pred) {
+        dateHtml = fmtDateRange(pred.early, pred.late);
+      }
+    }
+
+    return `<div class="${cls}">
+      <div class="t-node">${s.icon}</div>
+      <div class="t-stage-label">${s.label}</div>
+      <div class="t-date">${dateHtml}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('timelineBody').innerHTML = `
+    <div class="timeline-wrap">
+      <div class="timeline-track">
+        <div class="timeline-fill" style="width:${fillPct}%;"></div>
+        ${nodes}
+      </div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER — Section 3: Warnings
+// ─────────────────────────────────────────────────────────────────────────────
+function renderWarnings() {
+  const { warnings, stageIdx } = state;
+
+  if (warnings.length === 0) {
+    document.getElementById('warningsBody').innerHTML = `
+      <div class="no-warnings">
+        No active warnings · Next automated check: 6 AM tomorrow
+      </div>`;
+    return;
+  }
+
+  const stageKey = STAGES[stageIdx].key;
+  const items = warnings.map(w => `
+    <div class="warning-item">
+      <div class="warning-icon">${w.type === 'hard_frost' ? '🧊' : '❄️'}</div>
+      <div class="warning-body">
+        <div class="warning-label ${w.severity}">${w.label}</div>
+        <div class="warning-date">${w.date}</div>
+        <div class="warning-msg">${w.msg} ${growthStageContext(stageKey, w.type)}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('warningsBody').innerHTML = `
+    ${items}
+    <button class="btn-alert" id="btnSendAlert">
+      📬 Send Alert Email Now
+    </button>
+    <div class="confirm-msg" id="alertSentConfirm"></div>
+  `;
+
+  document.getElementById('btnSendAlert').addEventListener('click', onSendAlert);
+}
+
+async function onSendAlert() {
+  const btn = document.getElementById('btnSendAlert');
+  const msg = document.getElementById('alertSentConfirm');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/frost-alert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action:     'send_alert',
+        warnings:   state.warnings,
+        currentGDD: state.currentGDD,
+      }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      msg.textContent = '✓ Alert sent to prashanth@frcwine.com and contact@frcwine.com';
+    } else {
+      msg.textContent = `⚠ ${data.error || 'Send failed'}`;
+    }
+    msg.style.opacity = '1';
+  } catch (err) {
+    msg.textContent = '⚠ Send failed — check connection';
+    msg.style.opacity = '1';
+  }
+  btn.disabled = false;
+  btn.textContent = '📬 Send Alert Email Now';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER — Section 4: 10-Day Forecast
+// ─────────────────────────────────────────────────────────────────────────────
+function renderForecast() {
+  const { forecastDays, warnings } = state;
+  const warnDates = new Set(warnings.map(w => w.date));
+
+  const cards = forecastDays.map((d, i) => {
+    const dt     = new Date(d.date + 'T12:00:00');
+    const dayName = i === 0 ? 'Today'
+      : i === 1 ? 'Tomorrow'
+      : dt.toLocaleDateString('en-US', { weekday: 'short' });
+    const hasFrost = warnDates.has(d.date);
+    const highPrec = d.precip >= 50;
+
+    return `<div class="fc-day${i === 0 ? ' today' : ''}${hasFrost ? ' warn-frost' : ''}">
+      <div class="fc-day-name">${dayName}</div>
+      <div class="fc-emoji">${weatherEmoji(d.code)}</div>
+      <div class="fc-temps">${Math.round(d.tmax)}° <span class="fc-low">${Math.round(d.tmin)}°</span></div>
+      <div class="fc-precip${highPrec ? ' high' : ''}">${d.precip}% 💧</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('forecastBody').innerHTML = `
+    <div class="forecast-strip">${cards}</div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER — Section 5: GDD Progress + Sparkline
+// ─────────────────────────────────────────────────────────────────────────────
+function renderProgress() {
+  const { currentGDD, gddHistory, gddCumSeries, gddDateSeries, stageIdx, forecastDays } = state;
+
+  // Build upcoming stages table
+  const tableRows = STAGES.slice(1).map((s, i) => {
+    const realIdx = i + 1;
+    const isPast  = currentGDD >= s.gdd;
+    const isNext  = realIdx === stageIdx + 1;
+    const gddRem  = Math.max(0, s.gdd - currentGDD);
+
+    let estRange = '—';
+    let daysAway = '—';
+    if (!isPast) {
+      const pred = predictStageDate(s.gdd, currentGDD, gddHistory);
+      if (pred) {
+        estRange = `${fmtDateRange(pred.early, pred.late)}${pred.isImminent ? ' <span class="stage-imminent">Soon</span>' : ''}`;
+        daysAway = `${pred.daysUntil}d`;
+      }
+    }
+
+    const cls = isPast ? 'past' : (isNext ? 'next' : '');
+    return `<tr class="${cls}">
+      <td>${s.icon} ${s.label}</td>
+      <td>${s.gdd}</td>
+      <td>${isPast ? '<span style="color:var(--sage)">✓</span>' : gddRem}</td>
+      <td>${estRange}</td>
+      <td>${daysAway}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('progressBody').innerHTML = `
+    <div class="sparkline-wrap">
+      <canvas id="gddChart"></canvas>
+    </div>
+    <table class="stage-table">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>GDD Threshold</th>
+          <th>GDD Remaining</th>
+          <th>Est. Date Range</th>
+          <th>Days Away</th>
+        </tr>
+      </thead>
+      <tbody>${tableRows}</tbody>
+    </table>`;
+
+  drawSparkline();
+}
+
+function drawSparkline() {
+  const canvas = document.getElementById('gddChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // HiDPI
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width  = rect.width  * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const pad = { top: 16, right: 24, bottom: 28, left: 48 };
+  const iW = W - pad.left - pad.right;
+  const iH = H - pad.top  - pad.bottom;
+
+  const { gddCumSeries, gddDateSeries, currentGDD, gddHistory, forecastDays } = state;
+
+  // Project future GDD from today → harvest (2400)
+  const recent  = gddHistory.slice(-14);
+  const avgRate = recent.length > 0 ? recent.reduce((a,b) => a+b,0) / recent.length : 0;
+  const projections = [];
+  if (avgRate >= 0.1) {
+    let proj = currentGDD;
+    let d    = new Date();
+    while (proj < 2400 && projections.length < 300) {
+      projections.push({ gdd: proj });
+      proj += avgRate;
+      d.setDate(d.getDate() + 1);
+    }
+  }
+
+  const totalDays  = gddCumSeries.length + projections.length;
+  const harvestGDD = 2400;
+
+  function xOf(i)   { return pad.left + (i / (totalDays - 1)) * iW; }
+  function yOf(gdd) { return pad.top  + iH - (gdd / harvestGDD) * iH; }
+
+  // Background
+  ctx.fillStyle = 'rgba(10,20,14,0.0)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Stage milestone ticks
+  ctx.textAlign = 'left';
+  ctx.font = `bold 8px Montserrat, sans-serif`;
+  for (const s of state_STAGES || STAGES) {
+    if (s.gdd === 0) continue;
+    const y = yOf(s.gdd);
+    ctx.strokeStyle = 'rgba(115,152,133,0.2)';
+    ctx.lineWidth   = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(115,152,133,0.45)';
+    ctx.save();
+    ctx.translate(pad.left - 4, y + 1);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(s.label, 0, 0);
+    ctx.restore();
+  }
+
+  // Actual GDD line
+  ctx.strokeStyle = '#739885';
+  ctx.lineWidth   = 2;
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  gddCumSeries.forEach((gdd, i) => {
+    if (i === 0) ctx.moveTo(xOf(i), yOf(gdd));
+    else         ctx.lineTo(xOf(i), yOf(gdd));
+  });
+  ctx.stroke();
+
+  // Area fill under actual
+  const lastActual = gddCumSeries.length - 1;
+  ctx.beginPath();
+  gddCumSeries.forEach((gdd, i) => {
+    if (i === 0) ctx.moveTo(xOf(i), yOf(gdd));
+    else         ctx.lineTo(xOf(i), yOf(gdd));
+  });
+  ctx.lineTo(xOf(lastActual), yOf(0));
+  ctx.lineTo(xOf(0), yOf(0));
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
+  grad.addColorStop(0, 'rgba(115,152,133,0.25)');
+  grad.addColorStop(1, 'rgba(115,152,133,0.0)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Projected GDD line (dashed)
+  if (projections.length > 1) {
+    ctx.strokeStyle = 'rgba(115,152,133,0.35)';
+    ctx.lineWidth   = 1.5;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    projections.forEach((p, i) => {
+      const xi = lastActual + i;
+      if (i === 0) ctx.moveTo(xOf(xi), yOf(p.gdd));
+      else         ctx.lineTo(xOf(xi), yOf(p.gdd));
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Today marker
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([2, 3]);
+  ctx.beginPath();
+  ctx.moveTo(xOf(lastActual), pad.top);
+  ctx.lineTo(xOf(lastActual), H - pad.bottom);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Y axis labels
+  ctx.fillStyle = 'rgba(115,152,133,0.5)';
+  ctx.font = '9px Montserrat, sans-serif';
+  ctx.textAlign = 'right';
+  [0, 500, 1000, 1500, 2000, 2400].forEach(gdd => {
+    ctx.fillText(gdd, pad.left - 6, yOf(gdd) + 3);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER — Section 6: Quick Actions (enable buttons)
+// ─────────────────────────────────────────────────────────────────────────────
+function enableActions() {
+  document.getElementById('btnBudBreak').disabled  = false;
+  document.getElementById('btnTestAlert').disabled = false;
+  document.getElementById('btnExport').disabled    = false;
+
+  document.getElementById('btnBudBreak').addEventListener('click', () => {
+    const toggle = document.getElementById('budBreakToggle');
+    if (toggle) {
+      toggle.checked = true;
+      toggle.dispatchEvent(new Event('change'));
+    }
+  });
+
+  document.getElementById('btnTestAlert').addEventListener('click', onTestAlert);
+  document.getElementById('btnExport').addEventListener('click', onExport);
+}
+
+async function onTestAlert() {
+  const btn = document.getElementById('btnTestAlert');
+  const msg = document.getElementById('actionConfirm');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/frost-alert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ test: true, currentGDD: state.currentGDD }),
+    });
+    const data = await res.json();
+    msg.textContent = data.ok
+      ? '✓ Test alert sent to prashanth@frcwine.com and contact@frcwine.com'
+      : `⚠ ${data.error || 'Send failed'}`;
+  } catch (err) {
+    msg.textContent = '⚠ Failed — check connection';
+  }
+  btn.disabled = false;
+}
+
+function onExport() {
+  const today     = new Date();
+  const mmdd      = (today.getMonth()+1).toString().padStart(2,'0') + today.getDate().toString().padStart(2,'0');
+  const stageKey  = STAGES[state.stageIdx].key;
+
+  const projections = STAGES.slice(state.stageIdx + 1).map(s => {
+    const pred = predictStageDate(s.gdd, state.currentGDD, state.gddHistory);
+    return {
+      stage: s.key,
+      label: s.label,
+      gddThreshold: s.gdd,
+      gddRemaining: Math.max(0, s.gdd - state.currentGDD),
+      estimatedEarly: pred ? pred.early.toISOString().slice(0,10) : null,
+      estimatedLate:  pred ? pred.late.toISOString().slice(0,10)  : null,
+      daysAway:       pred ? pred.daysUntil : null,
+      isImminent:     pred ? pred.isImminent : false,
+    };
+  });
+
+  const payload = {
+    exportDate:        today.toISOString(),
+    currentGDD:        Math.round(state.currentGDD),
+    currentStage:      stageKey,
+    daysSincePruning:  daysSincePruning(),
+    budBreakRecorded:  state.budBreakRecorded,
+    stageProjections:  projections,
+    activeWarnings:    state.warnings,
+    forecast:          state.forecastDays,
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `frc-vineyard-season-2026-${mmdd}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  document.getElementById('actionConfirm').textContent = `✓ Exported frc-vineyard-season-2026-${mmdd}.json`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ERROR STATES
+// ─────────────────────────────────────────────────────────────────────────────
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = `<div class="card-error">${msg || 'Data unavailable — check connection'}</div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    await loadData();
+  } catch (err) {
+    console.error('[vineyard-season] data load failed:', err);
+    ['statusBody','timelineBody','warningsBody','forecastBody','progressBody'].forEach(id => showError(id));
+    return;
+  }
+
+  // Render each section with individual error containment
+  const renders = [
+    ['statusBody',   renderStatus],
+    ['timelineBody', renderTimeline],
+    ['warningsBody', renderWarnings],
+    ['forecastBody', renderForecast],
+    ['progressBody', renderProgress],
+  ];
+
+  for (const [id, fn] of renders) {
+    try { fn(); }
+    catch (err) {
+      console.error(`[vineyard-season] render ${id} failed:`, err);
+      showError(id);
+    }
+  }
+
+  enableActions();
+}
+
+init();
+</script>
+</body>
+</html>

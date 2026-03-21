@@ -13,5 +13,15 @@
       "destination": "https://freeruncellars.com/$1",
       "permanent": true
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/frost-alert-cron",
+      "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/weekend-forecast-cron",
+      "schedule": "0 15 * * 5"
+    }
   ]
 }

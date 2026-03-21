@@ -1,5 +1,5 @@
 // api/_vineyard.js — Shared vineyard logic for cron + alert handlers
-// Required env vars: BREVO_API_KEY, KV_REST_API_URL, KV_REST_API_TOKEN
+// Required env vars: BREVO_API_KEY, KV_REST_API_URL (or UPSTASH_REDIS_KV_REST_API_URL), KV_REST_API_TOKEN (or UPSTASH_REDIS_KV_REST_API_TOKEN)
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -27,6 +27,34 @@ const WMO_CODES = {
 };
 
 const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ── Visitor-friendly stage labels (used by public about-page widget) ──────────
+const VISITOR_LABELS = {
+  pruning:   'Resting after pruning',
+  bud_swell: 'Vines waking up',
+  bud_break: 'First buds of the season',
+  shoot_3in: 'Young shoots growing',
+  bloom:     'Vines in bloom',
+  fruit_set: 'Grapes forming',
+  veraison:  'Grapes changing color',
+  harvest:   'Harvest time',
+};
+
+// ── Seasonal quiet notes (public widget, no-warnings state) ──────────────────
+const SEASONAL_QUIET = {
+  spring: '🌿 Vines resting well',
+  summer: '☀️ A beautiful growing season',
+  fall:   '🍂 Moving toward harvest',
+  winter: '❄️ Vines in winter dormancy',
+};
+
+// month: 0-indexed JS Date.getMonth()
+function getSeasonalQuiet(month) {
+  if (month >= 2 && month <= 4) return SEASONAL_QUIET.spring; // Mar–May
+  if (month >= 5 && month <= 7) return SEASONAL_QUIET.summer; // Jun–Aug
+  if (month >= 8 && month <= 10) return SEASONAL_QUIET.fall;  // Sep–Nov
+  return SEASONAL_QUIET.winter;
+}
 
 const SCORE_COLOR = {
   Beautiful: '#537f71',
@@ -196,8 +224,16 @@ function evaluateWarnings(forecastDays, budBreakRecorded, currentGDD) {
 
 // ── Vercel KV REST API ────────────────────────────────────────────────────────
 
+// Resolves env var names for both Vercel KV (legacy) and Upstash via Vercel Storage
+function kvCreds() {
+  return {
+    url:   process.env.KV_REST_API_URL   || process.env.UPSTASH_REDIS_KV_REST_API_URL   || process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
+  };
+}
+
 async function kvGet(key) {
-  const { KV_REST_API_URL: url, KV_REST_API_TOKEN: token } = process.env;
+  const { url, token } = kvCreds();
   if (!url || !token) return null;
   try {
     const res = await fetch(`${url}/get/${encodeURIComponent(key)}`, {
@@ -211,7 +247,7 @@ async function kvGet(key) {
 }
 
 async function kvSet(key, value) {
-  const { KV_REST_API_URL: url, KV_REST_API_TOKEN: token } = process.env;
+  const { url, token } = kvCreds();
   if (!url || !token) return false;
   try {
     const strVal = typeof value === 'string' ? value : JSON.stringify(value);
@@ -350,7 +386,9 @@ async function sendBrevoEmail(subject, htmlContent) {
 
 module.exports = {
   STAGES, WMO_CODES, MONTHS_SHORT, SCORE_COLOR,
+  VISITOR_LABELS, SEASONAL_QUIET,
   wmoInfo, calcGDD, fmtDateRange, daysSincePruning, scoreDay,
+  getSeasonalQuiet,
   fetchForecast, fetchHistoricalGDD,
   computeSeasonData, getCurrentStage, projectStages,
   evaluateWarnings,
