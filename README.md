@@ -1,6 +1,6 @@
 # Free Run Cellars — Website
 
-**Live site:** https://www.frcwine.com  
+**Live site:** https://www.freeruncellars.com
 **Vercel preview:** https://freeruncellars.vercel.app  
 **GitHub repo:** https://github.com/paispa/freeruncellars  
 **Owners:** Trish Slevin & Prashanth Pais  
@@ -12,12 +12,14 @@
 
 ## Project Overview
 
-Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michigan. Currently built as static HTML hosted on Vercel, connected to `frcwine.com` (test domain) while `freeruncellars.com` remains on the existing GoDaddy site. Future plan is to migrate to WordPress.
+Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michigan. Built as static HTML hosted on Vercel at `www.freeruncellars.com`. `frcwine.com` and `www.frcwine.com` redirect here. Future plan is to migrate to WordPress.
 
-**Current stack:** Static HTML → GitHub → Vercel → frcwine.com  
-**Target stack:** WordPress (WP Engine or Kinsta) + custom theme based on these prototypes  
-**DNS:** frcwine.com managed via GoDaddy · A record `216.198.79.1` · CNAME `www` → Vercel  
-**Redirect:** `frcwine.com` → `www.frcwine.com` handled by `vercel.json` in repo root
+**Current stack:** Static HTML → GitHub → Vercel → www.freeruncellars.com
+**Analytics:** Google Analytics 4 — Measurement ID `G-T51K1F9DVS`
+**Target stack:** WordPress (WP Engine or Kinsta) + custom theme based on these prototypes
+**DNS:** freeruncellars.com and frcwine.com managed via Cloudflare · A record `216.198.79.1` · CNAME `www` → Vercel
+**Redirects:** `frcwine.com` and `www.frcwine.com` → `freeruncellars.com` (308 permanent) handled by `vercel.json`
+**Clean URLs:** `"cleanUrls": true` in `vercel.json` — pages served at `/pages/about` (no `.html`)
 
 ---
 
@@ -26,7 +28,16 @@ Full website for Free Run Cellars, a boutique winery in Berrien Springs, Michiga
 ```
 freeruncellars/
 ├── index.html                  ← Homepage
-├── vercel.json                 ← Redirect config (frcwine.com → www.frcwine.com)
+├── vercel.json                 ← Redirect config (frcwine.com → freeruncellars.com)
+├── test-api-handlers.js        ← Unit tests for api/_helpers.js (run: node test-api-handlers.js)
+├── api/
+│   ├── _helpers.js             ← Shared: CORS allowlist, rate limiting, escapeHtml, upload/signup constants
+│   ├── chat.js                 ← AI chat (Anthropic Claude Haiku) — CORS restricted, rate limited
+│   ├── calendar.js             ← Outlook ICS calendar proxy
+│   ├── upload-photo.js         ← Photo booth storage (Vercel Blob) — MIME + size validated
+│   ├── circle-signup.js        ← Owners Circle form → Brevo list + email notification
+│   ├── contact.js              ← Contact page inquiry form → Brevo email to contact@frcwine.com
+│   └── lead.js                 ← Chat widget lead capture → Brevo email to contact@frcwine.com
 ├── pages/
 │   ├── about.html              ← Our Story
 │   ├── wines.html              ← Full wine menu + seasonal cocktails
@@ -35,10 +46,13 @@ freeruncellars/
 │   ├── event-packages.html     ← Private events & pricing
 │   ├── gallery.html            ← Photo gallery with lightbox
 │   ├── contact.html            ← Visit Us / Hours / Map
-│   └── reviews.html            ← Review landing (Google, Yelp, Facebook)
+│   ├── reviews.html            ← Review landing (Google, Yelp, Facebook)
+│   └── circle.html             ← ⚠️ Owners Circle — private, not linked publicly
 ├── tools/
-│   ├── post-generator.html     ← Internal: AI Facebook post generator
-│   └── photobooth.html         ← Photo booth with EmailJS (needs config keys)
+│   ├── post-generator.html          ← Internal: AI Facebook post generator
+│   ├── photobooth.html              ← Photo booth with EmailJS + Vercel Blob
+│   ├── email-template-single.html   ← EmailJS template: single photo
+│   └── email-template-strip.html    ← EmailJS template: 3-photo composited strip
 ├── assets/
 │   ├── images/                 ← Brand assets
 │   └── docs/
@@ -61,26 +75,39 @@ freeruncellars/
 | Gallery | `pages/gallery.html` | ✅ Live |
 | Visit Us | `pages/contact.html` | ✅ Live |
 | Reviews | `pages/reviews.html` | ✅ Live |
-| Post Generator | `tools/post-generator.html` | ✅ Internal tool |
-| Photo Booth | `tools/photobooth.html` | ⚙️ Built — needs EmailJS keys |
+| Owners Circle | `pages/circle.html` | ✅ Live — private URL, not linked from site |
+| Post Generator | `tools/post-generator.html` | ✅ Internal tool — AI Facebook post generator with weather, model selector, post type |
+| Photo Booth | `tools/photobooth.html` | ✅ Live — EmailJS + Vercel Blob |
 
 ---
 
 ## Photo Booth Setup
 
-Fill in the CONFIG block at the top of `tools/photobooth.html`:
+CONFIG keys are filled in at the top of `tools/photobooth.html`. Two additional requirements:
 
-```javascript
-const CONFIG = {
-  emailjs_public_key:      'YOUR_EMAILJS_PUBLIC_KEY',
-  emailjs_service_id:      'YOUR_EMAILJS_SERVICE_ID',
-  emailjs_template_single: 'YOUR_TEMPLATE_ID_SINGLE_PHOTO',
-  emailjs_template_strip:  'YOUR_TEMPLATE_ID_3_PHOTO_STRIP',
-  godaddy_payment_url:     'YOUR_GODADDY_TIP_LINK',
-};
-```
+**Vercel Blob** — photos are stored server-side so email only carries a URL:
+1. Vercel dashboard → Storage → Create Blob store
+2. Copy `BLOB_READ_WRITE_TOKEN` → add to Vercel project environment variables
 
-EmailJS is set up under Prashanth's login. Templates are in the EmailJS dashboard.
+**EmailJS templates** — paste the HTML from `tools/email-template-single.html` and `tools/email-template-strip.html` into the matching templates in the EmailJS dashboard. Set the **To Email** field to `{{to_email}}` and enable the HTML editor.
+
+**3-photo strip** — the browser composites all three frames into one vertical film-strip image (dark background, FRC logo at the bottom) before uploading. One image is stored and emailed, just like a traditional photo booth print.
+
+---
+
+## Owners Circle
+
+Private membership page at `/pages/circle` — shared by direct URL only, not linked from the main site.
+
+**Brevo setup** (one-time, before the page goes live):
+
+1. Sign up at [brevo.com](https://brevo.com) (free tier: 300 emails/day)
+2. **Settings → API Keys** → Generate → add to Vercel as `BREVO_API_KEY`
+3. **Contacts → Lists** → "New List" named `Owners Circle` → copy numeric ID → add to Vercel as `BREVO_CIRCLE_LIST_ID`
+4. **Contacts → Settings → Contact Attributes** → add Text attributes: `INTERESTS`, `MEMBERSHIP_TYPE`, `CIRCLE_MESSAGE`
+5. Optional: build a welcome email automation in Brevo triggered when a contact is added to the Owners Circle list
+
+Signups POST to `api/circle-signup.js` which adds the contact to the Brevo list and sends a notification to `contact@frcwine.com`.
 
 ---
 
@@ -111,15 +138,19 @@ image: https://yourphoto.com/artist.jpg
 desc: Soulful acoustic duo from Kalamazoo.
 type: live-music
 admission: Free
+url: https://tickets.example.com
+status: sold-out
 ```
 
-Supported types: `live-music` · `tasting` · `special`
+**Supported types:** `live-music` · `tasting` · `special` · `ticketed`
+
+**Supported status values:** `sold-out` — replaces the action button with a greyed-out "Sold Out" pill and adds a red "Sold Out" badge on the event image. Omit the field (or leave blank) for normal display.
 
 ---
 
 ## Image Swap Guide
 
-Images are CSS variables at the top of each HTML file. To swap: upload to GoDaddy Image Manager → copy CDN URL → paste in.
+Images are CSS variables at the top of each HTML file. To swap: upload to GoDaddy Image Manager → copy CDN URL → paste in. GoDaddy CDN is used for large hero/gallery photos only; logos and brand assets are self-hosted in `/public/images/`.
 
 CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/FILENAME.jpeg`
 
@@ -142,7 +173,8 @@ CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e
 **Secondary:** `#707271` grey · `#cbc7c7` light grey · `#000000` black  
 **Primary font:** Uniform → web substitute: **Jost**  
 **Accent font:** Znikomitno24 → web substitute: **Cormorant Garamond**  
-**Logo CDN:** `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png`
+**Logo:** `/public/images/free-run-cellars-logo-horizontal-black-323a89.webp` (self-hosted)
+**Wine press logo:** `/public/images/FR_WinePress.png` — used in nav (48px, left of wordmark) and as a centred footer stamp (90px) on all pages
 
 ---
 
@@ -186,7 +218,7 @@ Prashanth grew up at Mathathota, his grandparents' coffee estate in Chikmagalur,
 | Harbor Country Chamber | https://business.harborcountry.org/list/member/free-run-cellars-145 |
 | Moody on the Market | https://www.moodyonthemarket.com/free-run-cellars-to-begin-new-chapter-as-independent-winery/ |
 | Lake Michigan Shore AVA | https://www.lmswine.com |
-| Moersch Hospitality (wine sales) | https://www.moerschhospitalitygroup.com |
+| Drink Michigan (wine sales) | https://drinkmichigan.com/collections/freeruncellars#/ |
 
 **Podcast — If Vines Could Talk, Episode 108:**
 - Spotify: https://open.spotify.com/episode/2QQvuKemIWH9dlWREocD2u
@@ -210,7 +242,7 @@ Prashanth grew up at Mathathota, his grandparents' coffee estate in Chikmagalur,
 
 ## E-Commerce Notes
 
-Wine currently sold online via Moersch Hospitality to avoid multi-state sales tax complexity. Future plan: WooCommerce + TaxJar/Avalara once licensing confirmed. Do not build an in-house shop until that decision is made.
+Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/). Do not build an in-house shop without explicit approval.
 
 ---
 
@@ -228,15 +260,52 @@ Wine currently sold online via Moersch Hospitality to avoid multi-state sales ta
 
 - [x] EmailJS keys → filled in (service_9x5fnh1, g6DwhDedu0HLzfAw8)
 - [x] GoDaddy tip/payment link → filled in
-- [ ] Switch `freeruncellars.com` DNS to Vercel when ready
+- [x] Hamburger menu fixed on all pages (missing `id="navLinks"`, leaked CSS, broken IIFEs)
+- [x] Events calendar JS crash fixed
+- [x] Gallery filter and hamburger fixed (unclosed IIFE caused SyntaxError)
+- [x] Reviews page scroll fixed (`body: position fixed` was blocking scroll)
+- [x] Wines filter JS implemented (buttons existed but had no handler)
+- [x] Clean URLs enabled (`/pages/about` instead of `/pages/about.html`)
+- [x] Wines section mobile layout fixed (single-column stacking)
+- [x] Live Music and Visit Us mobile hero padding fixed
+- [x] Chatbot updated to direct users to events calendar page for upcoming events
+- [x] Photo booth: switched to Vercel Blob storage + URL-based email delivery
+- [x] Photo booth: 3-photo strip composited into single film-strip image client-side
+- [x] Email templates: added fallback "view photo" links for image-blocking email clients
+- [x] Switch `freeruncellars.com` DNS to Vercel — complete
+- [x] Logo replaced with self-hosted horizontal logo (removed GoDaddy CDN logo dependency)
+- [x] Wine press logo added to nav on all pages (left of wordmark, flex container, gap 12px)
+- [x] Wine press footer stamp added to all pages (90px, centred, above copyright bar)
+- [x] Live Music page mobile layout overhauled (767px breakpoint, reduced paddings, Season/Time/Admission 2-col grid)
+- [x] Johnny Poracky artist photo on Live Music page (600px max-width, 12px corners, caption)
+- [x] Google Analytics 4 added to all pages (G-T51K1F9DVS)
+- [x] Contact page: email mailto with subject line, Google Maps directions, mobile single-column layout, tel:+1 links, Facebook card, updated social copy
+- [x] Owners Circle page built (`pages/circle.html`) — live at `/pages/circle`
+- [x] Owners Circle: `BREVO_API_KEY` + `BREVO_CIRCLE_LIST_ID` set in Vercel env vars
+- [x] Owners Circle: phone number required (future SMS/Supabase auth)
+- [x] Owners Circle: interests saved to Brevo as text string (INTERESTS attribute)
+- [x] Owners Circle: duplicate phone/email handled gracefully — friendly error with contact@frcwine.com
+- [x] API security hardening: CORS allowlist (replaces `*`), per-IP rate limiting, honeypot on circle form, HTML escaping in notification email, upload MIME/size validation — issues #38 #39 #42 #43
+- [x] Shared API helpers extracted to `api/_helpers.js`; unit test suite added (`test-api-handlers.js`, 69 tests)
+- [x] Post generator: CORS fix (Anthropic calls now proxied through `api/generate-post.js`; API key never exposed client-side)
+- [x] Post generator: model selector (Haiku default / Sonnet toggle), weather auto-fetch (Open-Meteo, 16-day window), post type toggle (Announcement / Reminder), featured wine field
+- [x] Contact page: replaced `mailto:` link with inline Brevo contact form — inquiry types: Perform here, Host an event, Food truck, Host an activity
+- [x] Chat widget lead capture: `/api/lead.js` created — was silently failing before (endpoint didn't exist)
+- [x] Contact page hamburger fixed — stray `d` character + duplicate IntersectionObserver caused JS SyntaxError that prevented mobile nav from attaching
+- [x] Age gate: switched from `sessionStorage` to `localStorage` — now persists across sessions instead of asking every visit
+- [x] Nav link renamed "Visit Us" → "Visit & Contact" across all 9 pages
+- [x] Contact form: optional event date picker (shown only for Host an event / Food truck / Host an activity)
+- [x] Contact form: mailing list opt-in checkbox — phone required when checked, contact added to Brevo list 11
+- [ ] Owners Circle: legal review of "dividends into credits" language (Michigan winery regs)
 - [ ] Replace placeholder reviews with real Google/Facebook reviews
 - [ ] Newsletter → connect to proper email list (Mailchimp or EmailJS)
-- [ ] Josh Bishop (preferred caterer) — add to site once permission confirmed
-- [ ] Instagram handle confirmation (@freeruncellars assumed)
+- [x] Josh Bishop (preferred caterer) — section live on event-packages.html
+- [x] Instagram handle confirmed — @freeruncellars live in nav, contact, and reviews pages
+- [x] AI chatbot / inquiry assistant — fully live (api/chat.js + embedded on all pages)
 - [ ] Blog: Chikmagalur coffee terroir vs SW Michigan wine terroir
-- [ ] AI chatbot / inquiry assistant
 - [ ] Partnership page for neighboring vineyards
+- [ ] Favicon — export `FR_WinePress.png` as 512×512 square transparent PNG, generate favicon.ico + apple-touch-icon
 
 ---
 
-*Last updated: March 2026*
+*Last updated: March 19, 2026 (Nav rename, event date field, mailing list opt-in on contact form)*

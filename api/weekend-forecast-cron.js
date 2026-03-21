@@ -1,165 +1,180 @@
-// api/weekend-forecast-cron.js — Friday 10 AM forecast cron (runs at 0 15 * * 5 UTC = 10 AM CDT)
-// Required env vars:
-//   CRON_SECRET        — Authorization header must equal "Bearer <CRON_SECRET>"
-//   BREVO_API_KEY      — send forecast emails
-//   KV_REST_API_URL    — Vercel KV (optional, graceful fallback)
-//   KV_REST_API_TOKEN  — Vercel KV (optional, graceful fallback)
+// api/weekend-forecast-cron.js
+// Friday weekend forecast email — runs at 10:00 AM Central (15:00 UTC every Friday)
+// Required env vars: BREVO_API_KEY, CRON_SECRET, KV_REST_API_URL, KV_REST_API_TOKEN
 
 const {
-  STAGES, getCurrentStageIdx, getFrostWarnings,
-  scoreVisitorDay, DAY_SCORES,
-  weatherEmoji, weatherDesc,
-  sendBrevoEmail, kvGet,
-  forecastUrl, parseForecast,
+  fetchForecast, fetchHistoricalGDD, computeSeasonData,
+  getCurrentStage, projectStages, fmtDateRange, daysSincePruning,
+  evaluateWarnings,
+  kvGet, sendBrevoEmail,
+  wmoInfo, scoreDay, SCORE_COLOR, MONTHS_SHORT,
 } = require('./_vineyard');
 
-// ── Day-of-week label ────────────────────────────────────────────────────────
-function dayLabel(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+// ── Weekend email builder ──────────────────────────────────────────────────────
+
+function dayColumn(day, score) {
+  if (!day) return '<td style="padding:16px;text-align:center;border-right:1px solid #f0ede8;">—</td>';
+  const [icon, desc] = wmoInfo(day.weathercode);
+  const dt = new Date(day.date + 'T12:00:00');
+  const dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dt.getDay()];
+  const dateStr = MONTHS_SHORT[dt.getMonth()] + ' ' + dt.getDate();
+  const color = SCORE_COLOR[score] || '#707271';
+  return `<td style="padding:16px;text-align:center;border-right:1px solid #f0ede8;vertical-align:top;">
+    <div style="font-weight:700;font-size:13px;color:#222;margin-bottom:2px;">${dayName}</div>
+    <div style="font-size:11px;color:#999;margin-bottom:10px;">${dateStr}</div>
+    <div style="font-size:32px;margin-bottom:8px;line-height:1;">${icon}</div>
+    <div style="font-size:13px;color:#c0392b;font-weight:600;">${Math.round(day.tmax)}°</div>
+    <div style="font-size:12px;color:#2980b9;margin-bottom:6px;">${Math.round(day.tmin)}°</div>
+    <div style="font-size:11px;color:#777;margin-bottom:10px;">${day.precipProb}% precip</div>
+    <div style="background:${color};color:#fff;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:inline-block;">${score}</div>
+  </td>`;
 }
 
-// ── Badge pill ───────────────────────────────────────────────────────────────
-function scoreBadge(score) {
-  return `<span style="display:inline-block; padding:2px 10px; border-radius:12px; background:${score.color}20; color:${score.color}; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; border:1px solid ${score.color}40;">${score.label}</span>`;
-}
+function buildWeekendEmailHtml({ satDay, sunDay, monDay, satScore, sunScore, monScore,
+    verdict, currentGDD, currentStage, nextStage, nextStageEst, daysSince, warnings, forecastDays }) {
 
-// ── Email template ───────────────────────────────────────────────────────────
-function buildWeekendHtml(weekendDays, allDays, currentGDD, stageLabel, frostWarnings) {
-  const weekendRows = weekendDays.map(day => {
-    const score     = scoreVisitorDay(day.tmax, day.tmin, day.precip, day.code);
-    const emoji     = weatherEmoji(day.code);
-    const desc      = weatherDesc(day.code);
-    const hasFrost  = frostWarnings.some(w => w.date === day.date);
-    const frostNote = hasFrost
-      ? `<div style="margin-top:8px; font-size:12px; color:#d68910; font-weight:600;">❄️ Frost risk overnight</div>`
-      : '';
+  const warningBadges = warnings.length
+    ? warnings.map(w =>
+        `<span style="background:${w.color}22;border:1px solid ${w.color};color:${w.color};border-radius:4px;`
+        + `padding:4px 10px;font-size:11px;font-weight:700;margin-right:6px;display:inline-block;margin-bottom:6px;">`
+        + `${w.icon} ${w.label}</span>`).join('')
+    : '<div style="color:#537f71;font-size:13px;">🌿 No active vineyard concerns this weekend</div>';
 
-    return `
-    <tr>
-      <td style="padding:18px 20px; border-bottom:1px solid #eef4f1;">
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-          <div>
-            <div style="font-size:15px; font-weight:600; color:#2c2c2c; margin-bottom:4px;">
-              ${emoji} ${dayLabel(day.date)}
-            </div>
-            <div style="font-size:13px; color:#707271; line-height:1.5;">
-              ${desc} · ${Math.round(day.tmax)}°F / ${Math.round(day.tmin)}°F · ${day.precip}% precip
-            </div>
-            ${frostNote}
-          </div>
-          <div>${scoreBadge(score)}</div>
-        </div>
-      </td>
+  const lookAheadRows = forecastDays.slice(3).map(d => {
+    const [icon, desc] = wmoInfo(d.weathercode);
+    const hasWarn = warnings.some(w => w.affectedDays && w.affectedDays.find(ad => ad.date === d.date));
+    const dt = new Date(d.date + 'T12:00:00');
+    return `<tr style="background:${hasWarn ? '#fff8f0' : 'transparent'};">
+      <td style="padding:7px 10px;font-size:12px;border-bottom:1px solid #f0ede8;">${MONTHS_SHORT[dt.getMonth()]} ${dt.getDate()}</td>
+      <td style="padding:7px 10px;font-size:13px;border-bottom:1px solid #f0ede8;">${icon}</td>
+      <td style="padding:7px 10px;font-size:12px;color:#c0392b;font-weight:600;border-bottom:1px solid #f0ede8;">${Math.round(d.tmax)}°</td>
+      <td style="padding:7px 10px;font-size:12px;color:#2980b9;border-bottom:1px solid #f0ede8;">${Math.round(d.tmin)}°</td>
+      <td style="padding:7px 10px;font-size:12px;border-bottom:1px solid #f0ede8;">${desc}</td>
+      <td style="padding:7px 10px;font-size:12px;color:#555;border-bottom:1px solid #f0ede8;">${d.precipProb}%</td>
     </tr>`;
   }).join('');
 
-  const hasFrostAny = frostWarnings.length > 0;
-  const frostBlock = hasFrostAny
-    ? `<div style="background:#fef9e7; border-left:3px solid #d68910; padding:14px 18px; margin-bottom:24px; border-radius:0 4px 4px 0;">
-        <div style="font-size:12px; font-weight:700; color:#d68910; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px;">❄️ Frost Risk in 10-Day Window</div>
-        ${frostWarnings.map(w => `<div style="font-size:13px; color:#555; line-height:1.6;">${w.date}: ${w.msg}</div>`).join('')}
-       </div>`
+  const nextMilestoneRow = nextStage
+    ? `<tr style="background:#f3f0ec;"><td style="padding:10px 14px;color:#777;">Next Milestone</td><td style="padding:10px 14px;color:#222;">${nextStage.icon} ${nextStage.label}</td></tr>`
+    : '';
+  const estRow = nextStageEst
+    ? `<tr><td style="padding:10px 14px;color:#777;">Est. Date Range</td><td style="padding:10px 14px;color:#537f71;font-weight:600;">${nextStageEst}</td></tr>`
     : '';
 
-  // Upcoming week strip (Mon–Fri)
-  const weekStrip = allDays.slice(2, 7).map(day => {
-    const s = scoreVisitorDay(day.tmax, day.tmin, day.precip, day.code);
-    const d = new Date(day.date + 'T12:00:00');
-    const wd = d.toLocaleDateString('en-US', { weekday: 'short' });
-    return `
-      <td style="text-align:center; padding:10px 8px; border-right:1px solid #eef4f1;">
-        <div style="font-size:10px; color:#aaa; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">${wd}</div>
-        <div style="font-size:16px; margin-bottom:4px;">${weatherEmoji(day.code)}</div>
-        <div style="font-size:11px; color:#537f71; font-weight:600;">${Math.round(day.tmax)}°</div>
-        <div style="font-size:10px; color:#aaa;">${Math.round(day.tmin)}°</div>
-      </td>`;
-  }).join('');
-
-  return `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0; padding:0; background:#f4f4f4; font-family:'Helvetica Neue',Arial,sans-serif;">
-  <div style="max-width:600px; margin:32px auto; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,0.08);">
-    <div style="background:linear-gradient(135deg, #3d6155, #537f71); padding:28px 32px;">
-      <div style="font-family:Georgia,serif; font-style:italic; font-size:13px; color:rgba(255,255,255,0.7); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;">Free Run Cellars · Weekend Forecast</div>
-      <h1 style="margin:0; color:#fff; font-family:Georgia,serif; font-style:italic; font-weight:300; font-size:28px; line-height:1.2;">
-        Weekend Weather & Vineyard Update
-      </h1>
-    </div>
-
-    <div style="padding:32px 32px 0;">
-      <div style="background:#eef4f1; border-radius:6px; padding:14px 18px; margin-bottom:24px; display:flex; align-items:center; gap:16px;">
-        <div>
-          <div style="font-size:10px; color:#537f71; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:3px;">Season Status</div>
-          <div style="font-size:14px; color:#2c2c2c; font-weight:600;">${stageLabel} · ${currentGDD} GDD accumulated</div>
-        </div>
-      </div>
-      ${frostBlock}
-    </div>
-
-    <div style="padding:0 32px;">
-      <div style="font-size:10px; color:#537f71; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; margin-bottom:12px;">This Weekend</div>
-      <table style="width:100%; border-collapse:collapse; border:1px solid #eef4f1; border-radius:6px; overflow:hidden; margin-bottom:24px;">
-        <tbody>${weekendRows}</tbody>
-      </table>
-    </div>
-
-    <div style="padding:0 32px 32px;">
-      <div style="font-size:10px; color:#537f71; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; margin-bottom:12px;">Week Ahead</div>
-      <table style="width:100%; border-collapse:collapse; border:1px solid #eef4f1; border-radius:6px; overflow:hidden; margin-bottom:24px;">
-        <tbody><tr>${weekStrip}</tr></tbody>
-      </table>
-
-      <hr style="border:none; border-top:1px solid #eef4f1; margin:0 0 20px;">
-      <p style="color:#aaa; font-size:11px; line-height:1.7; margin:0;">
-        Your weekly vineyard briefing from Free Run Cellars.
-        <a href="https://www.frcwine.com/tools/vineyard-season.html" style="color:#537f71;">Full season dashboard →</a>
-      </p>
-    </div>
+  return `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5f5f5;font-family:Georgia,serif;">
+<div style="max-width:600px;margin:0 auto;background:#fff;">
+  <div style="background:#537f71;padding:24px 32px;text-align:center;">
+    <div style="color:#fff;font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:.75;margin-bottom:4px;">Free Run Cellars</div>
+    <div style="color:#fff;font-size:20px;font-weight:300;letter-spacing:1px;">Weekend Briefing</div>
+    <div style="color:rgba(255,255,255,.75);font-size:13px;margin-top:6px;font-style:italic;">${verdict}</div>
   </div>
-</body>
-</html>`;
+  <div style="padding:28px 32px;">
+    <h2 style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#537f71;margin-bottom:16px;">Weekend at a Glance</h2>
+    <table style="width:100%;border-collapse:collapse;background:#fafaf9;border:1px solid #f0ede8;">
+      <tr>
+        ${dayColumn(satDay, satScore)}
+        ${dayColumn(sunDay, sunScore)}
+        ${dayColumn(monDay, monScore)}
+      </tr>
+    </table>
+
+    <h2 style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#537f71;margin:28px 0 16px;">Vineyard This Week</h2>
+    <table style="width:100%;font-size:13px;border-collapse:collapse;background:#f9f7f4;">
+      <tr><td style="padding:10px 14px;color:#777;width:160px;">Growing Degree Days</td><td style="padding:10px 14px;font-weight:600;color:#222;">${currentGDD.toFixed(1)} GDD</td></tr>
+      <tr style="background:#f3f0ec;"><td style="padding:10px 14px;color:#777;">Current Stage</td><td style="padding:10px 14px;color:#222;">${currentStage ? currentStage.icon + ' ' + currentStage.label : '—'}</td></tr>
+      <tr><td style="padding:10px 14px;color:#777;">Days Since Pruning</td><td style="padding:10px 14px;color:#222;">Day ${daysSince}</td></tr>
+      ${nextMilestoneRow}${estRow}
+    </table>
+    <div style="margin-top:14px;">${warningBadges}</div>
+
+    ${lookAheadRows ? `
+    <h2 style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#537f71;margin:28px 0 16px;">Looking Ahead</h2>
+    <table style="width:100%;border-collapse:collapse;">
+      <tr style="background:#f0ede8;">
+        <th style="padding:7px 10px;font-size:10px;text-align:left;color:#777;font-weight:600;letter-spacing:1px;">Date</th>
+        <th style="padding:7px 10px;"></th>
+        <th style="padding:7px 10px;font-size:10px;text-align:left;color:#777;font-weight:600;letter-spacing:1px;">High</th>
+        <th style="padding:7px 10px;font-size:10px;text-align:left;color:#777;font-weight:600;letter-spacing:1px;">Low</th>
+        <th style="padding:7px 10px;font-size:10px;text-align:left;color:#777;font-weight:600;letter-spacing:1px;">Conditions</th>
+        <th style="padding:7px 10px;font-size:10px;text-align:left;color:#777;font-weight:600;letter-spacing:1px;">Precip%</th>
+      </tr>
+      ${lookAheadRows}
+    </table>` : ''}
+  </div>
+  <div style="background:#f0ede8;padding:20px 32px;text-align:center;">
+    <p style="font-size:11px;color:#888;margin:0 0 4px;">Free Run Cellars · 10062 Burgoyne Rd, Berrien Springs MI 49103</p>
+    <p style="font-size:11px;color:#888;margin:0 0 4px;">Sent every Friday at 10 AM Central.</p>
+    <p style="font-size:11px;color:#aaa;margin:0;">Staff tool: freeruncellars.com/tools/vineyard-season</p>
+  </div>
+</div></body></html>`;
 }
 
-// ── Handler ──────────────────────────────────────────────────────────────────
-export default async function handler(req, res) {
-  // Verify cron secret
-  const authHeader = req.headers.authorization || '';
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return res.status(401).json({ ok: false, error: 'Unauthorized' });
+// ── Handler ───────────────────────────────────────────────────────────────────
+
+module.exports = async function handler(req, res) {
+  if (req.headers['authorization'] !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).end();
   }
+
+  console.log('[weekend-forecast-cron] Starting Friday briefing');
 
   try {
-    const fRes  = await fetch(forecastUrl());
-    const fData = await fRes.json();
-    const days  = parseForecast(fData);
+    const [forecastDays, historicalData] = await Promise.all([
+      fetchForecast(),
+      fetchHistoricalGDD(),
+    ]);
 
-    // Saturday = index 1, Sunday = index 2 (today is Friday when cron runs)
-    const weekendDays = days.slice(1, 3);
-    const allDays     = days;
+    const { totalGDD, avgRate } = computeSeasonData(historicalData);
+    const { currentStage, nextStage } = getCurrentStage(totalGDD);
+    const projections  = projectStages(totalGDD, avgRate);
+    const nextProj     = projections[0] || null;
+    const nextStageEst = nextProj ? fmtDateRange(nextProj.early, nextProj.late) : null;
+    const budBreakRecorded = (await kvGet('frc_bud_break_recorded')) === 'true';
+    const daysSince = daysSincePruning();
 
-    const frostWarnings = getFrostWarnings(days.slice(0, 7));
+    // index 0 = today (Friday), 1 = Saturday, 2 = Sunday, 3 = Monday
+    const satDay = forecastDays[1] || null;
+    const sunDay = forecastDays[2] || null;
+    const monDay = forecastDays[3] || null;
 
-    const gddRaw    = await kvGet('frc_current_gdd');
-    const currentGDD = gddRaw ? Number(gddRaw) : 0;
-    const stageIdx   = getCurrentStageIdx(currentGDD);
-    const stageLabel = STAGES[stageIdx].label;
+    const satScore = satDay ? scoreDay(satDay) : null;
+    const sunScore = sunDay ? scoreDay(sunDay) : null;
+    const monScore = monDay ? scoreDay(monDay) : null;
 
-    await sendBrevoEmail({
-      subject: `🍇 Weekend Forecast · Free Run Cellars · ${weekendDays.map(d => {
-        const dt = new Date(d.date + 'T12:00:00');
-        return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      }).join(' & ')}`,
-      htmlContent: buildWeekendHtml(weekendDays, allDays, currentGDD, stageLabel, frostWarnings),
+    // Warnings evaluated against weekend days only
+    const weekendDays = [satDay, sunDay, monDay].filter(Boolean);
+    const warnings = evaluateWarnings(weekendDays, budBreakRecorded, totalGDD);
+
+    // Generate verdict
+    const scores    = [satScore, sunScore, monScore].filter(Boolean);
+    const goodDays  = scores.filter(s => s === 'Beautiful' || s === 'Nice').length;
+    const bestIdx   = scores.findIndex(s => s === 'Beautiful') !== -1
+                        ? scores.findIndex(s => s === 'Beautiful')
+                        : scores.findIndex(s => s === 'Nice');
+    const dayNames  = ['Saturday', 'Sunday', 'Monday'];
+    const bestDay   = bestIdx >= 0 ? dayNames[bestIdx] : 'the weekend';
+    let verdict;
+    if (goodDays >= 3)       verdict = 'A stunning weekend ahead';
+    else if (goodDays === 2) verdict = `A great weekend — ${bestDay} looks best for visiting`;
+    else if (goodDays === 1) verdict = `A mixed weekend — ${bestDay} looks best`;
+    else                     verdict = 'A quiet weekend — cozy indoor tastings await';
+
+    const satDt = satDay ? new Date(satDay.date + 'T12:00:00') : null;
+    const subjectDate = satDt ? `Sat ${MONTHS_SHORT[satDt.getMonth()]} ${satDt.getDate()}` : 'This Weekend';
+    const subject = `🍷 FRC Weekend Forecast — ${subjectDate} · ${verdict}`;
+
+    const html = buildWeekendEmailHtml({
+      satDay, sunDay, monDay, satScore, sunScore, monScore, verdict,
+      currentGDD: totalGDD, currentStage, nextStage, nextStageEst, daysSince,
+      warnings, forecastDays,
     });
 
-    console.log('[weekend-forecast-cron] Weekend forecast email sent');
-    return res.json({ ok: true, sent: true });
+    await sendBrevoEmail(subject, html);
+    console.log('[weekend-forecast-cron] Sent:', subject);
+    return res.status(200).json({ ok: true, sent: true, verdict });
 
-  } catch (err) {
-    console.error('[weekend-forecast-cron]', err.message);
-    return res.status(500).json({ ok: false, error: err.message });
+  } catch (e) {
+    console.error('[weekend-forecast-cron] Error:', e.message);
+    return res.status(500).json({ error: e.message });
   }
-}
+};

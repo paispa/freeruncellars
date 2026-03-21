@@ -1,11 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T51K1F9DVS');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wines – Free Run Cellars | Berrien Springs, MI</title>
 <meta name="description" content="Small-batch wines from Lake Michigan Shore and beyond. Whites, reds, and flights at Free Run Cellars in Berrien Springs, Michigan. Dry Riesling, Pinot Gris, Syrah, Lemberger and more.">
 <meta name="keywords" content="Free Run Cellars wines, Pinot Gris Michigan, Dry Riesling Lake Michigan Shore, Lemberger Michigan, small batch wines Berrien Springs, wine tasting Southwest Michigan">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "Winery"],
+  "name": "Free Run Cellars",
+  "description": "Family-owned boutique winery in Berrien Springs, Michigan — 90 minutes from Chicago. Estate wines, live music Sundays, and private events.",
+  "url": "https://freeruncellars.com",
+  "logo": "https://freeruncellars.com/public/images/free-run-cellars-logo-horizontal-black-323a89.webp",
+  "image": "https://freeruncellars.com/public/images/AS259838.jpeg",
+  "telephone": "+12698156885",
+  "email": "contact@frcwine.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "10062 Burgoyne Road",
+    "addressLocality": "Berrien Springs",
+    "addressRegion": "MI",
+    "postalCode": "49103",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 41.9286,
+    "longitude": -86.3495
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday"], "opens": "14:00", "closes": "18:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "12:00", "closes": "19:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Sunday"], "opens": "14:00", "closes": "18:00" }
+  ],
+  "servesCuisine": "Wine",
+  "priceRange": "$$",
+  "sameAs": [
+    "https://g.page/r/CYbLnDx6hWxXEBM",
+    "https://www.facebook.com/freeruncellars",
+    "https://www.instagram.com/freeruncellars",
+    "https://drinkmichigan.com/collections/freeruncellars",
+    "https://business.harborcountry.org/list/member/freerun-cellars-1088",
+    "https://stjoetoday.com/member/free-run-cellars",
+    "https://swmichigan.org/member/free-run-cellars",
+    "https://www.tripadvisor.com/Attraction_Review-g41988-d1748268-Reviews-Free_Run_Cellars-Berrien_Springs_Berrien_County_Michigan.html",
+    "https://www.yelp.com/biz/free-run-cellars-berrien-springs"
+  ]
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +96,8 @@ nav {
 }
 nav.solid { background:rgba(255,255,255,.97); box-shadow:0 1px 0 rgba(0,0,0,.07); }
 .nav-logo { height:34px; transition:filter .35s; }
-nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-press { height:48px; width:auto; transition:filter .35s; margin-top:4px; }
+nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
 .nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
 .nav-links a {
   font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
@@ -83,7 +138,7 @@ nav.solid .nav-links a:hover { color:var(--teal); }
 }
 .hero-bg {
   position:absolute; inset:0;
-  background-image:url('../public/images/R06A1589r.jpeg');
+  background-image:url('../public/images/R06A1817.jpeg');
   background-size:cover; background-position:center 40%;
   transform:scale(1.04);
   animation:hZoom 14s ease-out forwards;
@@ -443,10 +498,11 @@ h2.on-dark em { color:var(--teal-lt); }
 .page-footer {
   background:var(--black); color:rgba(255,255,255,.35);
   border-top:1px solid rgba(255,255,255,.05);
-  padding:28px 56px;
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:wrap; gap:16px; font-size:11px;
+  padding:44px 56px 28px;
+  display:flex; flex-direction:column; align-items:center; gap:0; font-size:11px;
 }
+.footer-press { height:90px; width:auto; filter:brightness(0) invert(1); opacity:.3; margin-bottom:28px; }
+.footer-bottom { width:100%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; border-top:1px solid rgba(255,255,255,.07); padding-top:20px; }
 .footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.4; }
 .footer-links { display:flex; gap:20px; }
 .page-footer a:hover { color:#fff; }
@@ -457,35 +513,26 @@ h2.on-dark em { color:var(--teal-lt); }
 /* ── RESPONSIVE ── */
 /* ── MOBILE NAV ── */
 
+@media (max-width:768px) {
+  .hero-body { padding:0 24px 60px; }
+  .filter-section { padding:0 20px; }
+  .wine-section { padding:52px 24px; }
+  .flights-section { padding:60px 24px; }
+  .flights-grid { grid-template-columns:1fr; }
+  .cocktails-section { padding:60px 24px; }
+  .cocktail-grid { grid-template-columns:1fr; }
+  .online-section { padding:52px 24px; }
+  .page-footer { padding:32px 20px 24px; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; gap:12px; }
+  .footer-links { flex-wrap:wrap; }
+}
+
 @media (max-width:560px) {
   .btn-line { margin-left:0; margin-top:10px; }
 }
 
 
-  .nav-links.open > li > a {
-    display:block; padding:16px 0;
-    font-size:13px; letter-spacing:2px; text-transform:uppercase;
-    color:rgba(255,255,255,0.85) !important;
-    border-bottom:1px solid rgba(255,255,255,0.07);
-  }
-  .nav-links.open .has-drop .drop-menu {
-    display:block; position:static; transform:none;
-    background:transparent; box-shadow:none; border:none;
-    padding:0 0 8px 16px; min-width:unset;
-  }
-  .nav-links.open .has-drop .drop-menu li a {
-    color:rgba(115,152,133,0.85) !important;
-    font-size:11px; padding:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    display:block;
-  }
-  .nav-links.open .nav-cta {
-    background:#537f71; color:#fff !important;
-    border-radius:4px; padding:14px 0; text-align:center;
-    margin-top:16px; border:none !important;
-  }
-  .hamburger { display:flex; }
-}
+
 
 /* ── Hamburger button ── */
 .hamburger {
@@ -565,11 +612,11 @@ nav.solid .hamburger span { background: #333; }
 .has-drop { position: relative; cursor: pointer; }
 .drop-menu {
   display: none;
-  position: absolute; top: calc(100% + 8px); left: 50%;
+  position: absolute; top: 100%; left: 50%;
   transform: translateX(-50%);
   background: #fff; border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0,0,0,.12);
-  padding: 8px 0; min-width: 190px;
+  padding: 16px 0 8px; min-width: 190px;
   list-style: none; z-index: 9100;
 }
 .has-drop:hover .drop-menu { display: block; }
@@ -589,9 +636,10 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="../index.html" style="line-height:0"><img class="nav-logo"
-    src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-    alt="Free Run Cellars"></a>
+  <a href="../index.html" style="line-height:0;display:flex;align-items:center;gap:12px;">
+    <img class="nav-press" src="../public/images/FR_WinePress.png" alt="">
+    <img class="nav-logo" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+  </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="about.html">Our Story</a></li>
     <li><a href="wines.html" style="color:var(--teal-lt)">Wines</a></li>
@@ -604,7 +652,7 @@ nav.solid .hamburger span { background: #333; }
       </ul>
     </li>
     <li><a href="gallery.html">Gallery</a></li>
-    <li><a href="contact.html">Visit Us</a></li>
+    <li><a href="contact.html">Visit &amp; Contact</a></li>
     <li><a href="reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
   <button class="hamburger" id="burger" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
@@ -1073,9 +1121,9 @@ nav.solid .hamburger span { background: #333; }
       <span style="width:32px;height:1px;background:var(--teal);display:inline-block;"></span>
     </p>
     <h2>Can't make it out?<br><em>We ship.</em></h2>
-    <p class="body-copy">A selection of Free Run wines is available online through our partners at Moersch Hospitality. Or better yet — come visit and pick your own.</p>
+    <p class="body-copy">A selection of Free Run wines is available online through Drink Michigan. Or better yet — come visit and pick your own.</p>
     <div>
-      <a href="https://www.moerschhospitalitygroup.com" target="_blank" rel="noopener" class="btn-fill">Shop Online →</a>
+      <a href="https://drinkmichigan.com/collections/freeruncellars#/" target="_blank" rel="noopener" class="btn-fill">Shop Online →</a>
       <a href="contact.html" class="btn-line">Plan a Visit</a>
     </div>
     <p class="online-note">Must be 21+ to purchase. Available while supplies last.</p>
@@ -1084,6 +1132,8 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- FOOTER -->
 <footer class="page-footer">
+  <img class="footer-press" src="/public/images/FR_WinePress.png" alt="">
+  <div class="footer-bottom">
   <img class="footer-logo"
     src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
     alt="Free Run Cellars">
@@ -1092,7 +1142,8 @@ nav.solid .hamburger span { background: #333; }
     <a href="../index.html">Home</a>
     <a href="about.html">Our Story</a>
     <a href="events-calendar.html">Events</a>
-    <a href="contact.html">Visit Us</a>
+    <a href="contact.html">Visit &amp; Contact</a>
+  </div>
   </div>
 </footer>
 
@@ -1119,14 +1170,23 @@ document.querySelectorAll('.wine-card, .flight-card').forEach((el, i) => {
   io.observe(el);
 });
 
-// ── Mobile hamburger ──
+// ── Wine filter ──────────────────────────────────────────
 (function() {
-  var burger = document.getElementById('burger');
-  var links  = document.getElementById('navLinks');
-  if (!burger || !links) return;
+  var filterBar = document.getElementById('filterBar');
+  if (!filterBar) return;
 
-  
-
+  filterBar.addEventListener('click', function(e) {
+    var btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var filter = btn.dataset.filter;
+    document.querySelectorAll('.wine-card').forEach(function(card) {
+      var match = filter === 'all' || card.dataset.type === filter;
+      card.style.display = match ? '' : 'none';
+    });
+  });
+})();
 
 // ── Mobile nav ──────────────────────────────────────────
 (function() {

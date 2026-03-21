@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T51K1F9DVS');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Post Generator – Free Run Cellars</title>
@@ -333,6 +342,44 @@
     font-size: 10px; color: var(--muted); margin-top: 2px;
   }
 
+  .es-weather {
+    margin-left: auto; flex-shrink: 0;
+    text-align: center;
+    font-size: 10px; color: var(--sage-light);
+    line-height: 1.4;
+  }
+
+  .es-weather-icon { font-size: 20px; display: block; }
+
+  /* ── Toggle pair (model / post type) ── */
+  .toggle-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .toggle-btn {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .toggle-btn:hover { border-color: var(--sage); color: var(--sage); }
+  .toggle-btn.active { background: rgba(115,152,133,0.12); border-color: var(--sage); color: var(--sage); }
+
+  .toggle-icon { font-size: 15px; display: block; margin-bottom: 3px; }
+
   /* Error */
   .error-msg {
     display: none;
@@ -371,7 +418,7 @@
   <!-- Header -->
   <div class="page-header">
     <img class="site-logo"
-      src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png/:/rs=h:74,cg:true,m/qt=q:95"
+      src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
       alt="Free Run Cellars">
     <div class="page-title">Facebook Post Generator</div>
     <div class="page-sub">For Trish · Free Run Cellars</div>
@@ -401,9 +448,14 @@
         <div class="es-date" id="esDate"></div>
         <div class="es-mon" id="esMon"></div>
       </div>
-      <div>
+      <div style="flex:1">
         <div class="es-name" id="esName"></div>
         <div class="es-time" id="esTime"></div>
+      </div>
+      <div class="es-weather" id="esWeather" style="display:none">
+        <span class="es-weather-icon" id="esWeatherIcon"></span>
+        <span id="esWeatherTemp"></span>
+        <span id="esWeatherDesc" style="display:block;font-size:9px;color:var(--muted);letter-spacing:0.5px"></span>
       </div>
     </div>
   </div>
@@ -416,8 +468,27 @@
     </div>
 
     <div class="field">
+      <label>Post type</label>
+      <div class="toggle-pair">
+        <button class="toggle-btn active" data-posttype="announcement" onclick="selectPostType(this)">
+          <span class="toggle-icon">📣</span> Announcement
+          <span style="display:block;font-size:8px;font-weight:400;letter-spacing:0;text-transform:none;margin-top:2px;color:inherit;opacity:0.7">Introducing the event</span>
+        </button>
+        <button class="toggle-btn" data-posttype="reminder" onclick="selectPostType(this)">
+          <span class="toggle-icon">⏰</span> Reminder
+          <span style="display:block;font-size:8px;font-weight:400;letter-spacing:0;text-transform:none;margin-top:2px;color:inherit;opacity:0.7">It's coming up soon!</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
       <label>About the artist / event <span style="color:rgba(115,152,133,0.4);font-weight:400;">(optional but makes the post much better)</span></label>
       <textarea id="artistDetails" placeholder="e.g. Soulful folk singer from Kalamazoo, fan favorite, plays originals and covers. Great energy with the crowd."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Featured wine or special offer <span style="color:rgba(115,152,133,0.4);font-weight:400;">(optional)</span></label>
+      <input type="text" id="featuredWine" placeholder="e.g. Pinot Gris flight $15 — perfect pairing for live music">
     </div>
 
     <div class="field">
@@ -431,6 +502,20 @@
         </button>
         <button class="tone-btn" data-tone="elegant" onclick="selectTone(this)">
           <span class="tone-icon">🍷</span> Elegant & Refined
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>AI model</label>
+      <div class="toggle-pair">
+        <button class="toggle-btn active" data-model="claude-haiku-4-5-20251001" onclick="selectModel(this)">
+          <span class="toggle-icon">⚡</span> Haiku
+          <span style="display:block;font-size:8px;font-weight:400;letter-spacing:0;text-transform:none;margin-top:2px;color:inherit;opacity:0.7">Fast · default</span>
+        </button>
+        <button class="toggle-btn" data-model="claude-sonnet-4-6" onclick="selectModel(this)">
+          <span class="toggle-icon">✨</span> Sonnet
+          <span style="display:block;font-size:8px;font-weight:400;letter-spacing:0;text-transform:none;margin-top:2px;color:inherit;opacity:0.7">Richer copy</span>
         </button>
       </div>
     </div>
@@ -496,8 +581,24 @@ const DAYS   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Sat
 const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 let events = [];
-let selectedEvent = null;
-let selectedTone  = 'warm';
+let selectedEvent  = null;
+let selectedTone   = 'warm';
+let selectedModel  = 'claude-haiku-4-5-20251001';
+let selectedPostType = 'announcement';
+let eventWeather   = null; // { icon, tempHi, tempLo, desc } or null
+
+// ── WMO weather code → human description + icon ──────────────────────
+const WMO_CODES = {
+  0:  ['☀️','Clear skies'],
+  1:  ['🌤️','Mostly clear'], 2: ['⛅','Partly cloudy'], 3: ['☁️','Overcast'],
+  45: ['🌫️','Foggy'], 48: ['🌫️','Foggy'],
+  51: ['🌦️','Light drizzle'], 53: ['🌦️','Drizzle'], 55: ['🌦️','Heavy drizzle'],
+  61: ['🌧️','Light rain'], 63: ['🌧️','Rain'], 65: ['🌧️','Heavy rain'],
+  71: ['🌨️','Light snow'], 73: ['🌨️','Snow'], 75: ['🌨️','Heavy snow'],
+  80: ['🌧️','Rain showers'], 81: ['🌧️','Rain showers'], 82: ['🌧️','Heavy showers'],
+  85: ['🌨️','Snow showers'], 86: ['🌨️','Heavy snow showers'],
+  95: ['⛈️','Thunderstorm'], 96: ['⛈️','Thunderstorm'], 99: ['⛈️','Thunderstorm'],
+};
 
 // ── ICS helpers (same as events page) ───────────────────────────────
 function unfoldICS(raw) { return raw.replace(/\r?\n[ \t]/g, ''); }
@@ -573,8 +674,31 @@ async function loadCalendar() {
   }
 }
 
+// ── Weather fetch (Open-Meteo, free, no key) ─────────────────────────
+async function fetchWeatherForDate(date) {
+  // Berrien Springs, MI — lat 41.9478, lon -86.3483
+  const url = 'https://api.open-meteo.com/v1/forecast'
+    + '?latitude=41.9478&longitude=-86.3483'
+    + '&daily=weathercode,temperature_2m_max,temperature_2m_min'
+    + '&temperature_unit=fahrenheit&timezone=America%2FChicago&forecast_days=16';
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return null;
+    const data = await res.json();
+    // date string e.g. "2026-03-22"
+    const target = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const idx = data.daily.time.indexOf(target);
+    if (idx === -1) return null;
+    const code  = data.daily.weathercode[idx];
+    const hi    = Math.round(data.daily.temperature_2m_max[idx]);
+    const lo    = Math.round(data.daily.temperature_2m_min[idx]);
+    const [icon, desc] = WMO_CODES[code] || ['🌡️','Unknown'];
+    return { icon, tempHi: hi, tempLo: lo, desc };
+  } catch(e) { return null; }
+}
+
 // ── Event selected ───────────────────────────────────────────────────
-function onEventSelected() {
+async function onEventSelected() {
   const idx = document.getElementById('eventSelect').value;
   const strip = document.getElementById('eventStrip');
 
@@ -582,6 +706,7 @@ function onEventSelected() {
     strip.classList.remove('visible');
     document.getElementById('generateBtn').disabled = true;
     selectedEvent = null;
+    eventWeather  = null;
     return;
   }
 
@@ -592,9 +717,25 @@ function onEventSelected() {
   document.getElementById('esMon').textContent  = MONTHS_SHORT[d.getMonth()];
   document.getElementById('esName').textContent = selectedEvent.name;
   document.getElementById('esTime').textContent = selectedEvent.time;
+
+  // Reset weather while fetching
+  const weatherEl = document.getElementById('esWeather');
+  weatherEl.style.display = 'none';
+  eventWeather = null;
+
   strip.classList.add('visible');
   document.getElementById('generateBtn').disabled = false;
   document.getElementById('outputCard').classList.remove('visible');
+
+  // Fetch weather in background (won't block the UI)
+  const weather = await fetchWeatherForDate(d);
+  if (weather) {
+    eventWeather = weather;
+    document.getElementById('esWeatherIcon').textContent = weather.icon;
+    document.getElementById('esWeatherTemp').textContent = `${weather.tempHi}° / ${weather.tempLo}°F`;
+    document.getElementById('esWeatherDesc').textContent = weather.desc;
+    weatherEl.style.display = 'block';
+  }
 }
 
 // ── Tone selector ────────────────────────────────────────────────────
@@ -602,6 +743,20 @@ function selectTone(btn) {
   document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedTone = btn.dataset.tone;
+}
+
+// ── Post type selector ───────────────────────────────────────────────
+function selectPostType(btn) {
+  document.querySelectorAll('[data-posttype]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedPostType = btn.dataset.posttype;
+}
+
+// ── Model selector ───────────────────────────────────────────────────
+function selectModel(btn) {
+  document.querySelectorAll('[data-model]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedModel = btn.dataset.model;
 }
 
 // ── Generate post ────────────────────────────────────────────────────
@@ -619,6 +774,7 @@ async function generatePost() {
   const dateNum   = d.getDate();
   const timeStr   = selectedEvent.time;
   const artistDetails = document.getElementById('artistDetails').value.trim();
+  const featuredWine  = document.getElementById('featuredWine').value.trim();
 
   const toneInstructions = {
     warm:    'Warm, welcoming, and personal — like a friend inviting you over. Use "we" and "you". Feels like a cozy invitation.',
@@ -626,38 +782,46 @@ async function generatePost() {
     elegant: 'Refined and evocative — paint a picture of a beautiful afternoon at the vineyard. Sophisticated but never stuffy.',
   };
 
-  const systemPrompt = `You are the voice of Free Run Cellars, a boutique family-run winery in Berrien Springs, Michigan owned by Prashanth Pais and Tricia Slevin. 
+  const postTypeInstructions = {
+    announcement: 'This is an initial announcement introducing the event. Build anticipation — make people want to save the date.',
+    reminder:     'This is a reminder post — the event is coming up very soon (this weekend or tomorrow). Create urgency and excitement. Make people feel they cannot miss it.',
+  };
+
+  const systemPrompt = `You are the voice of Free Run Cellars, a boutique family-run winery in Berrien Springs, Michigan owned by Prashanth Pais and Tricia Slevin.
 The winery is known for small-batch wines, a relaxed atmosphere, a beautiful pond with turtles, 3 acres of Pinot Gris vines, live music on Sundays, and being family and pet friendly.
 Write Facebook posts that feel authentic, local, and genuine — never corporate or generic.
 Always include the event details naturally within the post. End with relevant hashtags on a new line.
 Keep the post between 100-200 words. Do not use excessive emojis — one or two max, used tastefully.`;
 
-  const userPrompt = `Write a Facebook post announcing this event at Free Run Cellars:
+  const userPrompt = `Write a Facebook post for this event at Free Run Cellars:
 
 Event: ${selectedEvent.name}
 Date: ${dayName}, ${monthName} ${dateNum}
 Time: ${timeStr}
 ${artistDetails ? `About the artist/event: ${artistDetails}` : ''}
 ${selectedEvent.isTicketed ? 'This is a ticketed event.' : 'This event is free admission.'}
+${featuredWine ? `Featured wine / special offer to mention: ${featuredWine}` : ''}
+${eventWeather ? `Weather forecast for that day: ${eventWeather.desc}, high ${eventWeather.tempHi}°F / low ${eventWeather.tempLo}°F — weave the weather in naturally if it fits (e.g. sunny afternoon, perfect for the patio).` : ''}
 
+Post type: ${postTypeInstructions[selectedPostType]}
 Tone: ${toneInstructions[selectedTone]}
 
 Write the complete Facebook post ready to publish.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate-post', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userPrompt }],
-      }),
+      body: JSON.stringify({ systemPrompt, userPrompt, model: selectedModel }),
     });
 
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error ${res.status}`);
+    }
+
     const data = await res.json();
-    const text = data.content?.map(c => c.text || '').join('') || '';
+    const text = data.post || '';
 
     const output = document.getElementById('postOutput');
     output.value = text.trim();

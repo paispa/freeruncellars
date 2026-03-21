@@ -1,10 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T51K1F9DVS');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free Run Cellars – Boutique Winery in Berrien Springs, Michigan</title>
 <meta name="description" content="A boutique winery rooted in the philosophy of Atithidevo Bhav — the guest is akin to God. Small-batch wines, live music, and 10 acres of Michigan beauty in Berrien Springs, MI. 90 minutes from Chicago.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "Winery"],
+  "name": "Free Run Cellars",
+  "description": "Family-owned boutique winery in Berrien Springs, Michigan — 90 minutes from Chicago. Estate wines, live music Sundays, and private events.",
+  "url": "https://freeruncellars.com",
+  "logo": "https://freeruncellars.com/public/images/free-run-cellars-logo-horizontal-black-323a89.webp",
+  "image": "https://freeruncellars.com/public/images/AS259838.jpeg",
+  "telephone": "+12698156885",
+  "email": "contact@frcwine.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "10062 Burgoyne Road",
+    "addressLocality": "Berrien Springs",
+    "addressRegion": "MI",
+    "postalCode": "49103",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 41.9286,
+    "longitude": -86.3495
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday"], "opens": "14:00", "closes": "18:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "12:00", "closes": "19:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Sunday"], "opens": "14:00", "closes": "18:00" }
+  ],
+  "servesCuisine": "Wine",
+  "priceRange": "$$",
+  "sameAs": [
+    "https://g.page/r/CYbLnDx6hWxXEBM",
+    "https://www.facebook.com/freeruncellars",
+    "https://www.instagram.com/freeruncellars",
+    "https://drinkmichigan.com/collections/freeruncellars",
+    "https://business.harborcountry.org/list/member/freerun-cellars-1088",
+    "https://stjoetoday.com/member/free-run-cellars",
+    "https://swmichigan.org/member/free-run-cellars",
+    "https://www.tripadvisor.com/Attraction_Review-g41988-d1748268-Reviews-Free_Run_Cellars-Berrien_Springs_Berrien_County_Michigan.html",
+    "https://www.yelp.com/biz/free-run-cellars-berrien-springs"
+  ]
+}
+</script>
 
 <!--
   ═══════════════════════════════════════════════════════
@@ -41,14 +95,14 @@
   --nav-h:     74px;
 
   /* ── GODADDY CDN IMAGES ── */
-  --img-hero:    url('/public/images/FR-exterior-2.jpg');
+  --img-hero:    url('/public/images/AS259838.jpeg');
   --img-story:   url('/public/images/R06A2367.jpeg');
-  --img-patio:   url('/public/images/FR-high-tables-2.jpg');
-  --img-wine:    url('/public/images/FR-glass-on-table.jpg');
-  --img-events:  url('/public/images/FR_Outside_LiveMusic_2021_02.JPG');
+  --img-patio:   url('/public/images/R06A1556.jpeg');
+  --img-wine:    url('/public/images/R06A1589r.jpeg');
+  --img-events:  url('/public/images/untitled-31.jpeg');
   --img-wedding: url('/public/images/untitled-985.jpeg');
   --img-pond:    url('/public/images/IMG_4007.jpeg');
-  --img-sign:    url('/public/images/FR-snow-entrance-sign.jpg');
+  --img-sign:    url('/public/images/AS259819.jpeg');
 }
 
 /* ── RESET ── */
@@ -71,7 +125,8 @@ nav.solid {
   box-shadow:0 1px 0 rgba(0,0,0,.07);
 }
 .nav-logo { height:34px; transition:filter .35s; }
-nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
+.nav-press { height:48px; width:auto; transition:filter .35s; margin-top:4px; }
+nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
 
 .nav-links {
   display:flex; align-items:center; gap:30px; list-style:none;
@@ -83,42 +138,6 @@ nav:not(.solid) .nav-logo { filter:brightness(0) invert(1); }
 nav.solid .nav-links a { color:var(--grey); }
 .nav-links a:hover { color:#fff; }
 nav.solid .nav-links a:hover { color:var(--teal); }
-
-/* Mobile overlay menu */
-
-  .nav-links > li > a {
-    display:block; padding:16px 0;
-    font-size:13px; letter-spacing:2px; text-transform:uppercase;
-    color:rgba(255,255,255,0.85) !important;
-    border-bottom:1px solid rgba(255,255,255,0.07);
-  }
-  .nav-links.open .has-drop .drop-menu {
-    display:block; position:static; transform:none;
-    background:transparent; box-shadow:none; border:none;
-    padding:0 0 8px 16px; min-width:unset;
-  }
-  .nav-links .has-drop .drop-menu li a {
-    color:rgba(115,152,133,0.85) !important;
-    font-size:11px; padding:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    display:block;
-  }
-  .nav-links .nav-cta {
-    background:var(--teal) !important; color:#fff !important;
-    border-radius:4px !important; padding:14px 18px !important;
-    text-align:center; margin-top:16px; display:block;
-  }
-  .hamburger {
-  display:none; flex-direction:column; gap:5px;
-  cursor:pointer; padding:10px;
-  background:none; border:none;
-  position:relative; z-index:9999;
-  pointer-events:auto;
-  min-width:44px; min-height:44px;
-  align-items:center; justify-content:center;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
 
 /* ── BUTTONS ── */
 .btn-fill {
@@ -388,7 +407,7 @@ h1 em { font-style:normal; color:#a8d4be; }
 
 /* ── EVENTS BANNER ── */
 .events-banner {
-  position:relative; height:460px;
+  position:relative; min-height:460px;
   display:flex; align-items:center; justify-content:center; overflow:hidden;
 }
 .eb-bg {
@@ -597,6 +616,8 @@ footer { background:var(--black); color:rgba(255,255,255,.45); padding:52px 56px
 .f-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
 .f-col ul li a { font-size:12px; transition:color .2s; }
 .f-col ul li a:hover { color:#fff; }
+.f-stamp { text-align:center; padding:32px 0 12px; }
+.f-press { height:90px; width:auto; filter:brightness(0) invert(1); opacity:.3; }
 .f-bottom {
   border-top:1px solid rgba(255,255,255,.07); padding-top:24px;
   display:flex; justify-content:space-between; align-items:center;
@@ -693,11 +714,11 @@ nav.solid .hamburger span { background: #333; }
 .has-drop { position: relative; cursor: pointer; }
 .drop-menu {
   display: none;
-  position: absolute; top: calc(100% + 8px); left: 50%;
+  position: absolute; top: 100%; left: 50%;
   transform: translateX(-50%);
   background: #fff; border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0,0,0,.12);
-  padding: 8px 0; min-width: 190px;
+  padding: 16px 0 8px; min-width: 190px;
   list-style: none; z-index: 9100;
 }
 .has-drop:hover .drop-menu { display: block; }
@@ -745,7 +766,7 @@ nav.solid .hamburger span { background: #333; }
     background-size: cover !important;
   }
   /* Events banner — FR_Outside_LiveMusic */
-  .events-banner { height: 340px !important; }
+  .events-banner { min-height: 340px !important; }
   .events-banner {
     background-position: center 25% !important;
     background-size: cover !important;
@@ -762,12 +783,79 @@ nav.solid .hamburger span { background: #333; }
     background-position: center 45% !important;
     background-size: cover !important;
   }
+  /* Wines section — stack to single column */
+  .wines { padding: 60px 24px !important; }
+  .wines-inner { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .wines-img { height: 320px !important; }
+  .wines-img-bg {
+    background-position: center 40% !important;
+    background-size: cover !important;
+  }
+  /* Hero body — reduce side padding so headline doesn't over-wrap */
+  .hero-body { padding: 0 24px 80px !important; }
 }
 
 @media (max-width: 480px) {
   .hero-bg { background-position: 55% center !important; }
+  .hero-body { padding: 0 20px 60px !important; }
   .story-img { height: 280px !important; }
   .photo-break { height: 220px !important; }
+  .wines-img { height: 260px !important; }
+}
+
+/* ── MOBILE LAYOUT — reduce vertical length ── */
+@media (max-width: 767px) {
+  /* Strip — halve item padding (decorative spacer row) */
+  .strip-item { padding: 10px 14px; }
+
+  /* Our Story — stack image above text, tighten internal spacing */
+  .story { grid-template-columns: 1fr !important; }
+  .story-img { min-height: 280px !important; }
+  .story-content { padding: 52px 24px !important; }
+  .story-quote { margin: 16px 0 !important; }
+  .owners { margin-top: 20px !important; padding-top: 16px !important; }
+
+  /* Experience — reduce section padding ~29% */
+  .experience { padding: 68px 24px !important; }
+  .exp-header { margin-bottom: 40px !important; }
+
+  /* Private Events — reduce padding, stack split, collapse packages to 1 col */
+  .private { padding: 68px 24px !important; }
+  .private-split {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    margin-bottom: 36px !important;
+  }
+  .packages { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+  /* Grounds — stack image above content, reduce padding ~30% */
+  .grounds-inner { grid-template-columns: 1fr !important; }
+  .grounds-content { padding: 56px 24px !important; }
+  /* Stats row: confirm 2×2 grid (already 1fr 1fr at desktop, stays that way) */
+  .facts {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+    margin-top: 28px !important;
+  }
+
+  /* Reviews — reduce padding ~29% */
+  .reviews { padding: 68px 24px !important; }
+  .reviews-header { margin-bottom: 36px !important; }
+
+  /* Visit — stack image above content, reduce padding ~30% */
+  .visit { grid-template-columns: 1fr !important; }
+  .visit-img { min-height: 240px !important; }
+  .visit-content { padding: 52px 24px !important; }
+
+  /* Fruitful Vine — reduce padding ~29% */
+  .fruitful { padding: 40px 24px !important; }
+
+  /* Newsletter — reduce padding ~30% */
+  .newsletter { padding: 50px 24px !important; }
+
+  /* Footer — reduce padding ~30% */
+  footer { padding: 36px 24px 20px !important; }
 }
 
 </style>
@@ -777,9 +865,10 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="/" style="line-height:0"><img class="nav-logo"
-    src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-    alt="Free Run Cellars"></a>
+  <a href="/" style="line-height:0;display:flex;align-items:center;gap:12px;">
+    <img class="nav-press" src="/public/images/FR_WinePress.png" alt="">
+    <img class="nav-logo" src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+  </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="pages/about.html">Our Story</a></li>
     <li><a href="pages/wines.html">Wines</a></li>
@@ -792,7 +881,7 @@ nav.solid .hamburger span { background: #333; }
       </ul>
     </li>
     <li><a href="pages/gallery.html">Gallery</a></li>
-    <li><a href="pages/contact.html">Visit Us</a></li>
+    <li><a href="pages/contact.html">Visit &amp; Contact</a></li>
     <li><a href="pages/reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
   <button class="hamburger" id="burger" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
@@ -964,6 +1053,11 @@ nav.solid .hamburger span { background: #333; }
     <p class="s-label lt center">Live Music &amp; Events</p>
     <h2 class="on-dark">Something's always <em>happening</em></h2>
     <p>From laid-back Sunday sessions to ticketed special events, Free Run brings the best of Southwest Michigan's music scene to the vineyard patio every week.</p>
+    <figure style="margin:28px auto 32px;max-width:600px;width:100%;text-align:center;">
+      <img src="/public/images/IMG_8852.jpeg" alt="Johnny performing live music at Free Run Cellars"
+        style="width:100%;border-radius:12px;display:block;">
+      <figcaption style="margin-top:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);">Live Music Every Sunday</figcaption>
+    </figure>
     <a href="pages/events-calendar.html" class="btn-fill">View Upcoming Events</a>
   </div>
 </section>
@@ -1127,7 +1221,7 @@ nav.solid .hamburger span { background: #333; }
     <p class="fruitful-body">
       Our friends at <strong>Fruitful Vine Tours</strong> run guided wine tours through 
       Southwest Michigan wine country — including stops at Free Run Cellars. Sit back, 
-      enjoy the scenery, and let them handle the details. Tasting fees, lunch, and the 
+      enjoy the scenery, and let them handle the details. Tasting fees and the
       driving are all taken care of.
     </p>
   </div>
@@ -1239,6 +1333,9 @@ nav.solid .hamburger span { background: #333; }
       </ul>
     </div>
   </div>
+  <div class="f-stamp">
+    <img class="f-press" src="/public/images/FR_WinePress.png" alt="">
+  </div>
   <div class="f-bottom">
     <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
     <span><a href="/privacy">Privacy Policy</a> · <a href="/accessibility">Accessibility</a></span>
@@ -1253,7 +1350,7 @@ nav.solid .hamburger span { background: #333; }
 
 // ── Age Gate ──
 (function() {
-  if (sessionStorage.getItem('ageVerified')) return;
+  if (localStorage.getItem('ageVerified')) return;
   const gate = document.createElement('div');
   gate.id = 'age-gate';
   gate.innerHTML = `
@@ -1279,7 +1376,7 @@ nav.solid .hamburger span { background: #333; }
 })();
 
 function ageYes() {
-  sessionStorage.setItem('ageVerified', '1');
+  localStorage.setItem('ageVerified', '1');
   document.getElementById('age-gate').style.opacity = '0';
   document.getElementById('age-gate').style.transition = 'opacity .4s';
   setTimeout(() => document.getElementById('age-gate').remove(), 400);
@@ -1319,22 +1416,6 @@ const onScroll = () => nav.classList.toggle('solid', scrollY > 50);
 addEventListener('scroll', onScroll, { passive:true });
 onScroll();
 
-
-// Close when a real link is tapped
-links.addEventListener('click', function(e) {
-  if (e.target.tagName === 'A' && e.target.getAttribute('href') !== '#') {
-    links.classList.remove('open');
-    burger.classList.remove('open');
-  }
-});
-
-// Close on outside tap
-document.addEventListener('click', function(e) {
-  if (links.classList.contains('open') && !links.contains(e.target) && !burger.contains(e.target)) {
-    links.classList.remove('open');
-    burger.classList.remove('open');
-  }
-});
 
 // Scroll reveal
 const io = new IntersectionObserver(entries => {

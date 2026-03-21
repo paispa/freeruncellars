@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  FREE RUN CELLARS — OWNERS CIRCLE                        ║
+  ║  pages/circle.html                                       ║
+  ║                                                          ║
+  ║  ⚠️  NOT linked from main site. Share URL directly.      ║
+  ║      URL: freeruncellars.com/pages/circle                ║
+  ║                                                          ║
+  ║  ⚠️  LEGAL REVIEW NEEDED before wide distribution:       ║
+  ║  — Membership terms & refund policy                      ║
+  ║  — "Dividends into credits" language                     ║
+  ║  — Michigan winery membership regulations                ║
+  ║                                                          ║
+  ║  BREVO SETUP:                                            ║
+  ║  1. Create "Owners Circle" list in Brevo                 ║
+  ║  2. Add custom attributes: INTERESTS, JOIN_DATE,         ║
+  ║     CIRCLE_MESSAGE, MEMBERSHIP_TYPE                      ║
+  ║  3. Set BREVO_API_KEY + BREVO_CIRCLE_LIST_ID in Vercel   ║
+  ║  4. Create welcome automation triggered by list add      ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+
+<html lang="en">
+<head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-T51K1F9DVS');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Owners Circle – Free Run Cellars</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:       #537f71;
+    --teal-dark:  #3d6155;
+    --teal-light: #7aab9a;
+    --bg:         #000000;
+    --text:       #e8f0eb;
+    --muted:      #537f71;
+    --cream:      #ffffff;
+    --gold:       #c9a96e;
+    --gold-dim:   rgba(201,169,110,0.25);
+    --gold-glow:  rgba(201,169,110,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Jost', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(83,127,113,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 70%,  rgba(201,169,110,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 35%,  rgba(61,97,85,0.05) 0%, transparent 50%);
+  }
+
+  .grain {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.022;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 740px; margin: 0 auto;
+    padding: 64px 28px 100px;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Header ── */
+  .page-header {
+    text-align: center; margin-bottom: 56px;
+    animation: fadeDown 1s ease both;
+  }
+
+  .site-logo {
+    height: 32px; filter: brightness(0) invert(1); opacity: 0.65;
+    margin: 0 auto 36px; display: block;
+  }
+
+  .ornament { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 20px; }
+  .orn-line { height: 1px; width: 52px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .orn-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
+  .orn-diamond { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); opacity: 0.65; }
+
+  .circle-eyebrow {
+    font-size: 8px; letter-spacing: 4.5px; text-transform: uppercase;
+    color: var(--gold); opacity: 0.75; margin-bottom: 14px; font-weight: 600;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(46px, 9vw, 68px);
+    font-weight: 300; font-style: italic;
+    color: var(--cream); line-height: 1.05; letter-spacing: 0.5px; margin-bottom: 16px;
+  }
+  .page-title .gold { color: var(--gold); font-weight: 600; }
+
+  .costco-line {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; font-style: italic; font-weight: 300;
+    color: rgba(232,240,235,0.4); letter-spacing: 0.3px;
+  }
+
+  /* ── Section labels ── */
+  .section-eyebrow {
+    font-size: 8px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--gold); opacity: 0.7; text-align: center; margin-bottom: 8px; font-weight: 600;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 300; font-style: italic;
+    color: var(--cream); text-align: center; margin-bottom: 32px;
+  }
+
+  /* ── Letter ── */
+  .letter { margin-bottom: 68px; animation: fadeUp 0.9s 0.15s ease both; }
+
+  .letter-card {
+    background: linear-gradient(155deg, rgba(12,22,16,0.97), rgba(3,6,4,0.97));
+    border: 1px solid rgba(201,169,110,0.14);
+    border-radius: 20px; padding: 50px 46px;
+    position: relative; overflow: hidden;
+  }
+  .letter-card::before {
+    content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  .letter-card::after {
+    content: ''; position: absolute; bottom: 0; left: 8%; right: 8%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(83,127,113,0.18), transparent);
+  }
+
+  .letter-drop {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 140px; font-weight: 600; font-style: italic;
+    color: rgba(201,169,110,0.05);
+    position: absolute; top: -14px; left: 16px;
+    line-height: 1; user-select: none; pointer-events: none;
+  }
+
+  .letter-greeting {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px; font-style: italic; font-weight: 300;
+    color: var(--teal-light); margin-bottom: 22px;
+  }
+
+  .letter-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18.5px; font-weight: 300; font-style: italic;
+    line-height: 1.88; color: rgba(232,240,235,0.82);
+    position: relative; z-index: 1;
+  }
+  .letter-body p { margin-bottom: 18px; }
+  .letter-body p:last-child { margin-bottom: 0; }
+  .letter-body strong { font-weight: 600; font-style: normal; color: var(--cream); }
+  .letter-body .accent { color: var(--gold); }
+
+  .letter-sig {
+    margin-top: 30px; padding-top: 26px;
+    border-top: 1px solid rgba(83,127,113,0.13);
+    display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  }
+  .sig-names { font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 400; font-style: italic; color: var(--cream); line-height: 1.3; }
+  .sig-role  { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+  .sig-estate { text-align: right; font-size: 9px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(201,169,110,0.45); line-height: 1.9; }
+
+  /* ── How it works ── */
+  .how-section { margin-bottom: 68px; animation: fadeUp 0.9s 0.3s ease both; }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  .step-card {
+    background: linear-gradient(160deg, rgba(10,20,14,0.96), rgba(0,0,0,0.96));
+    border: 1px solid rgba(83,127,113,0.14);
+    border-radius: 14px; padding: 22px 18px; text-align: center;
+    position: relative; overflow: hidden; transition: all 0.28s ease;
+  }
+  .step-card:hover { border-color: rgba(201,169,110,0.22); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.4); }
+  .step-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,110,0.18), transparent);
+  }
+  .step-num  { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; font-style: italic; color: var(--gold); opacity: 0.35; line-height: 1; margin-bottom: 10px; }
+  .step-text { font-size: 11px; color: rgba(232,240,235,0.62); line-height: 1.65; }
+  .step-text strong { color: var(--cream); font-weight: 600; display: block; margin-bottom: 3px; font-size: 12px; }
+
+  /* ── Pricing ── */
+  .pricing-section { margin-bottom: 68px; animation: fadeUp 0.9s 0.42s ease both; }
+
+  .pricing-card {
+    background: linear-gradient(155deg, rgba(15,28,20,0.98), rgba(3,8,5,0.98));
+    border: 1px solid rgba(201,169,110,0.22);
+    border-radius: 22px; padding: 44px 40px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .pricing-card::before {
+    content: ''; position: absolute; top: 0; left: 6%; right: 6%; height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent);
+  }
+  .pricing-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .pricing-watermark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 200px; font-weight: 700; font-style: italic;
+    color: rgba(201,169,110,0.03);
+    position: absolute; bottom: -30px; right: -10px;
+    line-height: 1; user-select: none; pointer-events: none; letter-spacing: -8px;
+  }
+
+  .price-eyebrow  { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.65; margin-bottom: 18px; }
+  .price-amount   { font-family: 'Cormorant Garamond', serif; font-size: clamp(64px, 12vw, 88px); font-weight: 300; color: var(--cream); line-height: 1; margin-bottom: 4px; position: relative; z-index: 1; }
+  .price-amount sup { font-size: 0.38em; vertical-align: super; color: var(--gold); }
+  .price-period   { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 28px; }
+  .price-divider  { width: 60px; height: 1px; margin: 0 auto 28px; background: linear-gradient(90deg, transparent, var(--gold-dim), transparent); }
+
+  .price-includes       { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .price-includes-label { font-size: 11px; color: rgba(232,240,235,0.5); letter-spacing: 0.5px; }
+  .credit-pill          { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.3); border-radius: 40px; padding: 6px 16px; font-size: 13px; font-weight: 700; color: var(--gold); }
+
+  .price-subtext { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-style: italic; font-weight: 300; color: rgba(232,240,235,0.45); line-height: 1.7; max-width: 440px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* ── Perks ── */
+  .perks-section { margin-bottom: 68px; animation: fadeUp 0.9s 0.54s ease both; }
+
+  .perks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .perk-card {
+    background: linear-gradient(145deg, rgba(10,20,14,0.96), rgba(0,0,0,0.96));
+    border: 1px solid rgba(83,127,113,0.14);
+    border-radius: 16px; padding: 26px 22px;
+    position: relative; overflow: hidden; transition: all 0.28s ease;
+  }
+  .perk-card:hover { border-color: rgba(201,169,110,0.22); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.4); }
+  .perk-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,110,0.15), transparent);
+  }
+  .perk-card.wide { grid-column: span 2; display: flex; align-items: flex-start; gap: 22px; }
+
+  .perk-badge { display: inline-block; background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.25); border-radius: 20px; padding: 3px 10px; font-size: 7.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+
+  .perk-icon { font-size: 26px; margin-bottom: 14px; display: block; }
+  .perk-card.wide .perk-icon { font-size: 32px; margin-bottom: 0; flex-shrink: 0; margin-top: 4px; }
+
+  .perk-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; font-style: italic; color: var(--cream); margin-bottom: 8px; line-height: 1.25; text-align: left; word-spacing: normal; letter-spacing: normal; }
+  .perk-desc { font-size: 11px; color: var(--muted); line-height: 1.75; text-align: left; word-spacing: normal; letter-spacing: normal; }
+  .perk-desc strong { color: rgba(232,240,235,0.75); font-weight: 600; }
+  .perk-detail { display: inline-block; margin-top: 10px; font-size: 9.5px; letter-spacing: 1px; color: rgba(201,169,110,0.55); border-top: 1px solid rgba(201,169,110,0.1); padding-top: 8px; width: 100%; }
+
+  /* ── Ramato ── */
+  .ramato-section { margin-bottom: 68px; animation: fadeUp 0.9s 0.66s ease both; }
+
+  .ramato-card {
+    background: linear-gradient(155deg, rgba(18,30,22,0.98), rgba(3,8,5,0.98));
+    border: 1px solid rgba(201,169,110,0.18);
+    border-radius: 20px; padding: 44px 40px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .ramato-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .ramato-bg-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(70px, 14vw, 120px); font-weight: 700; font-style: italic;
+    color: rgba(201,169,110,0.05);
+    position: absolute; bottom: -8px; right: 10px;
+    line-height: 1; user-select: none; pointer-events: none; letter-spacing: -3px;
+  }
+  .ramato-wines { display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap; position: relative; z-index: 1; }
+  .wine-pill    { background: rgba(201,169,110,0.07); border: 1px solid rgba(201,169,110,0.22); border-radius: 40px; padding: 8px 20px; font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; color: var(--gold); }
+  .ramato-body  { font-family: 'Cormorant Garamond', serif; font-size: 16.5px; font-style: italic; font-weight: 300; color: rgba(232,240,235,0.58); line-height: 1.85; max-width: 480px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* ── Dividend ── */
+  .dividend-section { margin-bottom: 68px; animation: fadeUp 0.9s 0.76s ease both; }
+
+  .dividend-card {
+    background: linear-gradient(145deg, rgba(10,20,14,0.97), rgba(0,0,0,0.97));
+    border: 1px solid rgba(83,127,113,0.18);
+    border-radius: 16px; padding: 28px 32px;
+    display: flex; gap: 22px; align-items: flex-start;
+    position: relative; overflow: hidden;
+  }
+  .dividend-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(83,127,113,0.25), transparent);
+  }
+  .dividend-icon  { font-size: 28px; flex-shrink: 0; margin-top: 2px; opacity: 0.8; }
+  .dividend-label { font-size: 8px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .legal-tag      { background: rgba(224,92,92,0.08); border: 1px solid rgba(224,92,92,0.2); border-radius: 4px; padding: 1px 6px; font-size: 7px; letter-spacing: 1px; color: #e05c5c; }
+  .dividend-text  { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; font-weight: 300; color: rgba(232,240,235,0.68); line-height: 1.75; }
+
+  /* ── Why join ── */
+  .why-section { margin-bottom: 68px; animation: fadeUp 0.9s 0.86s ease both; }
+  .why-card { background: linear-gradient(155deg, rgba(10,20,14,0.97), rgba(0,0,0,0.97)); border: 1px solid rgba(83,127,113,0.14); border-radius: 18px; padding: 36px 38px; position: relative; overflow: hidden; text-align: center; }
+  .why-card::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(83,127,113,0.22), transparent); }
+  .why-body { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; font-weight: 300; color: rgba(232,240,235,0.7); line-height: 1.8; max-width: 520px; margin: 0 auto; }
+  .why-body strong { color: var(--cream); font-weight: 600; font-style: normal; }
+
+  /* ── Form ── */
+  .form-section { animation: fadeUp 0.9s 0.96s ease both; }
+
+  .form-card { background: linear-gradient(155deg, rgba(10,20,14,0.97), rgba(0,0,0,0.97)); border: 1px solid rgba(83,127,113,0.18); border-radius: 20px; padding: 42px 40px; position: relative; overflow: hidden; }
+  .form-card::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, var(--teal-dark), var(--teal), var(--teal-dark), transparent); }
+
+  .form-intro { font-family: 'Cormorant Garamond', serif; font-size: 16.5px; font-style: italic; font-weight: 300; color: rgba(232,240,235,0.52); line-height: 1.8; text-align: center; margin-bottom: 30px; }
+
+  .field { margin-bottom: 16px; }
+
+  label { display: block; font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    width: 100%; background: rgba(255,255,255,0.025); border: 1px solid rgba(83,127,113,0.18);
+    border-radius: 10px; color: var(--text); font-family: 'Jost', sans-serif; font-size: 13px;
+    padding: 13px 16px; transition: border-color 0.2s, background 0.2s; outline: none; -webkit-appearance: none;
+  }
+  input:focus, textarea:focus { border-color: rgba(83,127,113,0.48); background: rgba(83,127,113,0.04); }
+  textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .interest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .int-item { display: flex; align-items: flex-start; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(83,127,113,0.12); border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: border-color 0.2s; }
+  .int-item:hover { border-color: rgba(83,127,113,0.28); }
+  .int-item input[type="checkbox"] { accent-color: var(--teal); cursor: pointer; flex-shrink: 0; margin-top: 1px; }
+  .int-label { font-size: 11px; color: rgba(232,240,235,0.62); line-height: 1.45; }
+
+  .btn-submit { width: 100%; background: linear-gradient(135deg, var(--teal-dark), var(--teal)); border: none; border-radius: 12px; color: #fff; font-family: 'Jost', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 18px; cursor: pointer; transition: all 0.25s; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(83,127,113,0.28); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .form-success { display: none; text-align: center; padding: 16px 0 8px; animation: fadeUp 0.5s ease both; }
+  .success-icon  { font-size: 38px; margin-bottom: 16px; display: block; }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; font-style: italic; color: var(--cream); margin-bottom: 10px; }
+  .success-body  { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; font-weight: 300; color: rgba(232,240,235,0.55); line-height: 1.75; }
+
+  .form-error { display: none; margin-top: 12px; padding: 12px 16px; background: rgba(224,92,92,0.06); border: 1px solid rgba(224,92,92,0.18); border-radius: 8px; font-size: 11px; color: #e05c5c; line-height: 1.6; }
+
+  .spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff; animation: spin 0.7s linear infinite; display: inline-block; }
+
+  /* ── Wine press logo ── */
+  .press-header { display: block; margin: 0 auto 28px; width: 120px; opacity: 0.55; filter: brightness(0) invert(1); }
+  .press-footer { display: block; margin: 0 auto 18px; width: 90px; opacity: 0.3; filter: brightness(0) invert(1); }
+
+  /* ── Footer ── */
+  .footer-note { text-align: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid rgba(83,127,113,0.07); }
+  .footer-note p { font-size: 8.5px; color: rgba(83,127,113,0.32); letter-spacing: 2px; text-transform: uppercase; line-height: 2.1; }
+
+  /* ── Responsive ── */
+  @media (max-width: 767px) {
+    .page        { padding: 48px 20px 80px; }
+    .letter-card { padding: 30px 22px; }
+    .steps       { grid-template-columns: 1fr 1fr; }
+    .pricing-card { padding: 32px 24px; }
+    .perks-grid  { grid-template-columns: 1fr; }
+    .perk-card.wide { grid-column: auto; flex-direction: column; }
+    .ramato-card { padding: 28px 22px; }
+    .form-card   { padding: 28px 20px; }
+    .field-row   { grid-template-columns: 1fr; }
+    .interest-grid { grid-template-columns: 1fr; }
+    .letter-sig  { flex-direction: column; }
+    .sig-estate  { text-align: left; }
+    .dividend-card { flex-direction: column; gap: 12px; }
+    .why-card    { padding: 28px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="grain"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <img class="site-logo"
+      src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+      alt="Free Run Cellars">
+    <div class="ornament">
+      <div class="orn-line"></div>
+      <div class="orn-diamond"></div>
+      <div class="orn-line r"></div>
+    </div>
+    <img class="press-header"
+      src="/public/images/FR_WinePress.png"
+      alt="">
+    <div class="circle-eyebrow">A private invitation</div>
+    <div class="page-title">The Owners<br><span class="gold">Circle</span></div>
+    <div class="costco-line">Think of it like Costco — but for wine.</div>
+  </div>
+
+  <!-- Letter -->
+  <div class="letter">
+    <div class="letter-card">
+      <div class="letter-drop">O</div>
+      <div class="letter-greeting">To our most cherished friends,</div>
+      <div class="letter-body">
+        <p>We didn't just buy a winery. We bought a home — four acres of Pinot Gris vines, a walnut grove, a pond full of turtles, and a story that was waiting to be continued. We moved in, put down roots, and started making wine that is genuinely, entirely ours.</p>
+        <p>The <span class="accent">Owners Circle</span> is our way of bringing a handful of people along for the ride — not as customers, but as <strong>fellow travelers</strong> in this journey. You'll know what we know, when we know it. First access to wines straight from our vines. A quiet seat at the table before the doors open to the public.</p>
+        <p>You pay an annual membership. We give you <strong>$150 in Free Run Credits</strong> right back — to spend on wine, tastings, events, or merchandise. After that, everything is discounted. And when Free Run performs well, we intend to share a piece of that back with you too.</p>
+        <p>If you visit us more than a few times a year, this pays for itself. Beyond the savings, you become part of something closer — connected to the vineyard, the wine, and the people behind it.</p>
+      </div>
+      <div class="letter-sig">
+        <div>
+          <div class="sig-names">Trish &amp; Prashanth</div>
+          <div class="sig-role">Owners · Free Run Cellars</div>
+        </div>
+        <div class="sig-estate">Berrien Springs, Michigan<br>Est. on Burgoyne Road</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-section">
+    <div class="section-eyebrow">Simple as it gets</div>
+    <div class="section-title">How it works</div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Join the Circle</strong>One annual membership. One decision. Year-long value.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>$150 back instantly</strong>Free Run Credits applied to your account right away.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Enjoy all year long</strong>Discounts, private events, early releases — yours.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Save every visit</strong>The more you come, the more it pays for itself.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="pricing-section">
+    <div class="pricing-card">
+      <div class="pricing-watermark">$249</div>
+      <div class="price-eyebrow">Annual membership</div>
+      <div class="price-amount"><sup>$</sup>249</div>
+      <div class="price-period">per year</div>
+      <div class="price-divider"></div>
+      <div class="price-includes">
+        <span class="price-includes-label">Includes</span>
+        <span class="credit-pill">✦ $150 in Free Run Credits</span>
+      </div>
+      <div class="price-subtext">
+        That's $150 back immediately — wine, tastings, events, merchandise.
+        Everything after that is discounted. Making your real out-of-pocket just $99 a year.
+      </div>
+    </div>
+  </div>
+
+  <!-- Perks -->
+  <div class="perks-section">
+    <div class="section-eyebrow">What you receive</div>
+    <div class="section-title">Being in the circle</div>
+
+    <div class="perks-grid">
+
+      <div class="perk-card wide">
+        <span class="perk-icon">🪙</span>
+        <div>
+          <div class="perk-badge">Immediate value</div>
+          <div class="perk-name">$150 in Free Run Credits</div>
+          <div class="perk-desc">Spend them on <strong>wine, tastings, events, or merchandise</strong> — however and whenever you like. Credits never expire within your membership year.</div>
+          <span class="perk-detail">✦ Applied to your account on the day you join</span>
+        </div>
+      </div>
+
+      <div class="perk-card">
+        <span class="perk-icon">🍷</span>
+        <div class="perk-badge">Always on</div>
+        <div class="perk-name">10% off — for you &amp; your people</div>
+        <div class="perk-desc">After credits are used, <strong>10% off all bottles, tastings &amp; events.</strong> Extends to friends and family you bring — you become the person who knows the place.</div>
+        <span class="perk-detail">✦ No limit on who you share it with</span>
+      </div>
+
+
+      <div class="perk-card">
+        <span class="perk-icon">🎟️</span>
+        <div class="perk-badge">Before anyone else</div>
+        <div class="perk-name">First pick on event tickets</div>
+        <div class="perk-desc">When free tickets for live music or special events become available, Circle members are <strong>notified and given first access</strong> — before any public announcement.</div>
+        <span class="perk-detail">✦ Private window before public release</span>
+      </div>
+
+      <div class="perk-card">
+        <span class="perk-icon">✦</span>
+        <div class="perk-badge">Exclusive · 2x per year</div>
+        <div class="perk-name">Owner-only events &amp; experiences</div>
+        <div class="perk-desc">Two intimate evenings at the estate each year — <strong>barrel previews, harvest gatherings, curated pairings.</strong> Not announced anywhere publicly.</div>
+        <span class="perk-detail">✦ Invitation-only, 2 events per year</span>
+      </div>
+
+      <div class="perk-card">
+        <span class="perk-icon">🌿</span>
+        <div class="perk-badge">From us, personally</div>
+        <div class="perk-name">Behind-the-scenes from the estate</div>
+        <div class="perk-desc">Harvest updates, what's fermenting, a difficult vintage, a beautiful one. <strong>The real story as it happens</strong> — from Trish and Prashanth directly.</div>
+        <span class="perk-detail">✦ Seasonal updates, year-round</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Ramato -->
+  <div class="ramato-section">
+    <div class="ramato-card">
+      <div class="ramato-bg-word">Ramato</div>
+      <div class="section-eyebrow">2026 · Estate wines · Circle members first</div>
+      <div class="section-title" style="margin-bottom:8px;">Early access to our first estate wines</div>
+      <div class="ramato-wines">
+        <div class="wine-pill">Orange Ramato</div>
+        <div class="wine-pill">Cabernet Blanc</div>
+      </div>
+      <div class="ramato-body">
+        Four acres of Pinot Gris, grown on our land, made our way. The Ramato —
+        a skin-contact orange wine — is the first wine that is entirely, authentically ours.
+        Circle members will be the first to know when it's ready, and the first offered a bottle.
+        The Cabernet Blanc follows close behind.
+      </div>
+    </div>
+  </div>
+
+  <!-- Dividend -->
+  <div class="dividend-section">
+    <div class="dividend-card">
+      <div class="dividend-icon">📈</div>
+      <div>
+        <div class="dividend-label">
+          A little something extra
+          <span class="legal-tag">⚠ Pending legal review</span>
+        </div>
+        <div class="dividend-text">
+          When Free Run Cellars performs well, we intend to share that with the people who helped make it happen.
+          Based on how the winery performs each year, we'll convert a share of our results into
+          additional credits for Circle members. You supported us early — that shouldn't go unnoticed.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why join -->
+  <div class="why-section">
+    <div class="why-card">
+      <div class="why-body">
+        <strong>"If you visit Free Run more than a few times a year, this pays for itself.</strong>
+        Beyond the savings, you become part of something closer — connected to
+        the vineyard, the wine, and the people behind it."
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="form-section">
+    <div class="section-eyebrow">Express your interest</div>
+    <div class="section-title">Join the Circle</div>
+
+    <div class="form-card">
+      <div class="form-intro">
+        We'll reach out personally. This isn't a mailing list —
+        it's a conversation between people who care about the same things.
+      </div>
+
+      <div id="formWrap">
+        <!-- Honeypot: hidden from real users, bots fill it in -->
+        <div style="display:none;" aria-hidden="true">
+          <label>Leave this blank</label>
+          <input type="text" id="_hp" name="_hp" autocomplete="off" tabindex="-1">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>First name *</label>
+            <input type="text" id="firstName" placeholder="Jane">
+          </div>
+          <div class="field">
+            <label>Last name</label>
+            <input type="text" id="lastName" placeholder="Doe">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Email address *</label>
+          <input type="email" id="email" placeholder="jane@example.com">
+        </div>
+
+        <div class="field">
+          <label>Phone *</label>
+          <input type="tel" id="phone" placeholder="(269) 555-0100">
+        </div>
+
+        <div class="field">
+          <label>What draws you to the circle? <span style="color:rgba(83,127,113,0.4);font-weight:400;">(optional)</span></label>
+          <textarea id="message" placeholder="I've been coming out on Sundays for a couple of years and love what you're building…"></textarea>
+        </div>
+
+        <div class="field">
+          <label>What interests you most?</label>
+          <div class="interest-grid">
+            <label class="int-item"><input type="checkbox" value="ramato">  <span class="int-label">First access to new wines</span></label>
+            <label class="int-item"><input type="checkbox" value="credits"> <span class="int-label">$150 in credits + ongoing discount</span></label>
+            <label class="int-item"><input type="checkbox" value="events">  <span class="int-label">Private tastings &amp; owner-only events</span></label>
+            <label class="int-item"><input type="checkbox" value="tickets"> <span class="int-label">Early access to live music tickets</span></label>
+            <label class="int-item"><input type="checkbox" value="updates"> <span class="int-label">Behind-the-scenes vineyard updates</span></label>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="submitForm()">
+          <span id="submitBtnText">✦ Request to Join the Circle</span>
+        </button>
+
+        <div class="form-error" id="formError"></div>
+      </div>
+
+      <div class="form-success" id="formSuccess">
+        <span class="success-icon">🌿</span>
+        <div class="success-title">You're on our radar.</div>
+        <div class="success-body">
+          Trish or Prashanth will reach out to you personally.<br>
+          Thank you for wanting to be part of this with us.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <img class="press-footer"
+      src="/public/images/FR_WinePress.png"
+      alt="">
+    <p>
+      Free Run Cellars · Local · Independent · Community Driven<br>
+      10062 Burgoyne Rd, Berrien Springs MI · freeruncellars.com<br>
+      This page is private and shared by invitation only
+    </p>
+  </div>
+
+</div>
+
+<script>
+async function submitForm() {
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName  = document.getElementById('lastName').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const phone     = document.getElementById('phone').value.trim();
+  const message   = document.getElementById('message').value.trim();
+
+  hideError();
+
+  if (!firstName)                     { showError('Please enter your first name.');        return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.');  return; }
+  if (!phone)                         { showError('Please enter your phone number.');       return; }
+
+  const interests = [...document.querySelectorAll('.interest-grid input:checked')].map(cb => cb.value);
+
+  const btn     = document.getElementById('submitBtn');
+  const btnText = document.getElementById('submitBtnText');
+  btn.disabled  = true;
+  btnText.innerHTML = '<div class="spinner"></div> Sending…';
+
+  try {
+    const res = await fetch('/api/circle-signup', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, email, phone, message, interests, _hp: document.getElementById('_hp').value }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Server error');
+    }
+
+    document.getElementById('formWrap').style.display    = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+
+  } catch (err) {
+    console.error('Submission error:', err);
+    showError(err.message || 'Something went wrong — please try again or email us at contact@frcwine.com');
+    btn.disabled  = false;
+    btnText.innerHTML = '✦ Request to Join the Circle';
+  }
+}
+
+function showError(msg) { const el = document.getElementById('formError'); el.textContent = msg; el.style.display = 'block'; }
+function hideError()    { document.getElementById('formError').style.display = 'none'; }
+</script>
+
+</body>
+</html>

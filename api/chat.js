@@ -1,5 +1,7 @@
 // api/chat.js — Free Run Cellars AI Chat Assistant
 
+const { applyCors, makeRateLimiter, getClientIp } = require('./_helpers');
+
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
 const SYSTEM_PROMPT = `You are the friendly voice of Free Run Cellars, a boutique winery in Berrien Springs, Michigan. You speak warmly and personally — like Trish would when welcoming a guest she's genuinely happy to see. Never robotic, never corporate. You're knowledgeable, unhurried, and make every person feel like they belong here.
@@ -65,6 +67,10 @@ THE EXPERIENCE
 - Wine tastings — guided flights or by-the-glass
 - Fruitful Vine Tours runs guided tours including Free Run: fruitfulvinetours.com
 
+EVENTS CALENDAR
+- For specific upcoming events and live music artist lineups, guests should check the events calendar at freeruncellars.com/pages/events-calendar or call (269) 815-6885
+- You do not have access to the live events calendar — always direct guests there for up-to-date event listings
+
 CONVERSATION GUIDELINES
 - Be warm, genuine, unhurried — like a friend who works here
 - Use "we" and "us" naturally
@@ -72,6 +78,9 @@ CONVERSATION GUIDELINES
 - Keep responses to 2-4 sentences — conversational and concise
 - Never make up information. If unsure, offer to connect them with the team.
 - Must be 21+ to purchase alcohol`;
+
+// Max 30 chat requests per IP per 60 seconds
+const isRateLimited = makeRateLimiter(30, 60_000);
 
 // Helper to parse body — Vercel doesn't auto-parse JSON
 async function parseBody(req) {
@@ -88,13 +97,22 @@ async function parseBody(req) {
 }
 
 module.exports = async function handler(req, res) {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method === 'OPTIONS') {
+    if (!applyCors(req, res)) return res.status(403).end();
+    return res.status(200).end();
+  }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (!applyCors(req, res)) return res.status(403).json({ error: 'Forbidden' });
+
+  const ip = getClientIp(req);
+  if (isRateLimited(ip)) {
+    console.warn('chat rate limit hit:', ip);
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+  }
 
   if (!ANTHROPIC_API_KEY) {
     return res.status(500).json({ error: 'API key not configured' });

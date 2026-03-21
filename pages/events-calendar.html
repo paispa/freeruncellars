@@ -1,9 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T51K1F9DVS');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Events – Free Run Cellars</title>
+<meta name="description" content="Upcoming events at Free Run Cellars in Berrien Springs, Michigan — live music, tastings, and special evenings at our boutique vineyard. 90 minutes from Chicago.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "Winery"],
+  "name": "Free Run Cellars",
+  "description": "Family-owned boutique winery in Berrien Springs, Michigan — 90 minutes from Chicago. Estate wines, live music Sundays, and private events.",
+  "url": "https://freeruncellars.com",
+  "logo": "https://freeruncellars.com/public/images/free-run-cellars-logo-horizontal-black-323a89.webp",
+  "image": "https://freeruncellars.com/public/images/AS259838.jpeg",
+  "telephone": "+12698156885",
+  "email": "contact@frcwine.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "10062 Burgoyne Road",
+    "addressLocality": "Berrien Springs",
+    "addressRegion": "MI",
+    "postalCode": "49103",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 41.9286,
+    "longitude": -86.3495
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday"], "opens": "14:00", "closes": "18:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "12:00", "closes": "19:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Sunday"], "opens": "14:00", "closes": "18:00" }
+  ],
+  "servesCuisine": "Wine",
+  "priceRange": "$$",
+  "sameAs": [
+    "https://g.page/r/CYbLnDx6hWxXEBM",
+    "https://www.facebook.com/freeruncellars",
+    "https://www.instagram.com/freeruncellars",
+    "https://drinkmichigan.com/collections/freeruncellars",
+    "https://business.harborcountry.org/list/member/freerun-cellars-1088",
+    "https://stjoetoday.com/member/free-run-cellars",
+    "https://swmichigan.org/member/free-run-cellars",
+    "https://www.tripadvisor.com/Attraction_Review-g41988-d1748268-Reviews-Free_Run_Cellars-Berrien_Springs_Berrien_County_Michigan.html",
+    "https://www.yelp.com/biz/free-run-cellars-berrien-springs"
+  ]
+}
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -34,7 +90,9 @@
     background: rgba(0,0,0,.85);
     box-shadow: 0 1px 0 rgba(115,152,133,.2);
   }
-  .nav-logo { height: 34px; filter: brightness(0) invert(1); }
+  .nav-logo { height:34px; transition:filter .35s; }
+  .nav-press { height:48px; width:auto; transition:filter .35s; margin-top:4px; }
+  nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
   .nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
   .nav-links a {
     font-size: 10.5px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
@@ -160,7 +218,7 @@
   /* ── Event card ── */
   .event-card {
     display: grid;
-    grid-template-columns: 80px 1fr 110px;
+    grid-template-columns: 80px 1fr;
     background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
     border: 1px solid rgba(115,152,133,0.18);
     border-radius: 14px;
@@ -228,38 +286,25 @@
     font-size: 9px; letter-spacing: 1px; color: var(--sage);
   }
 
-  /* Image */
-  .event-image {
-    flex-shrink: 0; position: relative; overflow: hidden;
-    background: rgba(115,152,133,0.04);
-  }
-  .event-image img {
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: top center;
-    display: block; transition: transform 0.4s ease;
-  }
-  .event-card:hover .event-image img { transform: scale(1.05); }
-  .event-image .placeholder {
-    width: 100%; height: 100%; min-height: 100px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 6px;
-  }
-  .placeholder-note { font-size: 22px; opacity: 0.15; }
-  .placeholder-initial {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px; font-weight: 300; font-style: italic;
-    color: rgba(115,152,133,0.25); line-height: 1;
+  /* ── Sold-out button ── */
+  .sold-out-btn {
+    display: inline-block; margin-top: 10px;
+    padding: 7px 16px;
+    background: #ece9e6; color: #aaa;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: 4px; cursor: not-allowed;
   }
 
-  /* ── Ticket badge ── */
-  .ticket-badge {
-    position: absolute; top: 10px; right: 10px;
-    background: rgba(115,152,133,0.15);
-    border: 1px solid rgba(115,152,133,0.3);
-    border-radius: 4px; padding: 2px 6px;
-    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--sage); font-weight: 600;
+  /* ── Event URL button ── */
+  .event-url-btn {
+    display: inline-block; margin-top: 10px;
+    padding: 7px 16px;
+    background: var(--sage); color: #000;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; border-radius: 4px;
+    transition: background 0.2s;
   }
+  .event-url-btn:hover { background: var(--sage-dark); color: #fff; }
 
   /* ── Intro text ── */
   .events-intro {
@@ -282,10 +327,83 @@
     letter-spacing: 2px; text-transform: uppercase; line-height: 2;
   }
 
+  /* ── Weather Strip ── */
+  #weatherStrip { margin-bottom: 32px; }
+
+  .weather-strip-title {
+    font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(115,152,133,0.4); text-align: center; margin-bottom: 12px;
+  }
+
+  .weather-cards {
+    display: flex; gap: 10px;
+    overflow-x: auto; scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .weather-cards::-webkit-scrollbar { display: none; }
+
+  .weather-card {
+    flex: 1; min-width: 110px;
+    background: rgba(10,20,14,0.7);
+    border: 1px solid rgba(115,152,133,0.18);
+    border-radius: 12px; padding: 14px 10px;
+    text-align: center; flex-shrink: 0;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .weather-card.event-day {
+    border-color: #537f71;
+    box-shadow: 0 0 0 1px rgba(83,127,113,0.25), inset 0 0 16px rgba(83,127,113,0.06);
+  }
+
+  .weather-card-day {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(115,152,133,0.65); margin-bottom: 6px; font-weight: 600;
+  }
+  .weather-card-icon { font-size: 26px; margin-bottom: 5px; line-height: 1; }
+  .weather-card-desc {
+    font-size: 9px; color: rgba(115,152,133,0.5);
+    letter-spacing: 0.3px; margin-bottom: 8px;
+  }
+  .weather-card-temps {
+    display: flex; justify-content: center; gap: 8px; align-items: baseline;
+  }
+  .weather-temp-hi {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; font-weight: 400; color: rgba(232,240,235,0.9);
+  }
+  .weather-temp-lo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; color: rgba(115,152,133,0.45);
+  }
+  .weather-card-precip {
+    font-size: 8px; color: rgba(115,152,133,0.4);
+    letter-spacing: 0.3px; margin-top: 6px;
+  }
+
+  /* Skeleton shimmer */
+  .weather-card.skeleton .weather-card-day,
+  .weather-card.skeleton .weather-card-icon,
+  .weather-card.skeleton .weather-card-desc,
+  .weather-card.skeleton .weather-temp-hi,
+  .weather-card.skeleton .weather-temp-lo,
+  .weather-card.skeleton .weather-card-precip {
+    background: rgba(115,152,133,0.1); border-radius: 4px;
+    color: transparent; display: inline-block; min-width: 2em;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1; }
+  }
+
   /* ── Responsive ── */
+  @media (max-width: 767px) {
+    .weather-cards { flex-wrap: nowrap; justify-content: flex-start; }
+    .weather-card  { min-width: 88px; flex: 0 0 88px; padding: 12px 8px; }
+  }
+
   @media (max-width: 560px) {
     .event-card { grid-template-columns: 68px 1fr; }
-    .event-image { display: none; }
     .event-name { font-size: 18px; }
     .event-body { padding: 12px 14px; }
   }
@@ -296,30 +414,7 @@
 
 
 
-  .nav-links.open > li > a {
-    display:block; padding:16px 0;
-    font-size:13px; letter-spacing:2px; text-transform:uppercase;
-    color:rgba(255,255,255,0.85) !important;
-    border-bottom:1px solid rgba(255,255,255,0.07);
-  }
-  .nav-links.open .has-drop .drop-menu {
-    display:block; position:static; transform:none;
-    background:transparent; box-shadow:none; border:none;
-    padding:0 0 8px 16px; min-width:unset;
-  }
-  .nav-links.open .has-drop .drop-menu li a {
-    color:rgba(115,152,133,0.85) !important;
-    font-size:11px; padding:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    display:block;
-  }
-  .nav-links.open .nav-cta {
-    background:#537f71; color:#fff !important;
-    border-radius:4px; padding:14px 0; text-align:center;
-    margin-top:16px; border:none !important;
-  }
-  .hamburger { display:flex; }
-}
+
 
 /* ── Hamburger button ── */
 .hamburger {
@@ -399,11 +494,11 @@ nav.solid .hamburger span { background: #333; }
 .has-drop { position: relative; cursor: pointer; }
 .drop-menu {
   display: none;
-  position: absolute; top: calc(100% + 8px); left: 50%;
+  position: absolute; top: 100%; left: 50%;
   transform: translateX(-50%);
   background: #fff; border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0,0,0,.12);
-  padding: 8px 0; min-width: 190px;
+  padding: 16px 0 8px; min-width: 190px;
   list-style: none; z-index: 9100;
 }
 .has-drop:hover .drop-menu { display: block; }
@@ -422,11 +517,11 @@ nav.solid .hamburger span { background: #333; }
 <body>
 
 <nav id="nav">
-  <a href="../index.html">
-  <a href="../index.html" style="line-height:0"><img class="nav-logo"
-      src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-      alt="Free Run Cellars"></a>
-  <ul class="nav-links">
+  <a href="../index.html" style="line-height:0;display:flex;align-items:center;gap:12px;">
+    <img class="nav-press" src="../public/images/FR_WinePress.png" alt="">
+    <img class="nav-logo" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+  </a>
+  <ul class="nav-links" id="navLinks">
     <li><a href="about.html">Our Story</a></li>
     <li><a href="wines.html">Wines</a></li>
     <li class="has-drop">
@@ -438,7 +533,7 @@ nav.solid .hamburger span { background: #333; }
       </ul>
     </li>
     <li><a href="gallery.html">Gallery</a></li>
-    <li><a href="contact.html">Visit Us</a></li>
+    <li><a href="contact.html">Visit &amp; Contact</a></li>
     <li><a href="reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
   <button class="hamburger" id="burger" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
@@ -461,6 +556,9 @@ nav.solid .hamburger span { background: #333; }
   <div class="events-intro">
     <p>We're thrilled to bring you the vibrant sounds of live music! Check out the exciting events below for a chance to enjoy fantastic performances and unforgettable moments.</p>
   </div>
+
+  <!-- Weather forecast strip — populated by JS, hidden on API failure -->
+  <div id="weatherStrip"></div>
 
   <div class="filter-bar" id="filterBar">
     <button class="filter-btn active" data-filter="all">All Events</button>
@@ -507,17 +605,18 @@ async function fetchCalendar() {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-//  HOW TO ADD IMAGES & DETAILS TO YOUR EVENTS
+//  HOW TO CONFIGURE EVENTS IN OUTLOOK
 //
-//  In Outlook, open any event → Notes/Body field → add lines like:
+//  Notes/Body field — add any of these lines:
+//    type: live-music        (or tasting | special)
+//    admission: Free         (or "Ticketed · $35", or any text)
+//    status: sold-out        (replaces button with red Sold Out badge)
 //
-//    image: https://yourphoto.com/artist.jpg
-//    desc: Soulful acoustic duo from Kalamazoo, MI.
-//    type: live-music
-//    admission: Free
+//  Location field:
+//    • Street address → shows "Details Coming Soon" (grey disabled button)
+//    • https://... URL → shows teal "Get Tickets" button linking to that URL
 //
-//  Supported types: live-music | tasting | special
-//  If type is omitted, the page will auto-detect from the event title.
+//  If type is omitted, the page auto-detects from the event title.
 // ─────────────────────────────────────────────────────────────────────
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -536,10 +635,17 @@ function guessType(title) {
 function parseNotes(raw) {
   if (!raw) return {};
   const result = {};
-  // ICS descriptions can have \n or literal "\\n"
-  const lines = raw.replace(/\\n/g, '\n').split(/\r?\n/);
+  // Outlook ICS descriptions often contain HTML — normalize block elements to newlines, strip tags
+  let text = raw
+    .replace(/<\/?(p|div|br|li|h\d)[^>]*>/gi, '\n')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+  const lines = text.replace(/\\n/g, '\n').split(/\r?\n/);
   for (const line of lines) {
-    const m = line.match(/^\s*(image|desc|type|admission)\s*:\s*(.+)/i);
+    const m = line.match(/^\s*(type|admission|status)\s*:\s*(.+)/i);
     if (m) result[m[1].toLowerCase()] = m[2].trim();
   }
   return result;
@@ -579,38 +685,44 @@ function parseICS(text) {
       const m = block.match(new RegExp('\n' + key + '(?:;[^:]+)?:([^\r\n]+)', 'i'));
       return m ? m[1].trim() : '';
     };
-    const summary  = get('SUMMARY').replace(/\\,/g, ',').replace(/\\;/g, ';');
+    const rawSummary = get('SUMMARY').replace(/\\,/g, ',').replace(/\\;/g, ';');
     const dtstart  = get('DTSTART');
     const dtend    = get('DTEND');
     const rawDesc  = get('DESCRIPTION');
     const desc     = rawDesc.replace(/\\n/g, '\n').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
+    const location = get('LOCATION').replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\/g, '');
 
-    if (!summary || !dtstart) continue;
+    if (!rawSummary || !dtstart) continue;
+
+    // Parse inline tags from title: "Event Name | admission: Ticketed · $35 | type: special"
+    const titleParts = rawSummary.split('|');
+    const cleanName  = titleParts[0].trim();
+    const titleTags  = {};
+    for (let j = 1; j < titleParts.length; j++) {
+      const m = titleParts[j].trim().match(/^(type|admission|status)\s*:\s*(.+)/i);
+      if (m) titleTags[m[1].toLowerCase()] = m[2].trim();
+    }
 
     const startDate = parseICSDate(dtstart);
     const endDate   = dtend ? parseICSDate(dtend) : null;
-    const notes     = parseNotes(desc);
+    // Description tags override title tags
+    const notes     = Object.assign({}, titleTags, parseNotes(desc));
 
     // Determine type
-    const type = notes.type || guessType(summary);
+    const type = notes.type || guessType(rawSummary);
 
     // Build time display
     let timeStr = formatTime(startDate);
     if (endDate) timeStr += ` – ${formatTime(endDate)}`;
-
-    // Detect ticket events from title
-    const isTicketed = /ticket/i.test(summary);
-    const cleanName  = summary.replace(/\s*-?\s*ticket\s*event/i, '').trim();
 
     events.push({
       name:      cleanName,
       date:      startDate,
       time:      timeStr,
       type,
-      desc:      notes.desc || '',
-      image:     notes.image || '',
-      admission: notes.admission || (isTicketed ? 'Ticketed' : 'Free'),
-      isTicketed,
+      admission: notes.admission || '',
+      location,
+      status:    (notes.status || '').toLowerCase().replace(/\s+/g, '-'),
     });
   }
 
@@ -659,21 +771,20 @@ function renderEvents(events, filter) {
     card.className = 'event-card';
     card.style.animationDelay = `${i * 50}ms`;
 
-    // Initial letter for placeholder
-    const initial = ev.name.charAt(0).toUpperCase();
-
-    const imgHtml = ev.image
-      ? `<img src="${ev.image}" alt="${ev.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=placeholder><div class=placeholder-note>♪</div><div class=placeholder-initial>${initial}</div></div>'">`
-      : `<div class="placeholder"><div class="placeholder-note">♪</div><div class="placeholder-initial">${initial}</div></div>`;
-
     const admHtml = ev.admission
       ? `<span class="admission-badge">${ev.admission}</span>` : '';
 
-    const descHtml = ev.desc
-      ? `<div class="event-desc">${ev.desc}</div>` : '';
+    const isSoldOut = ev.status === 'sold-out';
+    const locationIsUrl = /^https?:\/\//i.test(ev.location);
 
-    const ticketHtml = ev.isTicketed
-      ? `<div class="ticket-badge">Tickets</div>` : '';
+    let btnHtml = '';
+    if (isSoldOut) {
+      btnHtml = `<span class="sold-out-btn">Sold Out</span>`;
+    } else if (ev.admission && locationIsUrl) {
+      btnHtml = `<a class="event-url-btn" href="${ev.location}" target="_blank" rel="noopener noreferrer">Get Tickets</a>`;
+    } else if (ev.admission) {
+      btnHtml = `<span class="sold-out-btn">Details Coming Soon</span>`;
+    }
 
     card.innerHTML = `
       <div class="event-date">
@@ -684,15 +795,11 @@ function renderEvents(events, filter) {
       <div class="event-body">
         <div class="event-type-tag">${TYPE_LABELS[ev.type] || 'Event'}</div>
         <div class="event-name">${ev.name}</div>
-        ${descHtml}
         <div class="event-meta">
           <span>◷ ${ev.time}</span>
           ${admHtml}
         </div>
-      </div>
-      <div class="event-image" style="position:relative;">
-        ${imgHtml}
-        ${ticketHtml}
+        ${btnHtml}
       </div>
     `;
     container.appendChild(card);
@@ -721,10 +828,21 @@ async function loadCalendar() {
   showLoading();
   try {
     const text = await fetchCalendar();
-    console.log('Calendar fetched, length:', text.length, 'has VCALENDAR:', text.includes('BEGIN:VCALENDAR'));
     allEvents = parseICS(text);
-    console.log('Events parsed:', allEvents.length);
     renderEvents(allEvents, activeFilter);
+    // Highlight weather cards whose date matches an upcoming event
+    const today = new Date(); today.setHours(0,0,0,0);
+    const eventDates = new Set();
+    allEvents.forEach(ev => {
+      const d = new Date(ev.date); d.setHours(0,0,0,0);
+      if (d >= today) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const day = String(d.getDate()).padStart(2,'0');
+        eventDates.add(`${y}-${m}-${day}`);
+      }
+    });
+    if (window._highlightWeatherDays) window._highlightWeatherDays(eventDates);
   } catch (e) {
     console.error('Calendar load failed:', e);
     showError();
@@ -743,13 +861,129 @@ document.getElementById('filterBar').addEventListener('click', e => {
 
 loadCalendar();
 
-// ── Mobile hamburger ──
-(function() {
-  var burger = document.getElementById('burger');
-  var links  = document.getElementById('navLinks');
-  if (!burger || !links) return;
+</script>
 
-  
+<script>
+// ── Weather Widget ───────────────────────────────────────────────────
+(function() {
+  var LAT = 41.9478, LON = -86.3483;
+  var DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  var WMO = {
+    0:  { icon: '☀️',  desc: 'Clear' },
+    1:  { icon: '🌤️', desc: 'Mainly Clear' },
+    2:  { icon: '⛅',  desc: 'Partly Cloudy' },
+    3:  { icon: '☁️',  desc: 'Overcast' },
+    45: { icon: '🌫️', desc: 'Foggy' },
+    48: { icon: '🌫️', desc: 'Freezing Fog' },
+    51: { icon: '🌦️', desc: 'Light Drizzle' },
+    53: { icon: '🌦️', desc: 'Drizzle' },
+    55: { icon: '🌦️', desc: 'Heavy Drizzle' },
+    61: { icon: '🌧️', desc: 'Light Rain' },
+    63: { icon: '🌧️', desc: 'Rain' },
+    65: { icon: '🌧️', desc: 'Heavy Rain' },
+    71: { icon: '🌨️', desc: 'Light Snow' },
+    73: { icon: '🌨️', desc: 'Snow' },
+    75: { icon: '🌨️', desc: 'Heavy Snow' },
+    77: { icon: '🌨️', desc: 'Snow Grains' },
+    80: { icon: '🌦️', desc: 'Showers' },
+    81: { icon: '🌦️', desc: 'Showers' },
+    82: { icon: '⛈️',  desc: 'Heavy Showers' },
+    85: { icon: '🌨️', desc: 'Snow Showers' },
+    86: { icon: '🌨️', desc: 'Heavy Snow' },
+    95: { icon: '⛈️',  desc: 'Thunderstorm' },
+    96: { icon: '⛈️',  desc: 'Thunderstorm' },
+    99: { icon: '⛈️',  desc: 'Thunderstorm' }
+  };
+
+  function wmoInfo(code) {
+    return WMO[code] || { icon: '🌡️', desc: 'Variable' };
+  }
+
+  // Shared state — calendar script calls this after events load
+  window._weatherEventDates = new Set();
+  window._highlightWeatherDays = function(eventDates) {
+    window._weatherEventDates = eventDates;
+    document.querySelectorAll('.weather-card[data-date]').forEach(function(card) {
+      card.classList.toggle('event-day', eventDates.has(card.dataset.date));
+    });
+  };
+
+  function renderSkeleton() {
+    var skeletons = '';
+    for (var i = 0; i < 5; i++) {
+      skeletons += '<div class="weather-card skeleton">' +
+        '<div class="weather-card-day">---</div>' +
+        '<div class="weather-card-icon">☁</div>' +
+        '<div class="weather-card-desc">Loading</div>' +
+        '<div class="weather-card-temps">' +
+          '<span class="weather-temp-hi">72°</span>' +
+          '<span class="weather-temp-lo">55°</span>' +
+        '</div>' +
+        '<div class="weather-card-precip">0% precip</div>' +
+      '</div>';
+    }
+    var strip = document.getElementById('weatherStrip');
+    strip.innerHTML =
+      '<div class="weather-strip-title">5-Day Forecast · Berrien Springs, MI</div>' +
+      '<div class="weather-cards">' + skeletons + '</div>';
+  }
+
+  function renderWeather(data) {
+    var d = data.daily;
+    var cards = '';
+    for (var i = 0; i < d.time.length; i++) {
+      var dateStr = d.time[i];
+      // Parse date parts directly to avoid timezone shift
+      var parts = dateStr.split('-');
+      var dow = new Date(+parts[0], +parts[1] - 1, +parts[2]).getDay();
+      var dayLabel = i === 0 ? 'Today' : DAYS_SHORT[dow];
+      var info = wmoInfo(d.weathercode[i]);
+      var hi = Math.round(d.temperature_2m_max[i]);
+      var lo = Math.round(d.temperature_2m_min[i]);
+      var precip = d.precipitation_probability_max[i] || 0;
+      var isEvent = window._weatherEventDates.has(dateStr);
+      cards +=
+        '<div class="weather-card' + (isEvent ? ' event-day' : '') + '" data-date="' + dateStr + '">' +
+          '<div class="weather-card-day">' + dayLabel + '</div>' +
+          '<div class="weather-card-icon">' + info.icon + '</div>' +
+          '<div class="weather-card-desc">' + info.desc + '</div>' +
+          '<div class="weather-card-temps">' +
+            '<span class="weather-temp-hi">' + hi + '°</span>' +
+            '<span class="weather-temp-lo">' + lo + '°</span>' +
+          '</div>' +
+          '<div class="weather-card-precip">' + precip + '% precip</div>' +
+        '</div>';
+    }
+    var strip = document.getElementById('weatherStrip');
+    strip.innerHTML =
+      '<div class="weather-strip-title">5-Day Forecast · Berrien Springs, MI</div>' +
+      '<div class="weather-cards">' + cards + '</div>';
+  }
+
+  async function loadWeather() {
+    renderSkeleton();
+    try {
+      var url = 'https://api.open-meteo.com/v1/forecast' +
+        '?latitude=' + LAT +
+        '&longitude=' + LON +
+        '&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
+        '&temperature_unit=fahrenheit' +
+        '&timezone=America%2FChicago' +
+        '&forecast_days=5';
+      var res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      if (!res.ok) throw new Error('weather api error');
+      var data = await res.json();
+      renderWeather(data);
+    } catch(e) {
+      // Silent fail — remove strip entirely
+      var strip = document.getElementById('weatherStrip');
+      if (strip) strip.style.display = 'none';
+    }
+  }
+
+  loadWeather();
+})();
 </script>
 
 <script>

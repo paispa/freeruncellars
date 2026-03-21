@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T51K1F9DVS');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gallery – Free Run Cellars | Berrien Springs, MI</title>
@@ -38,7 +47,9 @@ nav {
   transition:background .35s, box-shadow .35s;
 }
 nav.solid { background:rgba(10,10,10,.97); box-shadow:0 1px 0 rgba(255,255,255,.06); }
-.nav-logo { height:34px; filter:brightness(0) invert(1); }
+.nav-logo { height:34px; transition:filter .35s; }
+.nav-press { height:48px; width:auto; transition:filter .35s; margin-top:4px; }
+nav:not(.solid) .nav-logo, nav:not(.solid) .nav-press { filter:brightness(0) invert(1); }
 .nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
 .nav-links a {
   font-size:10.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
@@ -237,10 +248,11 @@ h1 em { font-style:normal; color:var(--teal-lt); }
 .page-footer {
   background:var(--black); color:rgba(255,255,255,.25);
   border-top:1px solid rgba(255,255,255,.05);
-  padding:28px 56px;
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:wrap; gap:16px; font-size:11px;
+  padding:44px 56px 28px;
+  display:flex; flex-direction:column; align-items:center; gap:0; font-size:11px;
 }
+.footer-press { height:90px; width:auto; filter:brightness(0) invert(1); opacity:.3; margin-bottom:28px; }
+.footer-bottom { width:100%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; border-top:1px solid rgba(255,255,255,.07); padding-top:20px; }
 .footer-logo { height:24px; filter:brightness(0) invert(1); opacity:.3; }
 .footer-links { display:flex; gap:20px; }
 .page-footer a:hover { color:rgba(255,255,255,.6); }
@@ -253,31 +265,14 @@ h1 em { font-style:normal; color:var(--teal-lt); }
   .gallery-item { margin-bottom:8px; }
 }
 
-
-  .nav-links.open > li > a {
-    display:block; padding:16px 0;
-    font-size:13px; letter-spacing:2px; text-transform:uppercase;
-    color:rgba(255,255,255,0.85) !important;
-    border-bottom:1px solid rgba(255,255,255,0.07);
-  }
-  .nav-links.open .has-drop .drop-menu {
-    display:block; position:static; transform:none;
-    background:transparent; box-shadow:none; border:none;
-    padding:0 0 8px 16px; min-width:unset;
-  }
-  .nav-links.open .has-drop .drop-menu li a {
-    color:rgba(115,152,133,0.85) !important;
-    font-size:11px; padding:10px 0;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    display:block;
-  }
-  .nav-links.open .nav-cta {
-    background:#537f71; color:#fff !important;
-    border-radius:4px; padding:14px 0; text-align:center;
-    margin-top:16px; border:none !important;
-  }
-  .hamburger { display:flex; }
+@media (max-width:768px) {
+  .page-footer { padding:32px 20px 24px; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; gap:12px; }
+  .footer-links { flex-wrap:wrap; }
 }
+
+
+
 
 /* ── Hamburger button ── */
 .hamburger {
@@ -357,11 +352,11 @@ nav.solid .hamburger span { background: #333; }
 .has-drop { position: relative; cursor: pointer; }
 .drop-menu {
   display: none;
-  position: absolute; top: calc(100% + 8px); left: 50%;
+  position: absolute; top: 100%; left: 50%;
   transform: translateX(-50%);
   background: #fff; border-radius: 10px;
   box-shadow: 0 8px 32px rgba(0,0,0,.12);
-  padding: 8px 0; min-width: 190px;
+  padding: 16px 0 8px; min-width: 190px;
   list-style: none; z-index: 9100;
 }
 .has-drop:hover .drop-menu { display: block; }
@@ -381,9 +376,10 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="../index.html" style="line-height:0"><img class="nav-logo"
-    src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-    alt="Free Run Cellars"></a>
+  <a href="../index.html" style="line-height:0;display:flex;align-items:center;gap:12px;">
+    <img class="nav-press" src="../public/images/FR_WinePress.png" alt="">
+    <img class="nav-logo" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+  </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="about.html">Our Story</a></li>
     <li><a href="wines.html">Wines</a></li>
@@ -396,7 +392,7 @@ nav.solid .hamburger span { background: #333; }
       </ul>
     </li>
     <li><a href="gallery.html" style="color:#fff">Gallery</a></li>
-    <li><a href="contact.html">Visit Us</a></li>
+    <li><a href="contact.html">Visit &amp; Contact</a></li>
     <li><a href="reviews.html" class="nav-cta">Leave a Review</a></li>
   </ul>
   <button class="hamburger" id="burger" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
@@ -568,6 +564,8 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- FOOTER -->
 <footer class="page-footer">
+  <img class="footer-press" src="/public/images/FR_WinePress.png" alt="">
+  <div class="footer-bottom">
   <img class="footer-logo"
     src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
     alt="Free Run Cellars">
@@ -576,7 +574,8 @@ nav.solid .hamburger span { background: #333; }
     <a href="../index.html">Home</a>
     <a href="about.html">Our Story</a>
     <a href="wines.html">Wines</a>
-    <a href="contact.html">Visit Us</a>
+    <a href="contact.html">Visit &amp; Contact</a>
+  </div>
   </div>
 </footer>
 
@@ -587,18 +586,6 @@ const onScroll = () => nav.classList.toggle('solid', scrollY > 60);
 addEventListener('scroll', onScroll, { passive:true });
 onScroll();
 
-// Hamburger
-const burger = document.getElementById('burger');
-const links  = document.getElementById('navLinks');
-let menuOpen = false;
-
-// ── Mobile hamburger ──
-(function() {
-  var burger = document.getElementById('burger');
-  var links  = document.getElementById('navLinks');
-  if (!burger || !links) return;
-
-  
 // Filter
 document.getElementById('filterBar').addEventListener('click', e => {
   const btn = e.target.closest('.filter-btn');
