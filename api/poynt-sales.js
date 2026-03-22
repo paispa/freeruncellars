@@ -189,8 +189,12 @@ module.exports = async function handler(req, res) {
     const summary = buildSummary(orders, wineMap);
     const timeline = buildTimeline(orders);
 
-    // Inventory calculations (if provided by client)
+    // Inventory calculations with velocity predictions (if provided by client)
     let inventoryResult = null;
+    const periodDays = Math.max(1, Math.round(
+      (new Date(endAt) - new Date(startAt)) / (1000 * 60 * 60 * 24)
+    ));
+
     if (inventory && typeof inventory === 'object') {
       inventoryResult = {};
       // 12 bottles per case
@@ -200,6 +204,15 @@ module.exports = async function handler(req, res) {
         const remaining = startingCases !== null
           ? startingCases - (totalBottlesSold / 12)
           : null;
+
+        // Velocity: bottles per day over the queried period
+        const bottlesPerDay = totalBottlesSold / periodDays;
+        // Runway: how many days until remaining inventory hits zero
+        let runwayDays = null;
+        if (remaining !== null && remaining > 0 && bottlesPerDay > 0) {
+          runwayDays = Math.round((remaining * 12) / bottlesPerDay);
+        }
+
         inventoryResult[wine] = {
           bottlesSold: data.bottles,
           glassesSold: data.glasses,
@@ -208,6 +221,8 @@ module.exports = async function handler(req, res) {
           startingCases: startingCases,
           remainingCases: remaining !== null ? Math.round(remaining * 10) / 10 : null,
           lowStock: remaining !== null && remaining < 1,
+          bottlesPerDay: Math.round(bottlesPerDay * 100) / 100,
+          runwayDays: runwayDays,
         };
       }
     }
@@ -218,7 +233,7 @@ module.exports = async function handler(req, res) {
       wines: wineMap,
       timeline,
       inventory: inventoryResult,
-      period: { startAt, endAt },
+      period: { startAt, endAt, days: periodDays },
     });
   } catch (err) {
     console.error('poynt-sales error:', err);

@@ -274,6 +274,49 @@
 
   .controls .btn { width: auto; padding: 8px 20px; font-size: 11px; }
 
+  /* ─── Quick-select buttons ─────────────────────────────────────── */
+
+  .quick-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .quick-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid rgba(115,152,133,0.25);
+    background: transparent;
+    color: var(--sage-light);
+    transition: all 0.3s ease;
+  }
+
+  .quick-btn:hover { background: rgba(115,152,133,0.1); border-color: var(--sage); }
+
+  .quick-btn.active {
+    background: var(--sage);
+    color: #000;
+    border-color: var(--sage);
+    font-weight: 600;
+  }
+
+  /* ─── Runway / prediction ──────────────────────────────────────── */
+
+  .runway-ok { color: var(--sage-light); }
+  .runway-warn { color: #e8a838; font-weight: 600; }
+  .runway-crit { color: var(--red); font-weight: 600; }
+
+  .velocity {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
   /* ─── Sales table ────────────────────────────────────────────────── */
 
   .sales-table {
@@ -416,6 +459,8 @@
     .metric .value { font-size: 26px; }
     .card { padding: 20px 16px; }
     .sales-table, .inv-table { font-size: 12px; }
+    .quick-btns { gap: 6px; }
+    .quick-btn { padding: 5px 10px; font-size: 10px; }
   }
 </style>
 </head>
@@ -446,6 +491,12 @@
     <!-- Date range controls -->
     <div class="card">
       <div class="card-title"><span class="num">1</span> Date Range</div>
+      <div class="quick-btns" id="quickBtns">
+        <button class="quick-btn" data-range="7d">This Week</button>
+        <button class="quick-btn active" data-range="30d">Last 30 Days</button>
+        <button class="quick-btn" data-range="month">This Month</button>
+        <button class="quick-btn" data-range="ytd">Year to Date</button>
+      </div>
       <div class="controls">
         <label>From</label>
         <input type="date" id="startDate">
@@ -503,9 +554,10 @@
 
     <!-- Inventory -->
     <div id="inventoryCard" class="card">
-      <div class="card-title"><span class="num">5</span> Inventory Tracker</div>
+      <div class="card-title"><span class="num">5</span> Inventory &amp; Predictions</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">
-        Enter starting case counts below, then click <strong>Load Sales</strong> to see remaining inventory.
+        Enter starting case counts below, then click <strong>Load Sales</strong> to see remaining inventory and depletion forecasts.
+        Counts are saved automatically.
       </p>
       <div style="overflow-x:auto">
         <table class="inv-table">
@@ -515,6 +567,7 @@
               <th class="num">Starting Cases</th>
               <th class="num">Bottles Used</th>
               <th class="num">Remaining Cases</th>
+              <th class="num">Runway</th>
             </tr>
           </thead>
           <tbody id="invBody"></tbody>
@@ -547,31 +600,96 @@
 
   const $ = (id) => document.getElementById(id);
 
+  // ─── localStorage helpers ───────────────────────────────────────
+
+  var STORAGE_KEY = 'frc_dashboard_inventory';
+
+  function loadSavedInventory() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+
+  function saveInventory() {
+    var inv = {};
+    var inputs = $('invBody').querySelectorAll('input[type="number"]');
+    inputs.forEach(function(inp) {
+      var v = parseFloat(inp.value);
+      if (!isNaN(v)) inv[inp.dataset.wine] = v;
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(inv)); } catch (e) {}
+  }
+
+  // ─── Quick-select date ranges ──────────────────────────────────
+
+  function setDateRange(range) {
+    var now = new Date();
+    var start = new Date(now);
+
+    switch (range) {
+      case '7d':
+        start.setDate(start.getDate() - 7);
+        break;
+      case '30d':
+        start.setDate(start.getDate() - 30);
+        break;
+      case 'month':
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        break;
+      case 'ytd':
+        start = new Date(now.getFullYear(), 0, 1);
+        break;
+    }
+
+    $('startDate').value = start.toISOString().slice(0, 10);
+    $('endDate').value = now.toISOString().slice(0, 10);
+
+    // Update active button
+    var btns = $('quickBtns').querySelectorAll('.quick-btn');
+    btns.forEach(function(b) {
+      b.classList.toggle('active', b.dataset.range === range);
+    });
+  }
+
+  function initQuickBtns() {
+    $('quickBtns').addEventListener('click', function(e) {
+      var btn = e.target.closest('.quick-btn');
+      if (!btn) return;
+      setDateRange(btn.dataset.range);
+    });
+  }
+
   // ─── Init dates (last 30 days) ──────────────────────────────────
 
   function initDates() {
-    const now = new Date();
-    const start = new Date(now);
-    start.setDate(start.getDate() - 30);
-    $('startDate').value = start.toISOString().slice(0, 10);
-    $('endDate').value = now.toISOString().slice(0, 10);
+    setDateRange('30d');
   }
 
   // ─── Init inventory table ──────────────────────────────────────
 
   function initInventory() {
-    const tbody = $('invBody');
+    var saved = loadSavedInventory();
+    var tbody = $('invBody');
     tbody.innerHTML = '';
-    for (const wine of ALL_WINES) {
-      const tr = document.createElement('tr');
+    for (var i = 0; i < ALL_WINES.length; i++) {
+      var wine = ALL_WINES[i];
+      var savedVal = saved[wine];
+      var tr = document.createElement('tr');
       tr.dataset.wine = wine;
       tr.innerHTML =
         '<td>' + wine + '</td>' +
-        '<td class="num"><input type="number" min="0" step="0.5" value="" placeholder="—" data-wine="' + wine + '"></td>' +
+        '<td class="num"><input type="number" min="0" step="0.5" value="' + (savedVal !== undefined ? savedVal : '') + '" placeholder="—" data-wine="' + wine + '"></td>' +
         '<td class="num" data-col="used">—</td>' +
-        '<td class="num" data-col="remaining">—</td>';
+        '<td class="num" data-col="remaining">—</td>' +
+        '<td class="num" data-col="runway">—</td>';
       tbody.appendChild(tr);
     }
+
+    // Auto-save on input change
+    tbody.addEventListener('input', function(e) {
+      if (e.target.tagName === 'INPUT') saveInventory();
+    });
   }
 
   // ─── Login ──────────────────────────────────────────────────────
@@ -594,6 +712,7 @@
       // Any other response means password is correct (even 502 = Poynt not configured)
       $('loginScreen').classList.add('hidden');
       $('dashboard').classList.remove('hidden');
+      initQuickBtns();
       initDates();
       initInventory();
     })
@@ -604,6 +723,7 @@
         // Password was accepted but Poynt may not be configured — still let them in
         $('loginScreen').classList.add('hidden');
         $('dashboard').classList.remove('hidden');
+        initQuickBtns();
         initDates();
         initInventory();
       }
@@ -612,10 +732,16 @@
     });
   };
 
-  // Enter key on password field
+  // Enter key on password field + manual date clears quick-select
   document.addEventListener('DOMContentLoaded', function() {
     $('passwordInput').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') window.handleLogin();
+    });
+    ['startDate', 'endDate'].forEach(function(id) {
+      $(id).addEventListener('input', function() {
+        var btns = document.querySelectorAll('.quick-btn');
+        btns.forEach(function(b) { b.classList.remove('active'); });
+      });
     });
   });
 
@@ -770,15 +896,38 @@
 
   // ─── Render: Inventory ─────────────────────────────────────────
 
+  function formatRunway(days) {
+    if (days === null || days === undefined) return '—';
+    if (days <= 0) return '<span class="runway-crit">Depleted</span>';
+    if (days <= 14) {
+      return '<span class="runway-crit">' + days + 'd</span>';
+    }
+    if (days <= 30) {
+      var weeks = Math.round(days / 7);
+      return '<span class="runway-warn">~' + weeks + 'w</span>';
+    }
+    if (days <= 90) {
+      var weeks2 = Math.round(days / 7);
+      return '<span class="runway-ok">~' + weeks2 + 'w</span>';
+    }
+    var months = Math.round(days / 30);
+    return '<span class="runway-ok">~' + months + 'mo</span>';
+  }
+
   function renderInventory(wines, inventory) {
     var rows = $('invBody').querySelectorAll('tr');
     rows.forEach(function(tr) {
       var wine = tr.dataset.wine;
       var usedCell = tr.querySelector('[data-col="used"]');
       var remCell = tr.querySelector('[data-col="remaining"]');
+      var runwayCell = tr.querySelector('[data-col="runway"]');
 
       var wineData = wines[wine];
       var invData = inventory ? inventory[wine] : null;
+
+      // Reset row state
+      remCell.classList.remove('low-stock');
+      tr.classList.remove('low-stock-row');
 
       if (invData) {
         usedCell.textContent = invData.estimatedBottlesUsed;
@@ -787,25 +936,27 @@
           if (invData.lowStock) {
             remCell.classList.add('low-stock');
             tr.classList.add('low-stock-row');
-            if (!remCell.querySelector('.stock-badge')) {
-              remCell.innerHTML = invData.remainingCases + '<span class="stock-badge">Low</span>';
-            }
-          } else {
-            remCell.classList.remove('low-stock');
-            tr.classList.remove('low-stock-row');
+            remCell.innerHTML = invData.remainingCases + '<span class="stock-badge">Low</span>';
           }
         } else {
           remCell.textContent = '—';
+        }
+
+        // Runway prediction
+        runwayCell.innerHTML = formatRunway(invData.runwayDays);
+        if (invData.bottlesPerDay > 0) {
+          var velText = invData.bottlesPerDay + ' btl/day';
+          runwayCell.innerHTML += '<div class="velocity">' + velText + '</div>';
         }
       } else if (wineData) {
         var est = wineData.bottles + Math.ceil(wineData.glasses / 5);
         usedCell.textContent = est > 0 ? est : '—';
         remCell.textContent = '—';
-        remCell.classList.remove('low-stock');
-        tr.classList.remove('low-stock-row');
+        runwayCell.innerHTML = '—';
       } else {
         usedCell.textContent = '—';
         remCell.textContent = '—';
+        runwayCell.innerHTML = '—';
       }
     });
   }
