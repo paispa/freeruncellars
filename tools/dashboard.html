@@ -770,7 +770,15 @@
         inventory: Object.keys(inventory).length > 0 ? inventory : undefined,
       }),
     })
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      var ct = r.headers.get('content-type') || '';
+      if (!ct.includes('application/json')) {
+        return r.text().then(function(txt) {
+          throw new Error('Server returned non-JSON (HTTP ' + r.status + '): ' + txt.slice(0, 200));
+        });
+      }
+      return r.json();
+    })
     .then(function(data) {
       if (data.error) {
         alert('Error: ' + (data.detail || data.error));
