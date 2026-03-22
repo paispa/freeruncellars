@@ -93,7 +93,10 @@ function buildSummary(orders, wineMap) {
 function buildTimeline(orders) {
   const dayMap = {};
   for (const order of orders) {
-    const d = (order.createdAt || '').slice(0, 10); // YYYY-MM-DD
+    if (!order.createdAt) continue;
+    const d = typeof order.createdAt === 'number'
+      ? new Date(order.createdAt).toISOString().slice(0, 10)
+      : String(order.createdAt).slice(0, 10); // YYYY-MM-DD
     if (!d) continue;
     if (!dayMap[d]) dayMap[d] = 0;
     for (const item of (order.items || [])) {
@@ -188,10 +191,17 @@ module.exports = async function handler(req, res) {
     // Poynt filters by updatedAt, not createdAt — so old orders that were
     // recently modified (refunds, status changes) sneak in. Filter by createdAt
     // on our side, and exclude cancelled/voided orders.
+    // Poynt may return createdAt as epoch ms (number) or ISO string — normalise.
+    const startMs = new Date(startAt).getTime();
+    const endMs = new Date(endAt).getTime();
+
     const orders = rawOrders.filter(function(order) {
       // Filter by createdAt within our date range
       const created = order.createdAt;
-      if (created && (created < startAt || created > endAt)) return false;
+      if (created) {
+        const createdMs = typeof created === 'number' ? created : new Date(created).getTime();
+        if (createdMs < startMs || createdMs > endMs) return false;
+      }
       // Exclude non-completed orders
       var status = (order.statuses && order.statuses.status) || '';
       if (status === 'CANCELLED' || status === 'VOIDED') return false;
