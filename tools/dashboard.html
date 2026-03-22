@@ -974,7 +974,11 @@
   function renderPeriod(period) {
     var start = new Date(period.startAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     var end = new Date(period.endAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    $('periodInfo').textContent = 'Showing data from ' + start + ' to ' + end;
+    var msg = 'Showing data from ' + start + ' to ' + end;
+    if (period.totalFromApi !== undefined) {
+      msg += '  ·  ' + period.afterFilter + ' orders used (filtered from ' + period.totalFromApi + ' returned by Poynt)';
+    }
+    $('periodInfo').textContent = msg;
   }
 
 })();
