@@ -24,10 +24,15 @@ function base64url(buf) {
 
 function buildSelfSignedJwt() {
   const now = Math.floor(Date.now() / 1000);
-  const header = { alg: 'RS256', typ: 'JWT', kid: POYNT_APP_ID };
+  // Poynt expects iss/sub as URN: urn:aid:<app-uuid>
+  const appUrn = POYNT_APP_ID.startsWith('urn:aid:')
+    ? POYNT_APP_ID
+    : 'urn:aid:' + POYNT_APP_ID;
+
+  const header = { alg: 'RS256', typ: 'JWT' };
   const payload = {
-    sub: POYNT_APP_ID,
-    iss: POYNT_APP_ID,
+    sub: appUrn,
+    iss: appUrn,
     jti: crypto.randomUUID(),
     exp: now + 300,
     iat: now,
