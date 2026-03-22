@@ -785,6 +785,7 @@
         return;
       }
       salesData = data;
+      if (data.debug) console.log('Poynt debug:', JSON.stringify(data.debug, null, 2));
       renderSummary(data.summary);
       renderSalesTable(data.wines);
       renderChart(data.timeline);

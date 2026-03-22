@@ -188,6 +188,19 @@ module.exports = async function handler(req, res) {
     const token = await getAccessToken();
     const rawOrders = await fetchOrders(token, startAt, endAt);
 
+    // Log a sample order's date-related fields for debugging
+    const sampleOrder = rawOrders[0] || {};
+    const debugInfo = {
+      totalFromApi: rawOrders.length,
+      sampleKeys: Object.keys(sampleOrder),
+      sampleCreatedAt: sampleOrder.createdAt,
+      sampleCreatedAtType: typeof sampleOrder.createdAt,
+      sampleUpdatedAt: sampleOrder.updatedAt,
+      sampleUpdatedAtType: typeof sampleOrder.updatedAt,
+      sampleStatuses: sampleOrder.statuses,
+    };
+    console.log('poynt-sales debug:', JSON.stringify(debugInfo, null, 2));
+
     // Poynt filters by updatedAt, not createdAt — so old orders that were
     // recently modified (refunds, status changes) sneak in. Filter by createdAt
     // on our side, and exclude cancelled/voided orders.
@@ -257,6 +270,7 @@ module.exports = async function handler(req, res) {
       timeline,
       inventory: inventoryResult,
       period: { startAt, endAt, days: periodDays, totalFromApi: rawOrders.length, afterFilter: orders.length },
+      debug: debugInfo,
     });
   } catch (err) {
     console.error('poynt-sales error:', err);
