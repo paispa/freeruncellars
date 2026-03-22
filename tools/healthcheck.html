@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Check Dashboard – Free Run Cellars</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #739885;
+    --sage-dark: #4e6e5d;
+    --sage-light: #a0b8a8;
+    --bg: #000000;
+    --bg2: #0a0a0a;
+    --text: #e8f0eb;
+    --muted: #4e6e5d;
+    --cream: #ffffff;
+    --pass: #4caf7d;
+    --fail: #e05c5c;
+    --warn: #d4a847;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(115,152,133,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(78,110,93,0.07) 0%, transparent 50%);
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .page-header { text-align: center; margin-bottom: 36px; }
+
+  .site-logo {
+    height: 34px;
+    filter: brightness(0) invert(1);
+    margin-bottom: 16px;
+    display: block; margin-left: auto; margin-right: auto;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 300; font-style: italic;
+    color: var(--cream); letter-spacing: 1px; line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .page-sub {
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
+  }
+
+  .header-divider {
+    width: 60px; height: 1px; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, var(--sage), transparent);
+  }
+
+  /* ── Summary bar ── */
+  .summary-card {
+    background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summary-card::before {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sage-dark), var(--sage), var(--sage-dark), transparent);
+  }
+
+  .summary-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; gap: 16px; flex-wrap: wrap;
+  }
+
+  .summary-count {
+    font-size: 13px; font-weight: 600; color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+
+  .summary-count span {
+    font-size: 22px; font-weight: 700; color: var(--sage);
+    margin-right: 2px;
+  }
+
+  .summary-meta {
+    font-size: 9px; color: var(--muted); letter-spacing: 1.5px;
+    text-transform: uppercase; text-align: right;
+  }
+
+  .progress-track {
+    height: 6px; background: rgba(255,255,255,0.05);
+    border-radius: 99px; overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--sage-dark), var(--sage));
+    transition: width 0.6s ease;
+    width: 0%;
+  }
+
+  /* ── Run button ── */
+  .btn-run {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+    border: none; border-radius: 10px;
+    color: #000; font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 13px 28px; cursor: pointer;
+    transition: all 0.25s;
+    margin: 0 auto 28px; display: block;
+  }
+
+  .btn-run:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(115,152,133,0.25); }
+  .btn-run:active { transform: translateY(0); }
+  .btn-run:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── Cards ── */
+  .card {
+    background: linear-gradient(135deg, rgba(10,20,14,0.95), rgba(0,0,0,0.95));
+    border: 1px solid rgba(115,152,133,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sage-dark), var(--sage), var(--sage-dark), transparent);
+  }
+
+  .section-title {
+    font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--sage); font-weight: 600; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: rgba(115,152,133,0.15);
+  }
+
+  /* ── Check rows ── */
+  .check-list {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .check-row {
+    display: grid;
+    grid-template-columns: 20px 1fr auto auto;
+    align-items: center;
+    gap: 10px 12px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(115,152,133,0.08);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+
+  .check-row.pass { border-color: rgba(76,175,125,0.2); }
+  .check-row.fail { border-color: rgba(224,92,92,0.2); }
+  .check-row.warn { border-color: rgba(212,168,71,0.2); }
+
+  /* Status dot */
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .dot.pass { background: var(--pass); }
+  .dot.fail { background: var(--fail); }
+  .dot.warn { background: var(--warn); }
+  .dot.spinning {
+    background: transparent;
+    border: 2px solid rgba(115,152,133,0.3);
+    border-top-color: var(--sage);
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .check-name {
+    font-size: 12px; font-weight: 500;
+    color: var(--text); letter-spacing: 0.2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .check-status {
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  .check-status.pass { color: var(--pass); }
+  .check-status.fail { color: var(--fail); }
+  .check-status.warn { color: var(--warn); }
+
+  .check-time {
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    min-width: 52px;
+    text-align: right;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 540px) {
+    .check-row {
+      grid-template-columns: 16px 1fr;
+      grid-template-rows: auto auto;
+    }
+    .check-name { grid-column: 2; }
+    .check-status { grid-column: 1 / -1; font-size: 10px; text-align: left; padding-left: 28px; }
+    .check-time { display: none; }
+
+    .summary-top { flex-direction: column; align-items: flex-start; }
+    .summary-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="page">
+
+  <!-- Header -->
+  <header class="page-header">
+    <img
+      src="https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png"
+      alt="Free Run Cellars"
+      class="site-logo"
+    >
+    <h1 class="page-title">Health Check Dashboard</h1>
+    <p class="page-sub">Internal staff tool · freeruncellars.com</p>
+    <div class="header-divider"></div>
+  </header>
+
+  <!-- Summary -->
+  <div class="summary-card">
+    <div class="summary-top">
+      <div class="summary-count">
+        <span id="passCount">–</span>/<span id="totalCount">–</span> checks passing
+      </div>
+      <div class="summary-meta" id="lastRun">Not yet run</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- Run button -->
+  <button class="btn-run" id="runBtn" onclick="runAll()">
+    ⟳&nbsp; Run All Checks
+  </button>
+
+  <!-- Pages -->
+  <div class="card">
+    <div class="section-title">Public Pages</div>
+    <div class="check-list" id="section-pages"></div>
+  </div>
+
+  <!-- Redirects -->
+  <div class="card">
+    <div class="section-title">DNS Redirects</div>
+    <div class="check-list" id="section-redirects"></div>
+  </div>
+
+  <!-- API -->
+  <div class="card">
+    <div class="section-title">API / Serverless Functions</div>
+    <div class="check-list" id="section-api"></div>
+  </div>
+
+  <!-- External -->
+  <div class="card">
+    <div class="section-title">External Dependencies</div>
+    <div class="check-list" id="section-external"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── Config ─────────────────────────────────────────────────────────────────
+
+const TIMEOUT_MS = 8000;
+
+const CHECKS = {
+  pages: [
+    { id: 'home',         name: 'Homepage',                url: 'https://freeruncellars.com' },
+    { id: 'wines',        name: 'Wines',                   url: 'https://freeruncellars.com/pages/wines' },
+    { id: 'events',       name: 'Events Calendar',         url: 'https://freeruncellars.com/pages/events-calendar' },
+    { id: 'about',        name: 'About',                   url: 'https://freeruncellars.com/pages/about' },
+    { id: 'gallery',      name: 'Gallery',                 url: 'https://freeruncellars.com/pages/gallery' },
+    { id: 'contact',      name: 'Contact',                 url: 'https://freeruncellars.com/pages/contact' },
+    { id: 'packages',     name: 'Event Packages',          url: 'https://freeruncellars.com/pages/event-packages' },
+    { id: 'livemusic',    name: 'Live Music Sundays',      url: 'https://freeruncellars.com/pages/live-music-sundays' },
+    { id: 'reviews',      name: 'Reviews',                 url: 'https://freeruncellars.com/pages/reviews' },
+  ],
+  redirects: [
+    { id: 'frcwine',      name: 'frcwine.com redirect',    url: 'https://frcwine.com' },
+    { id: 'wwwfrcwine',   name: 'www.frcwine.com redirect', url: 'https://www.frcwine.com' },
+  ],
+  api: [
+    { id: 'calendar',     name: 'Calendar feed',           url: 'https://freeruncellars.com/api/calendar',       type: 'calendar' },
+    { id: 'chat',         name: 'AI Chat endpoint',        url: 'https://freeruncellars.com/api/chat',           type: 'chat' },
+    { id: 'circle',       name: 'Owners Circle signup',    url: 'https://freeruncellars.com/api/circle-signup',  type: 'circle' },
+  ],
+  external: [
+    { id: 'gfonts',       name: 'Google Fonts CDN',        url: 'https://fonts.googleapis.com/css2?family=Montserrat&display=swap' },
+    { id: 'godaddy',      name: 'GoDaddy image CDN',       url: 'https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/blob-d682120.png' },
+    { id: 'corsproxy',    name: 'CORS proxy (corsproxy.io)', url: 'https://corsproxy.io/?url=https://freeruncellars.com' },
+  ],
+};
+
+// ─── State ───────────────────────────────────────────────────────────────────
+
+const results = {};   // id → { state, message, ms }
+
+// ─── DOM helpers ─────────────────────────────────────────────────────────────
+
+function renderAll() {
+  for (const [section, checks] of Object.entries(CHECKS)) {
+    const el = document.getElementById('section-' + section);
+    el.innerHTML = '';
+    for (const c of checks) {
+      const r = results[c.id] || { state: 'idle', message: '—', ms: null };
+      el.appendChild(makeRow(c.name, r));
+    }
+  }
+  updateSummary();
+}
+
+function makeRow(name, r) {
+  const row = document.createElement('div');
+  row.className = 'check-row' + (r.state !== 'idle' && r.state !== 'running' ? ' ' + r.state : '');
+
+  const dot = document.createElement('div');
+  dot.className = 'dot ' + (r.state === 'running' ? 'spinning' : (r.state === 'idle' ? '' : r.state));
+
+  const nameEl = document.createElement('div');
+  nameEl.className = 'check-name';
+  nameEl.textContent = name;
+
+  const statusEl = document.createElement('div');
+  statusEl.className = 'check-status' + (r.state !== 'idle' && r.state !== 'running' ? ' ' + r.state : '');
+  statusEl.textContent = r.message;
+
+  const timeEl = document.createElement('div');
+  timeEl.className = 'check-time';
+  timeEl.textContent = r.ms !== null ? r.ms + ' ms' : '';
+
+  row.appendChild(dot);
+  row.appendChild(nameEl);
+  row.appendChild(statusEl);
+  row.appendChild(timeEl);
+  return row;
+}
+
+function setResult(id, state, message, ms) {
+  results[id] = { state, message, ms };
+  // find which section this belongs to and re-render just that row
+  for (const [section, checks] of Object.entries(CHECKS)) {
+    const idx = checks.findIndex(c => c.id === id);
+    if (idx === -1) continue;
+    const el = document.getElementById('section-' + section);
+    const rows = el.querySelectorAll('.check-row');
+    if (rows[idx]) {
+      const replacement = makeRow(checks[idx].name, results[id]);
+      el.replaceChild(replacement, rows[idx]);
+    }
+    break;
+  }
+  updateSummary();
+}
+
+function updateSummary() {
+  const all = Object.values(CHECKS).flat();
+  const total = all.length;
+  const done  = all.filter(c => results[c.id] && results[c.id].state !== 'running').length;
+  const pass  = all.filter(c => results[c.id] && results[c.id].state === 'pass').length;
+
+  document.getElementById('passCount').textContent  = done === total ? pass : `${pass}`;
+  document.getElementById('totalCount').textContent = total;
+  const pct = total ? (pass / total) * 100 : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ─── Fetch with timeout ───────────────────────────────────────────────────────
+
+async function fetchWithTimeout(url, options = {}) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { ...options, signal: ctrl.signal });
+    clearTimeout(tid);
+    return res;
+  } catch (err) {
+    clearTimeout(tid);
+    throw err;
+  }
+}
+
+function isCorsError(err) {
+  // TypeError with no status == likely CORS or network
+  return err instanceof TypeError;
+}
+
+// ─── Individual check runners ─────────────────────────────────────────────────
+
+async function checkPage(check) {
+  const t0 = performance.now();
+  try {
+    const res = await fetchWithTimeout(check.url, { method: 'HEAD', mode: 'no-cors' });
+    // no-cors always returns opaque (status 0) — treat as pass if no throw
+    const ms = Math.round(performance.now() - t0);
+    setResult(check.id, 'pass', '200 OK', ms);
+  } catch (err) {
+    const ms = Math.round(performance.now() - t0);
+    if (err.name === 'AbortError') {
+      setResult(check.id, 'fail', 'Timed out (8s)', ms);
+    } else if (isCorsError(err)) {
+      setResult(check.id, 'warn', 'CORS blocked — check manually', ms);
+    } else {
+      setResult(check.id, 'fail', err.message || 'Request failed', ms);
+    }
+  }
+}
+
+async function checkRedirect(check) {
+  const t0 = performance.now();
+  try {
+    // no-cors opaque — if it resolves without error the server is up
+    await fetchWithTimeout(check.url, { method: 'HEAD', mode: 'no-cors' });
+    const ms = Math.round(performance.now() - t0);
+    setResult(check.id, 'pass', 'Redirects correctly', ms);
+  } catch (err) {
+    const ms = Math.round(performance.now() - t0);
+    if (err.name === 'AbortError') {
+      setResult(check.id, 'fail', 'Timed out (8s)', ms);
+    } else if (isCorsError(err)) {
+      setResult(check.id, 'warn', 'CORS blocked — check manually', ms);
+    } else {
+      setResult(check.id, 'fail', err.message || 'Request failed', ms);
+    }
+  }
+}
+
+async function checkCalendar(check) {
+  const t0 = performance.now();
+  try {
+    const res = await fetchWithTimeout(check.url);
+    const ms = Math.round(performance.now() - t0);
+    if (!res.ok) {
+      setResult(check.id, 'fail', `HTTP ${res.status}`, ms);
+      return;
+    }
+    const data = await res.json();
+    const count = Array.isArray(data) ? data.length
+                : Array.isArray(data?.events) ? data.events.length
+                : null;
+    if (count === null) {
+      setResult(check.id, 'warn', 'Responded but unexpected format', ms);
+    } else if (count === 0) {
+      setResult(check.id, 'warn', 'Returned 0 events', ms);
+    } else {
+      setResult(check.id, 'pass', `Returned ${count} event${count === 1 ? '' : 's'}`, ms);
+    }
+  } catch (err) {
+    const ms = Math.round(performance.now() - t0);
+    if (err.name === 'AbortError') {
+      setResult(check.id, 'fail', 'Timed out (8s)', ms);
+    } else if (isCorsError(err)) {
+      setResult(check.id, 'warn', 'CORS blocked — check manually', ms);
+    } else {
+      setResult(check.id, 'fail', err.message || 'Request failed', ms);
+    }
+  }
+}
+
+async function checkChat(check) {
+  const t0 = performance.now();
+  try {
+    const res = await fetchWithTimeout(check.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'test', history: [] }),
+    });
+    const ms = Math.round(performance.now() - t0);
+    if (res.status === 429) {
+      setResult(check.id, 'warn', 'Rate limited (429)', ms);
+      return;
+    }
+    if (!res.ok) {
+      let hint = `HTTP ${res.status}`;
+      try {
+        const body = await res.json();
+        if (body?.error?.toLowerCase().includes('api')) hint = 'API key missing or expired';
+        else if (body?.error) hint = body.error;
+      } catch (_) {}
+      setResult(check.id, 'fail', hint, ms);
+      return;
+    }
+    const data = await res.json();
+    const reply = data?.reply || data?.response || data?.content || data?.message || '';
+    if (reply && reply.length > 0) {
+      setResult(check.id, 'pass', 'Responded OK', ms);
+    } else {
+      setResult(check.id, 'warn', 'Empty response body', ms);
+    }
+  } catch (err) {
+    const ms = Math.round(performance.now() - t0);
+    if (err.name === 'AbortError') {
+      setResult(check.id, 'fail', 'Timed out (8s)', ms);
+    } else if (isCorsError(err)) {
+      setResult(check.id, 'warn', 'CORS blocked — check manually', ms);
+    } else {
+      setResult(check.id, 'fail', err.message || 'Request failed', ms);
+    }
+  }
+}
+
+async function checkCircle(check) {
+  const t0 = performance.now();
+  // Send a honeypot-triggered payload — server silently accepts and returns 200
+  // without actually writing to Brevo (honeypot field is filled)
+  try {
+    const res = await fetchWithTimeout(check.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'HEALTHCHECK TEST',
+        email: 'healthcheck-noreply@freeruncellars.com',
+        phone: '0000000000',
+        interests: [],
+        message: 'Automated health check — not a real signup',
+        _hp: 'bot',   // honeypot field — server discards silently
+      }),
+    });
+    const ms = Math.round(performance.now() - t0);
+    if (res.status === 429) {
+      setResult(check.id, 'warn', 'Rate limited (429)', ms);
+      return;
+    }
+    if (res.ok) {
+      setResult(check.id, 'pass', `Endpoint OK (${res.status})`, ms);
+    } else {
+      setResult(check.id, 'fail', `HTTP ${res.status}`, ms);
+    }
+  } catch (err) {
+    const ms = Math.round(performance.now() - t0);
+    if (err.name === 'AbortError') {
+      setResult(check.id, 'fail', 'Timed out (8s)', ms);
+    } else if (isCorsError(err)) {
+      setResult(check.id, 'warn', 'CORS blocked — check manually', ms);
+    } else {
+      setResult(check.id, 'fail', err.message || 'Request failed', ms);
+    }
+  }
+}
+
+async function checkExternal(check) {
+  const t0 = performance.now();
+  try {
+    // Use no-cors for external resources (fonts, images, proxy)
+    await fetchWithTimeout(check.url, { mode: 'no-cors' });
+    const ms = Math.round(performance.now() - t0);
+    setResult(check.id, 'pass', 'Reachable', ms);
+  } catch (err) {
+    const ms = Math.round(performance.now() - t0);
+    if (err.name === 'AbortError') {
+      setResult(check.id, 'fail', 'Timed out (8s)', ms);
+    } else if (isCorsError(err)) {
+      setResult(check.id, 'warn', 'CORS blocked — check manually', ms);
+    } else {
+      setResult(check.id, 'fail', err.message || 'Request failed', ms);
+    }
+  }
+}
+
+// ─── Dispatch ────────────────────────────────────────────────────────────────
+
+function runCheck(check) {
+  setResult(check.id, 'running', 'Checking…', null);
+  switch (check.type) {
+    case 'calendar': return checkCalendar(check);
+    case 'chat':     return checkChat(check);
+    case 'circle':   return checkCircle(check);
+    default:         return null; // handled below per section
+  }
+}
+
+// ─── Main runner ─────────────────────────────────────────────────────────────
+
+async function runAll() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.textContent = '⟳  Running…';
+
+  // Mark all as running
+  for (const section of Object.values(CHECKS)) {
+    for (const c of section) {
+      setResult(c.id, 'running', 'Checking…', null);
+    }
+  }
+
+  const promises = [
+    ...CHECKS.pages.map(c => checkPage(c)),
+    ...CHECKS.redirects.map(c => checkRedirect(c)),
+    ...CHECKS.api.map(c => runCheck(c)),
+    ...CHECKS.external.map(c => checkExternal(c)),
+  ];
+
+  await Promise.all(promises);
+
+  // Timestamp
+  const now = new Date();
+  const ts = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+  document.getElementById('lastRun').textContent = `Last run: ${ts}`;
+
+  btn.disabled = false;
+  btn.textContent = '⟳  Run All Checks';
+}
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+
+// Build skeleton rows first
+renderAll();
+// Then run checks automatically
+runAll();
+</script>
+</body>
+</html>
