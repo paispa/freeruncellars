@@ -51,7 +51,9 @@ freeruncellars/
 │   ├── upload-photo.js           # Photo booth image storage (Vercel Blob)
 │   ├── circle-signup.js          # Owners Circle form → Brevo + email notification
 │   ├── contact.js                # Contact page inquiry form → Brevo email to contact@frcwine.com
-│   └── lead.js                   # Chat widget lead capture → Brevo email to contact@frcwine.com
+│   ├── lead.js                   # Chat widget lead capture → Brevo email to contact@frcwine.com
+│   ├── poynt-auth.js             # Poynt OAuth2 token management (JWT signing + caching)
+│   └── poynt-sales.js            # Poynt POS sales data, flight allocation, inventory predictions
 │
 ├── pages/                        # All public content pages
 │   ├── about.html                # Our Story / owner bios
@@ -65,6 +67,7 @@ freeruncellars/
 │   └── circle.html               # ⚠️ Owners Circle — NOT linked publicly, share URL directly
 │
 ├── tools/                        # Internal staff utilities (not linked publicly)
+│   ├── dashboard.html            # Sales dashboard (Poynt POS integration, password-protected)
 │   ├── post-generator.html       # AI-powered Facebook post generator
 │   ├── photobooth.html           # Event photo booth (camera + email via EmailJS)
 │   ├── email-template-single.html  # EmailJS template — single photo
@@ -108,6 +111,28 @@ Receives a base64 image from the photo booth, uploads binary to Vercel Blob, and
 - Enforces a 5 MB cap on the decoded buffer
 - Rate-limited to 10 uploads/IP/min
 
+### `api/poynt-auth.js`
+Poynt OAuth2 token management. Signs a self-issued JWT (RS256) using the app's private key, exchanges it for an access token at `services.poynt.net/token`, and caches the token in memory with a 60-second safety margin before expiry. Also exposes a diagnostic HTTP handler (POST with dashboard password) that returns a token preview.
+- Uses `POYNT_APP_ID` and `POYNT_PRIVATE_KEY` environment variables
+- Private key stored in Vercel env var with `\n`-escaped newlines (decoded at runtime)
+- Rate-limited to 10 requests/IP/min
+
+### `api/poynt-sales.js`
+Fetches orders from the Poynt POS API and returns aggregated sales data. Key features:
+- **Flight allocation**: distributes flight revenue equally across member wines (e.g. "Dry White Flight" → Dry Riesling + Pinot Gris + Fusion)
+- **Inventory predictions**: given starting case counts, computes bottles used, remaining cases, bottles/day velocity, and runway (days until depletion)
+- Paginates through up to 2,000 orders per request
+- Returns summary metrics, per-wine breakdown, daily revenue timeline, and inventory results
+- Rate-limited to 10 requests/IP/min; requires `DASHBOARD_PASSWORD`
+
+### `tools/dashboard.html`
+Password-protected staff sales dashboard (noindex, not linked from site). Dark-themed UI matching photobooth/post-generator style.
+- **Quick-select date range**: This Week, Last 30 Days, This Month, Year to Date
+- **Summary metrics**: total revenue, transaction count, top wine
+- **Revenue timeline**: SVG line chart with daily data points
+- **Sales by wine table**: glasses, bottles, flight shares, and revenue per wine
+- **Inventory tracker**: enter starting case counts (persisted in localStorage), see bottles used, remaining cases, and depletion runway predictions with velocity (btl/day)
+
 ### `tools/photobooth.html`
 CONFIG is filled in at the top of the file (keys committed to repo). For a 3-photo session the browser composites all three frames into one vertical film-strip canvas (dark background, FRC logo centred at the bottom) before uploading — so only a single image is stored and emailed.
 
@@ -133,6 +158,10 @@ const CONFIG = {
 | `BLOB_READ_WRITE_TOKEN` | `api/upload-photo.js` | Vercel Blob store token for photo storage |
 | `BREVO_API_KEY` | `api/circle-signup.js` | Brevo API key (xkeysib-…) |
 | `BREVO_CIRCLE_LIST_ID` | `api/circle-signup.js` | Numeric ID of the "Owners Circle" Brevo list |
+| `POYNT_APP_ID` | `api/poynt-auth.js` | Poynt application ID (from Poynt Developer Portal) |
+| `POYNT_PRIVATE_KEY` | `api/poynt-auth.js` | PEM-encoded RSA private key with `\n`-escaped newlines |
+| `POYNT_BUSINESS_ID` | `api/poynt-sales.js` | Poynt business UUID (from HQ dashboard or terminal) |
+| `DASHBOARD_PASSWORD` | `api/poynt-sales.js` | Staff password for the sales dashboard |
 
 Set these in **Vercel project settings**, not in the repo.
 
@@ -369,6 +398,18 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 11)
+
+Sales dashboard with Poynt POS integration:
+
+- **Sales dashboard** (`tools/dashboard.html`): password-protected staff tool at `/tools/dashboard`. Dark-themed UI (noindex, not linked from site). Shows revenue, transaction count, top wine, daily revenue chart, and per-wine sales breakdown (glasses, bottles, flight shares). Date range selectable via quick-select buttons (This Week, Last 30 Days, This Month, YTD) or manual date pickers.
+- **Poynt auth** (`api/poynt-auth.js`): serverless function for Poynt OAuth2. Signs a self-issued RS256 JWT, exchanges it for an access token, and caches in memory. Private key stored as `\n`-escaped PEM in `POYNT_PRIVATE_KEY` env var.
+- **Poynt sales** (`api/poynt-sales.js`): fetches orders from Poynt API with pagination (up to 2,000 orders). Allocates flight revenue equally across member wines. Computes inventory predictions: bottles/day velocity over the queried period and runway (days until depletion) for each wine.
+- **Flight allocation**: "Dry White Flight" → Dry Riesling + Pinot Gris + Fusion; "Dry Red Flight" → Rosé + Lemberger + Meritage; "Sweet Flight" → Mezzo + Valvin Muscat + Rosso. Revenue split equally; each member wine gets a `flightShares` count.
+- **Inventory persistence**: starting case counts entered in the dashboard auto-save to `localStorage`, restored on next session.
+- **Depletion predictions**: Runway column in inventory table — red (≤14d), amber (15–30d), green (31d+) — with bottles/day velocity sub-label. Server returns `bottlesPerDay` and `runwayDays` per wine.
+- **Env vars**: `POYNT_APP_ID`, `POYNT_PRIVATE_KEY`, `POYNT_BUSINESS_ID`, `DASHBOARD_PASSWORD` — all set in Vercel project settings.
+
 ## Recent Additions (March 2026 — part 10)
 
 Contact form enhancements and nav rename:
@@ -498,6 +539,7 @@ status: sold-out
 | Vercel | Hosting + serverless functions | `vercel.json` + Vercel dashboard |
 | GoDaddy | Domain + image CDN | GoDaddy dashboard |
 | Outlook/Microsoft 365 | Events calendar (ICS feed) | Microsoft 365 calendar |
+| Poynt POS | Sales data for staff dashboard | `POYNT_APP_ID` + `POYNT_PRIVATE_KEY` + `POYNT_BUSINESS_ID` in Vercel env |
 | GitHub | Source control + CI/CD trigger | github.com/paispa/freeruncellars |
 
 ---
