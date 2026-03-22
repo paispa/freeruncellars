@@ -148,41 +148,40 @@ async function fetchOrders(token, startAt, endAt) {
 // ─── HTTP handler ───────────────────────────────────────────────────────────
 
 module.exports = async function handler(req, res) {
-  if (!applyCors(req, res)) return res.status(403).json({ error: 'origin_not_allowed' });
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(204).end();
-  }
-  if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
-
-  const ip = getClientIp(req);
-  if (isRateLimited(ip)) return res.status(429).json({ error: 'rate_limited' });
-
-  const { password, startDate, endDate, inventory } = req.body || {};
-
-  // Auth
-  if (!password || password !== process.env.DASHBOARD_PASSWORD) {
-    return res.status(401).json({ error: 'unauthorized' });
-  }
-
-  if (!POYNT_BUSINESS_ID) {
-    return res.status(500).json({ error: 'poynt_not_configured' });
-  }
-
-  // Default range: last 30 days
-  const now = new Date();
-  const defaultStart = new Date(now);
-  defaultStart.setDate(defaultStart.getDate() - 30);
-
-  const startAt = startDate
-    ? new Date(startDate).toISOString()
-    : defaultStart.toISOString();
-  const endAt = endDate
-    ? new Date(endDate).toISOString()
-    : now.toISOString();
-
   try {
+    if (!applyCors(req, res)) return res.status(403).json({ error: 'origin_not_allowed' });
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      return res.status(204).end();
+    }
+    if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
+
+    const ip = getClientIp(req);
+    if (isRateLimited(ip)) return res.status(429).json({ error: 'rate_limited' });
+
+    const { password, startDate, endDate, inventory } = req.body || {};
+
+    // Auth
+    if (!password || password !== process.env.DASHBOARD_PASSWORD) {
+      return res.status(401).json({ error: 'unauthorized' });
+    }
+
+    if (!POYNT_BUSINESS_ID) {
+      return res.status(500).json({ error: 'poynt_not_configured', detail: 'POYNT_BUSINESS_ID env var is missing' });
+    }
+
+    // Default range: last 30 days
+    const now = new Date();
+    const defaultStart = new Date(now);
+    defaultStart.setDate(defaultStart.getDate() - 30);
+
+    const startAt = startDate
+      ? new Date(startDate + 'T00:00:00Z').toISOString()
+      : defaultStart.toISOString();
+    const endAt = endDate
+      ? new Date(endDate + 'T23:59:59.999Z').toISOString()
+      : now.toISOString();
     const token = await getAccessToken();
     const orders = await fetchOrders(token, startAt, endAt);
     const wineMap = allocateFlights(orders);
