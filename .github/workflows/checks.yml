@@ -1,0 +1,60 @@
+name: Site Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check HTML validity
+        uses: Cyb3r-Jak3/html5validator-action@v7
+        with:
+          root: .
+          skip_pattern: "node_modules"
+
+      - name: Check for broken links
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: >
+            --exclude "localhost"
+            --exclude "PAYMENT_LINK_HERE"
+            --exclude "corsproxy.io"
+            '**/*.html'
+          fail: true
+
+      - name: JavaScript lint
+        run: npx --yes jshint --extract=auto **/*.html || true
+
+  smoke-test:
+    runs-on: ubuntu-latest
+    needs: validate
+    # Only runs after a successful Vercel deploy
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Wait for Vercel deploy
+        run: sleep 30
+
+      - name: Check key pages are live
+        run: |
+          urls=(
+            "https://freeruncellars.com"
+            "https://freeruncellars.com/pages/wines"
+            "https://freeruncellars.com/pages/events-calendar"
+            "https://freeruncellars.com/pages/contact"
+            "https://freeruncellars.com/api/calendar"
+          )
+          for url in "${urls[@]}"; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+            if [ "$status" != "200" ]; then
+              echo "FAIL: $url returned $status"
+              exit 1
+            else
+              echo "OK: $url"
+            fi
+          done
