@@ -183,7 +183,21 @@ module.exports = async function handler(req, res) {
       ? new Date(endDate + 'T23:59:59.999Z').toISOString()
       : now.toISOString();
     const token = await getAccessToken();
-    const orders = await fetchOrders(token, startAt, endAt);
+    const rawOrders = await fetchOrders(token, startAt, endAt);
+
+    // Poynt filters by updatedAt, not createdAt — so old orders that were
+    // recently modified (refunds, status changes) sneak in. Filter by createdAt
+    // on our side, and exclude cancelled/voided orders.
+    const orders = rawOrders.filter(function(order) {
+      // Filter by createdAt within our date range
+      const created = order.createdAt;
+      if (created && (created < startAt || created > endAt)) return false;
+      // Exclude non-completed orders
+      var status = (order.statuses && order.statuses.status) || '';
+      if (status === 'CANCELLED' || status === 'VOIDED') return false;
+      return true;
+    });
+
     const wineMap = allocateFlights(orders);
     const summary = buildSummary(orders, wineMap);
     const timeline = buildTimeline(orders);
@@ -232,7 +246,7 @@ module.exports = async function handler(req, res) {
       wines: wineMap,
       timeline,
       inventory: inventoryResult,
-      period: { startAt, endAt, days: periodDays },
+      period: { startAt, endAt, days: periodDays, totalFromApi: rawOrders.length, afterFilter: orders.length },
     });
   } catch (err) {
     console.error('poynt-sales error:', err);
