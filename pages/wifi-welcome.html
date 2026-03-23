@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Welcome to Free Run Cellars WiFi</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --teal:      #537f71;
+  --teal-dk:   #3d6155;
+  --teal-lt:   #7aab9a;
+  --teal-pale: #eef4f1;
+  --black:     #0e0e0e;
+  --dark-bg:   #0d1a14;
+  --dark-card: #131f18;
+  --dark-border: rgba(83,127,113,.22);
+  --off-white: #f7f4f0;
+  --grey:      #787470;
+  --text-dim:  rgba(247,244,240,.62);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Jost',sans-serif;
+  background:var(--dark-bg);
+  color:var(--off-white);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:24px 20px 40px;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* Subtle vineyard texture overlay */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:url('../public/images/FR-vineyard-sm-cmyk.jpg');
+  background-size:cover;
+  background-position:center;
+  opacity:.07;
+  pointer-events:none;
+  z-index:0;
+}
+
+.page-wrap {
+  position:relative; z-index:1;
+  width:100%; max-width:420px;
+  display:flex; flex-direction:column;
+  align-items:center; gap:32px;
+}
+
+/* ── LOGO ── */
+.logo-wrap { text-align:center; }
+.logo-wrap img {
+  height:38px;
+  filter:brightness(0) invert(1);
+  opacity:.9;
+}
+
+/* ── HERO TEXT ── */
+.hero-text { text-align:center; }
+
+.eyebrow {
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:9px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--teal-lt); font-weight:500; margin-bottom:18px;
+}
+.eyebrow::before,
+.eyebrow::after { content:''; width:28px; height:1px; background:var(--teal-lt); }
+
+.headline {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,9vw,52px);
+  font-weight:300; font-style:italic;
+  line-height:1.08; letter-spacing:-.2px;
+  color:var(--off-white);
+  margin-bottom:16px;
+}
+.headline em { font-style:normal; color:var(--teal-lt); }
+
+.tagline {
+  font-size:13px; font-weight:300;
+  color:var(--text-dim);
+  line-height:1.65;
+  max-width:320px;
+  margin:0 auto;
+}
+
+/* ── CARD ── */
+.card {
+  width:100%;
+  background:var(--dark-card);
+  border:1px solid var(--dark-border);
+  border-radius:14px;
+  padding:32px 28px;
+}
+
+.card-eyebrow {
+  font-size:9px; letter-spacing:3.5px; text-transform:uppercase;
+  color:var(--teal); font-weight:500;
+  margin-bottom:10px;
+}
+
+.card-heading {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:400;
+  color:var(--off-white);
+  margin-bottom:6px;
+}
+
+.card-sub {
+  font-size:12px; color:var(--text-dim); line-height:1.6;
+  margin-bottom:24px;
+}
+
+/* ── FORM ── */
+.field { margin-bottom:16px; }
+
+.field label {
+  display:block;
+  font-size:9px; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--teal-lt); font-weight:500;
+  margin-bottom:7px;
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="tel"] {
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:7px;
+  padding:12px 14px;
+  font-family:'Jost',sans-serif;
+  font-size:14px; font-weight:300;
+  color:var(--off-white);
+  transition:border-color .2s, background .2s;
+  -webkit-appearance:none;
+}
+
+.field input:focus {
+  outline:none;
+  border-color:var(--teal);
+  background:rgba(83,127,113,.08);
+}
+
+.field input::placeholder { color:rgba(247,244,240,.28); }
+
+/* Checkboxes */
+.checks { display:flex; flex-direction:column; gap:12px; margin:20px 0 24px; }
+
+.check-row {
+  display:flex; align-items:flex-start; gap:12px;
+  cursor:pointer;
+}
+
+.check-row input[type="checkbox"] {
+  -webkit-appearance:none;
+  width:18px; height:18px; flex-shrink:0;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:4px;
+  background:rgba(255,255,255,.05);
+  margin-top:1px;
+  cursor:pointer;
+  position:relative;
+  transition:background .15s, border-color .15s;
+}
+
+.check-row input[type="checkbox"]:checked {
+  background:var(--teal);
+  border-color:var(--teal);
+}
+
+.check-row input[type="checkbox"]:checked::after {
+  content:'';
+  position:absolute; top:3px; left:5px;
+  width:6px; height:9px;
+  border:2px solid #fff;
+  border-top:none; border-left:none;
+  transform:rotate(45deg);
+}
+
+.check-label { font-size:12px; color:var(--text-dim); line-height:1.55; }
+.check-label strong { color:var(--off-white); font-weight:500; }
+
+/* Buttons */
+.btn-submit {
+  width:100%;
+  background:var(--teal);
+  color:#fff;
+  border:none;
+  border-radius:7px;
+  padding:14px 24px;
+  font-family:'Jost',sans-serif;
+  font-size:10.5px; font-weight:600;
+  letter-spacing:2.5px; text-transform:uppercase;
+  cursor:pointer;
+  transition:background .2s, transform .1s;
+  margin-bottom:12px;
+}
+
+.btn-submit:hover { background:var(--teal-dk); }
+.btn-submit:active { transform:scale(.98); }
+
+.btn-submit:disabled {
+  opacity:.55; cursor:not-allowed;
+  transform:none;
+}
+
+.btn-skip {
+  display:block; width:100%; text-align:center;
+  font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+  color:rgba(247,244,240,.35); font-weight:400;
+  cursor:pointer;
+  background:none; border:none;
+  font-family:'Jost',sans-serif;
+  padding:6px;
+  transition:color .2s;
+  text-decoration:none;
+}
+.btn-skip:hover { color:rgba(247,244,240,.65); }
+
+/* Error */
+.form-error {
+  font-size:11px; color:#e07070;
+  text-align:center; margin-bottom:12px;
+  display:none;
+}
+.form-error.visible { display:block; }
+
+/* ── SUCCESS STATE ── */
+.success-state {
+  display:none;
+  text-align:center;
+  padding:8px 0;
+}
+
+.success-icon {
+  width:52px; height:52px;
+  border-radius:50%;
+  background:rgba(83,127,113,.18);
+  border:1px solid var(--teal);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 20px;
+}
+
+.success-icon svg { width:22px; height:22px; stroke:var(--teal-lt); }
+
+.success-heading {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:400; font-style:italic;
+  color:var(--off-white); margin-bottom:10px;
+}
+
+.success-sub {
+  font-size:12px; color:var(--text-dim); line-height:1.65;
+  margin-bottom:28px; max-width:280px; margin-left:auto; margin-right:auto;
+}
+
+.btn-continue {
+  display:inline-block;
+  background:var(--teal);
+  color:#fff;
+  border:none; border-radius:7px;
+  padding:13px 32px;
+  font-family:'Jost',sans-serif;
+  font-size:10.5px; font-weight:600;
+  letter-spacing:2.5px; text-transform:uppercase;
+  cursor:pointer;
+  transition:background .2s;
+  text-decoration:none;
+}
+.btn-continue:hover { background:var(--teal-dk); }
+
+/* ── SKIP STATE ── */
+.skip-state {
+  display:none;
+  text-align:center;
+  padding:8px 0;
+}
+
+.skip-heading {
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px; font-weight:400; font-style:italic;
+  color:var(--off-white); margin-bottom:10px;
+}
+
+.skip-sub {
+  font-size:12px; color:var(--text-dim); line-height:1.65;
+  margin-bottom:24px;
+}
+
+/* ── FOOTER ── */
+.wifi-footer {
+  font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
+  color:rgba(247,244,240,.22);
+  text-align:center;
+}
+
+/* ── RETURN VISITOR BANNER ── */
+.return-banner {
+  display:none;
+  width:100%;
+  background:rgba(83,127,113,.12);
+  border:1px solid rgba(83,127,113,.28);
+  border-radius:10px;
+  padding:14px 18px;
+  text-align:center;
+}
+.return-banner.visible { display:block; }
+.return-banner-text {
+  font-size:13px; color:var(--teal-lt); line-height:1.55;
+  font-style:italic;
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:400;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width:380px) {
+  .card { padding:26px 20px; }
+  body { padding:20px 16px 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <img src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+         alt="Free Run Cellars">
+  </div>
+
+  <!-- Return visitor banner (shown via JS) -->
+  <div class="return-banner" id="returnBanner">
+    <p class="return-banner-text" id="returnBannerText">Welcome back — wonderful to see you again.</p>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-text">
+    <div class="eyebrow">Guest WiFi</div>
+    <h1 class="headline">You're <em>connected</em>.</h1>
+    <p class="tagline">Who needs bars on your phone when you've got wine by the glass?</p>
+  </div>
+
+  <!-- Card -->
+  <div class="card" id="formCard">
+
+    <div id="formState">
+      <p class="card-eyebrow">Stay in the loop</p>
+      <h2 class="card-heading">Join the Free Run family</h2>
+      <p class="card-sub" id="cardSub">Drop your info below and we'll keep you posted on new releases, live music, and events. Entirely optional — skip anytime.</p>
+
+      <form id="wifiForm" novalidate>
+        <div class="field">
+          <label for="fname">Name</label>
+          <input type="text" id="fname" name="name" placeholder="Your first name" autocomplete="given-name">
+        </div>
+        <div class="field">
+          <label for="femail">Email</label>
+          <input type="email" id="femail" name="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="fphone">Phone <span style="opacity:.5;font-size:9px;letter-spacing:1px">(optional)</span></label>
+          <input type="tel" id="fphone" name="phone" placeholder="(555) 555-5555" autocomplete="tel">
+        </div>
+
+        <div class="checks">
+          <label class="check-row">
+            <input type="checkbox" id="chkNewsletter" name="newsletter" checked>
+            <span class="check-label"><strong>Email updates</strong> — new wine releases, events & live music</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="chkSms" name="sms">
+            <span class="check-label"><strong>Text alerts</strong> — occasional SMS for last-minute events & specials</span>
+          </label>
+        </div>
+
+        <p class="form-error" id="formError">Please enter a valid email address.</p>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">Connect &amp; Sign Up</button>
+        <button type="button" class="btn-skip" id="btnSkip">Skip for now</button>
+      </form>
+    </div>
+
+    <!-- Success state -->
+    <div class="success-state" id="successState">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2 class="success-heading" id="successHeading">You're all set!</h2>
+      <p class="success-sub" id="successSub">Thanks for joining the Free Run family. Now go enjoy a glass — you've earned it.</p>
+      <a href="https://www.frcwine.com" class="btn-continue">Browse Our Wines</a>
+    </div>
+
+    <!-- Skip state -->
+    <div class="skip-state" id="skipState">
+      <h2 class="skip-heading">Enjoy your visit.</h2>
+      <p class="skip-sub">You're connected to the Free Run Cellars WiFi. Cheers!</p>
+      <a href="https://www.frcwine.com" class="btn-continue">Visit Our Site</a>
+    </div>
+
+  </div>
+
+  <p class="wifi-footer">Free Run Cellars &nbsp;·&nbsp; Berrien Springs, MI</p>
+
+</div><!-- /page-wrap -->
+
+<script>
+(function () {
+  const STORAGE_KEY = 'frc_wifi_guest';
+
+  // ── Read / update visit record ──────────────────────────────────────────
+  function getRecord() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+  function saveRecord(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  }
+
+  const record = getRecord();
+  const visits = (record.visits || 0) + 1;
+  const name   = record.name || '';
+
+  saveRecord({ ...record, visits, lastVisit: new Date().toISOString() });
+
+  // ── Return visitor banner ───────────────────────────────────────────────
+  if (visits > 1) {
+    const banner = document.getElementById('returnBanner');
+    const bannerText = document.getElementById('returnBannerText');
+    const greeting = name
+      ? `Welcome back, ${name} — always a pleasure.`
+      : `Welcome back — wonderful to see you again.`;
+    bannerText.textContent = greeting;
+    banner.classList.add('visible');
+
+    // Personalise card sub-text too
+    if (name) {
+      document.getElementById('cardSub').textContent =
+        `Good to see you again, ${name}. Update your preferences below, or just skip and enjoy.`;
+    }
+  }
+
+  // ── Phone formatting ────────────────────────────────────────────────────
+  document.getElementById('fphone').addEventListener('input', function () {
+    const digits = this.value.replace(/\D/g, '').slice(0, 10);
+    if (digits.length >= 7) {
+      this.value = `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+    } else if (digits.length >= 4) {
+      this.value = `(${digits.slice(0,3)}) ${digits.slice(3)}`;
+    } else if (digits.length > 0) {
+      this.value = `(${digits}`;
+    }
+  });
+
+  // ── Form submit ─────────────────────────────────────────────────────────
+  document.getElementById('wifiForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const nameVal       = document.getElementById('fname').value.trim();
+    const emailVal      = document.getElementById('femail').value.trim();
+    const phoneVal      = document.getElementById('fphone').value.trim();
+    const newsletter    = document.getElementById('chkNewsletter').checked;
+    const sms           = document.getElementById('chkSms').checked;
+    const errorEl       = document.getElementById('formError');
+    const btn           = document.getElementById('btnSubmit');
+
+    // Validate email
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailVal || !emailRe.test(emailVal)) {
+      errorEl.textContent = 'Please enter a valid email address.';
+      errorEl.classList.add('visible');
+      document.getElementById('femail').focus();
+      return;
+    }
+    errorEl.classList.remove('visible');
+
+    btn.disabled = true;
+    btn.textContent = 'Signing up…';
+
+    try {
+      const res = await fetch('/api/wifi-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: nameVal, email: emailVal, phone: phoneVal, newsletter, sms, visits })
+      });
+
+      if (!res.ok && res.status !== 204) {
+        throw new Error('Server error');
+      }
+
+      // Persist name locally for future return greetings
+      if (nameVal) saveRecord({ ...getRecord(), name: nameVal });
+
+      showSuccess(nameVal);
+
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Connect & Sign Up';
+      errorEl.textContent = 'Something went wrong. Please try again.';
+      errorEl.classList.add('visible');
+    }
+  });
+
+  // ── Skip ────────────────────────────────────────────────────────────────
+  document.getElementById('btnSkip').addEventListener('click', function () {
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('skipState').style.display = 'block';
+  });
+
+  // ── Show success ────────────────────────────────────────────────────────
+  function showSuccess(nameVal) {
+    document.getElementById('formState').style.display = 'none';
+    const successState = document.getElementById('successState');
+    successState.style.display = 'block';
+
+    if (nameVal) {
+      document.getElementById('successHeading').textContent = `You're all set, ${nameVal}!`;
+    }
+  }
+
+})();
+</script>
+
+</body>
+</html>

@@ -7,5 +7,17 @@
       "destination": "https://www.frcwine.com/$1",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "wifi.freeruncellars.com" }],
+      "destination": "/pages/wifi-welcome.html"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "has": [{ "type": "host", "value": "wifi.freeruncellars.com" }],
+      "destination": "/pages/wifi-welcome.html"
+    }
   ]
 }
