@@ -12,6 +12,12 @@
       "has": [{ "type": "host", "value": "www.frcwine.com" }],
       "destination": "https://freeruncellars.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "wifi.freeruncellars.com" }],
+      "destination": "https://freeruncellars.com/pages/wifi-welcome",
+      "permanent": false
     }
   ],
   "crons": [
@@ -24,16 +30,11 @@
       "schedule": "0 15 * * 5"
     }
   ],
-  "rewrites": [
+  "headers": [
     {
-      "source": "/",
-      "has": [{ "type": "host", "value": "wifi.freeruncellars.com" }],
-      "destination": "/pages/wifi-welcome.html"
-    },
-    {
-      "source": "/((?!api/).*)",
-      "has": [{ "type": "host", "value": "wifi.freeruncellars.com" }],
-      "destination": "/pages/wifi-welcome.html"
+      "source": "/robots.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain" }]
     }
-  ]
+  ],
+  "rewrites": []
 }
