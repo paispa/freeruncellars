@@ -700,10 +700,10 @@ async function submitForm() {
   btnText.innerHTML = '<div class="spinner"></div> Sending…';
 
   try {
-    const res = await fetch('/api/circle-signup', {
+    const res = await fetch('/api/brevo', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName, email, phone, message, interests, _hp: document.getElementById('_hp').value }),
+      body: JSON.stringify({ type: 'circle', firstName, lastName, email, phone, message, interests, _hp: document.getElementById('_hp').value }),
     });
 
     if (!res.ok) {

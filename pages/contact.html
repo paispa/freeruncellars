@@ -973,10 +973,10 @@ document.querySelectorAll('.info-block, .hours-table, .map-wrap').forEach((el, i
     btn.textContent = 'Sending…';
 
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('/api/brevo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, optIn, eventDate, inquiry, message, _hp }),
+        body: JSON.stringify({ type: 'contact', name, email, phone, optIn, eventDate, inquiry, message, _hp }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error');

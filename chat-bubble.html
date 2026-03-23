@@ -432,10 +432,10 @@
     addBotMessage(`Perfect, thank you ${name}! 🍷 We'll be in touch at ${email} within 24 hours. In the meantime, feel free to ask anything else about the winery.`);
 
     // Send to our API to forward to contact@frcwine.com
-    fetch(API_URL.replace('chat', 'lead'), {
+    fetch('/api/brevo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, source: 'chat' })
+      body: JSON.stringify({ type: 'lead', name, email, source: 'chat' })
     }).catch(() => {}); // silent fail — don't disrupt chat UX
 
     // Also add to messages so AI knows lead was captured

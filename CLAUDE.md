@@ -46,12 +46,10 @@ freeruncellars/
 │
 ├── api/                          # Vercel serverless functions
 │   ├── _helpers.js               # Shared utilities: CORS, rate limiting, escapeHtml, validation constants
+│   ├── brevo.js                  # Unified Brevo endpoint — routes by type: circle, contact, lead, wifi
 │   ├── chat.js                   # AI chat assistant (Anthropic Claude Haiku)
 │   ├── calendar.js               # Outlook ICS calendar proxy (CORS workaround)
 │   ├── upload-photo.js           # Photo booth image storage (Vercel Blob)
-│   ├── circle-signup.js          # Owners Circle form → Brevo + email notification
-│   ├── contact.js                # Contact page inquiry form → Brevo email to contact@frcwine.com
-│   ├── lead.js                   # Chat widget lead capture → Brevo email to contact@frcwine.com
 │   ├── poynt-auth.js             # Poynt OAuth2 token management (JWT signing + caching)
 │   └── poynt-sales.js            # Poynt POS sales data, flight allocation, inventory predictions
 │
@@ -86,7 +84,7 @@ freeruncellars/
 ## Key Files
 
 ### `api/_helpers.js`
-Shared utilities imported by all three API handlers. Exports:
+Shared utilities imported by all API handlers. Exports:
 - `ALLOWED_ORIGINS` — CORS allowlist (`freeruncellars.com`, `www.freeruncellars.com`, `freeruncellars.vercel.app`)
 - `applyCors(req, res)` — sets `Access-Control-Allow-Origin` for known browser origins; allows no-Origin requests (curl, server-to-server) through without restriction; returns `false` for unknown browser origins
 - `makeRateLimiter(max, windowMs)` — factory returning a per-IP in-memory rate-limiter function
@@ -94,6 +92,15 @@ Shared utilities imported by all three API handlers. Exports:
 - `escapeHtml(str)` — HTML-encodes `& < > " '` for safe email body interpolation
 - `DATA_URI_RE`, `ALLOWED_MIME_TYPES`, `MAX_IMAGE_BYTES` — upload validation constants
 - `INTERESTS_MAP`, `normalizePhone(phone)` — Owners Circle business logic
+
+### `api/brevo.js`
+Unified Brevo endpoint. Routes by `type` field in the POST body:
+- `circle` — Owners Circle signup: validates fields + honeypot, adds/updates contact in the Owners Circle Brevo list, sends notification email to `contact@frcwine.com`. Rate-limited to 5/IP/10 min.
+- `contact` — Contact form inquiry: validates fields + honeypot, sends inquiry notification email; optionally adds contact to mailing list (Brevo list 11) when `optIn` is true. Rate-limited to 5/IP/10 min.
+- `lead` — Chat widget lead capture: receives name + email from the chat bubble, emails `contact@frcwine.com`. Rate-limited to 10/IP/hour.
+- `wifi` — WiFi guest sign-up: creates/updates contact in Brevo with `WIFI_VISITS`, `WIFI_LAST_VISIT`, and optional newsletter/SMS list membership. Rate-limited to 10/IP/10 min.
+
+All types share the same CORS allowlist and use `api/_helpers.js`. Requires `BREVO_API_KEY`; circle type also requires `BREVO_CIRCLE_LIST_ID`; wifi type also uses `BREVO_NEWSLETTER_LIST_ID` and `BREVO_SMS_LIST_ID`.
 
 ### `api/chat.js`
 Anthropic Claude Haiku chatbot for the winery website. Key details:
@@ -156,8 +163,10 @@ const CONFIG = {
 |----------|---------|-------------|
 | `ANTHROPIC_API_KEY` | `api/chat.js` | Anthropic API key for chat assistant |
 | `BLOB_READ_WRITE_TOKEN` | `api/upload-photo.js` | Vercel Blob store token for photo storage |
-| `BREVO_API_KEY` | `api/circle-signup.js` | Brevo API key (xkeysib-…) |
-| `BREVO_CIRCLE_LIST_ID` | `api/circle-signup.js` | Numeric ID of the "Owners Circle" Brevo list |
+| `BREVO_API_KEY` | `api/brevo.js` | Brevo API key (xkeysib-…) |
+| `BREVO_CIRCLE_LIST_ID` | `api/brevo.js` | Numeric ID of the "Owners Circle" Brevo list |
+| `BREVO_NEWSLETTER_LIST_ID` | `api/brevo.js` | Numeric ID of the newsletter Brevo list (WiFi signup) |
+| `BREVO_SMS_LIST_ID` | `api/brevo.js` | Numeric ID of the SMS/text-alerts Brevo list (WiFi signup) |
 | `POYNT_APP_ID` | `api/poynt-auth.js` | Poynt application ID (from Poynt Developer Portal) |
 | `POYNT_PRIVATE_KEY` | `api/poynt-auth.js` | PEM-encoded RSA private key with `\n`-escaped newlines |
 | `POYNT_BUSINESS_ID` | `api/poynt-sales.js` | Poynt business UUID (from HQ dashboard or terminal) |
@@ -368,7 +377,7 @@ Membership landing page shared by private URL only — `freeruncellars.com/pages
 ### What it does
 - Presents the $249/yr membership with $150 credit back
 - Collects interest sign-ups (name, email, phone, interests, message)
-- POSTs to `/api/circle-signup` which:
+- POSTs to `/api/brevo` (type: `circle`) which:
   1. Adds/updates the contact in Brevo under the "Owners Circle" list
   2. Sends a notification email to `contact@frcwine.com` via Brevo transactional email
 
@@ -397,6 +406,15 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
+
+## Recent Additions (March 2026 — part 12)
+
+Consolidated four Brevo API handlers into a single `api/brevo.js` endpoint to stay under Vercel's free-plan limit of 12 serverless functions (was 13, now 10):
+
+- **`api/brevo.js`**: unified POST endpoint routing by `type` field — `circle`, `contact`, `lead`, `wifi`. Each type runs its original logic exactly as-is: same validation, honeypot checks, rate limits, CORS, error handling, and Brevo calls. All four types import shared helpers from `api/_helpers.js`.
+- **Deleted**: `api/circle-signup.js`, `api/contact.js`, `api/lead.js`, `api/wifi-signup.js` — replaced entirely by `api/brevo.js`.
+- **Frontend updated**: `pages/circle.html`, `pages/contact.html`, `pages/wifi-welcome.html`, and `chat-bubble.html` all POST to `/api/brevo` with a `type` field instead of their individual endpoints.
+- **No behavior changes**: env vars, Brevo list IDs, rate limits, and all logic are unchanged.
 
 ## Recent Additions (March 2026 — part 11)
 
