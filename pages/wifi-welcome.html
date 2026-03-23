@@ -495,10 +495,10 @@ body::before {
     btn.textContent = 'Signing up…';
 
     try {
-      const res = await fetch('/api/wifi-signup', {
+      const res = await fetch('/api/brevo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameVal, email: emailVal, phone: phoneVal, newsletter, sms, visits })
+        body: JSON.stringify({ type: 'wifi', name: nameVal, email: emailVal, phone: phoneVal, newsletter, sms, visits })
       });
 
       if (!res.ok && res.status !== 204) {
