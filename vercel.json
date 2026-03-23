@@ -23,5 +23,17 @@
       "path": "/api/weekend-forecast-cron",
       "schedule": "0 15 * * 5"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "wifi.freeruncellars.com" }],
+      "destination": "/pages/wifi-welcome.html"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "has": [{ "type": "host", "value": "wifi.freeruncellars.com" }],
+      "destination": "/pages/wifi-welcome.html"
+    }
   ]
 }
