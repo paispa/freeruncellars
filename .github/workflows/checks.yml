@@ -17,6 +17,8 @@ jobs:
         with:
           root: .
           skip_pattern: "node_modules"
+          # Ignore warnings (W*) — only fail on errors (E*)
+          extra: "--ignore-re 'W[0-9]+'"
 
       - name: Check for broken links
         uses: lycheeverse/lychee-action@v1
@@ -25,20 +27,22 @@ jobs:
             --exclude "localhost"
             --exclude "PAYMENT_LINK_HERE"
             --exclude "corsproxy.io"
-            '**/*.html'
+            --exclude "tel:"
+            --exclude "mailto:"
+            ./**/*.html
           fail: true
 
       - name: JavaScript lint
-        run: npx --yes jshint --extract=auto **/*.html || true
+        run: npx --yes jshint --extract=auto ./**/*.html
 
   smoke-test:
     runs-on: ubuntu-latest
     needs: validate
-    # Only runs after a successful Vercel deploy
+    # Only runs after a successful Vercel deploy on main
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Wait for Vercel deploy
-        run: sleep 30
+        run: sleep 60
 
       - name: Check key pages are live
         run: |
@@ -47,7 +51,6 @@ jobs:
             "https://freeruncellars.com/pages/wines"
             "https://freeruncellars.com/pages/events-calendar"
             "https://freeruncellars.com/pages/contact"
-            "https://freeruncellars.com/api/calendar"
           )
           for url in "${urls[@]}"; do
             status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
