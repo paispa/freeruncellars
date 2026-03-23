@@ -24,6 +24,12 @@
       "schedule": "0 15 * * 5"
     }
   ],
+  "headers": [
+    {
+      "source": "/robots.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain" }]
+    }
+  ],
   "rewrites": [
     {
       "source": "/",
