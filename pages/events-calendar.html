@@ -607,16 +607,22 @@ async function fetchCalendar() {
 // ─────────────────────────────────────────────────────────────────────
 //  HOW TO CONFIGURE EVENTS IN OUTLOOK
 //
-//  Notes/Body field — add any of these lines:
-//    type: live-music        (or tasting | special)
-//    admission: Free         (or "Ticketed · $35", or any text)
-//    status: sold-out        (replaces button with red Sold Out badge)
+//  NOTE: The iCal API does NOT return the Description/Notes field.
+//  Use the event TITLE (pipe syntax) to set type, admission, and status:
+//
+//    Event Name | type: live-music | admission: Free | status: sold-out
+//
+//    type:      live-music (default) · tasting · special
+//    admission: any text, e.g. "Free", "Ticketed · $35"
+//    status:    sold-out   → replaces button with greyed "Sold Out" pill
 //
 //  Location field:
-//    • Street address → shows "Details Coming Soon" (grey disabled button)
-//    • https://... URL → shows teal "Get Tickets" button linking to that URL
+//    • https://... URL → shows teal button linking to that URL
+//        – with admission set: "Get Tickets"
+//        – without admission:  "Learn More"
+//    • Street address  → no button shown
 //
-//  If type is omitted, the page auto-detects from the event title.
+//  If type is omitted, the page auto-detects from the event title keywords.
 // ─────────────────────────────────────────────────────────────────────
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -780,8 +786,10 @@ function renderEvents(events, filter) {
     let btnHtml = '';
     if (isSoldOut) {
       btnHtml = `<span class="sold-out-btn">Sold Out</span>`;
-    } else if (ev.admission && locationIsUrl) {
+    } else if (locationIsUrl && ev.admission) {
       btnHtml = `<a class="event-url-btn" href="${ev.location}" target="_blank" rel="noopener noreferrer">Get Tickets</a>`;
+    } else if (locationIsUrl) {
+      btnHtml = `<a class="event-url-btn" href="${ev.location}" target="_blank" rel="noopener noreferrer">Learn More</a>`;
     } else if (ev.admission) {
       btnHtml = `<span class="sold-out-btn">Details Coming Soon</span>`;
     }

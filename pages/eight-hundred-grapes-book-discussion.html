@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-T51K1F9DVS');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eight Hundred Grapes Book Discussion · Free Run Cellars · April 17th</title>
+<meta name="description" content="Join us Friday, April 17th at 6 PM for a book discussion of Eight Hundred Grapes by Laura Dave at Free Run Cellars. Free admission. Explore the secrets of wine alongside the secrets of the Ford family vineyard.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep:    #06090e;
+  --navy:    #080f1a;
+  --teal:    #537f71;
+  --teal-dk: #3d6155;
+  --teal-lt: #7aab9a;
+  --amber:   #b87c2a;
+  --amber-lt:#d4a050;
+  --cream:   #f0ece2;
+  --muted:   rgba(240,236,226,0.45);
+  --wine:    #6b1a2a;
+  --wine-lt: #9b3a50;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--deep);
+  font-family: 'Jost', sans-serif;
+  color: var(--cream);
+  overflow-x: hidden;
+}
+/* ── Canvas starfield ── */
+#starCanvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+/* ── Layout ── */
+.page { position: relative; z-index: 1; }
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+  background: linear-gradient(180deg, rgba(6,9,14,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(8px);
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none; line-height: 0;
+}
+.nav-press {
+  height: 44px; width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  margin-top: 4px;
+}
+.nav-logo {
+  height: 28px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+.nav-back {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; font-weight: 500;
+  transition: color 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-back:hover { color: var(--teal-lt); }
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 24px 80px;
+  text-align: center;
+  position: relative;
+}
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--teal); font-weight: 500; margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 9vw, 80px);
+  font-weight: 300; font-style: italic;
+  line-height: 1.05; letter-spacing: 1px;
+  color: var(--cream);
+  margin-bottom: 8px;
+  opacity: 0; animation: fadeUp 0.8s 0.35s ease forwards;
+}
+.hero-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 300;
+  color: var(--teal-lt); letter-spacing: 3px;
+  margin-bottom: 10px;
+  opacity: 0; animation: fadeUp 0.8s 0.5s ease forwards;
+}
+.hero-author {
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--amber-lt); font-weight: 400;
+  margin-bottom: 44px;
+  opacity: 0; animation: fadeUp 0.8s 0.6s ease forwards;
+}
+/* Book / grape illustration */
+.hero-visual {
+  width: min(200px, 50vw);
+  margin: 0 auto 44px;
+  opacity: 0; animation: fadeUp 0.8s 0.65s ease forwards;
+  filter: drop-shadow(0 0 40px rgba(83,127,113,0.3)) drop-shadow(0 0 80px rgba(107,26,42,0.2));
+}
+.hero-date-badge {
+  display: inline-flex; flex-direction: column; align-items: center;
+  background: rgba(83,127,113,0.1);
+  border: 1px solid rgba(83,127,113,0.35);
+  border-radius: 16px;
+  padding: 20px 40px;
+  margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.8s 0.8s ease forwards;
+}
+.badge-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 300; font-style: italic;
+  color: var(--cream); line-height: 1;
+}
+.badge-detail {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--teal); margin-top: 4px; font-weight: 500;
+}
+.hero-free-badge {
+  display: inline-block;
+  background: rgba(83,127,113,0.15);
+  border: 1px solid rgba(83,127,113,0.4);
+  border-radius: 50px;
+  padding: 8px 28px;
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--teal-lt); font-weight: 500;
+  margin-bottom: 36px;
+  opacity: 0; animation: fadeUp 0.8s 0.9s ease forwards;
+}
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0; animation: fadeUp 1s 1.4s ease forwards;
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(180deg, var(--teal), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 0.8; transform: scaleY(1.1); }
+}
+/* ── DIVIDER ── */
+.section-divider {
+  width: 80px; height: 1px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+}
+/* ── ABOUT THE BOOK ── */
+.book-section {
+  padding: 100px 24px;
+  max-width: 760px; margin: 0 auto;
+  text-align: center;
+}
+.section-label {
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--teal); font-weight: 500; text-align: center;
+  margin-bottom: 16px;
+}
+.section-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px, 5vw, 46px); font-weight: 300; font-style: italic;
+  color: var(--cream); text-align: center; line-height: 1.2;
+  margin-bottom: 40px;
+}
+.book-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 3.5vw, 28px);
+  font-style: italic; font-weight: 300;
+  color: var(--amber-lt);
+  line-height: 1.5;
+  margin-bottom: 32px;
+  padding: 0 20px;
+  position: relative;
+}
+.book-quote::before,
+.book-quote::after {
+  content: '"';
+  font-size: 1.4em;
+  color: var(--teal);
+  opacity: 0.5;
+  line-height: 0;
+  vertical-align: -0.3em;
+}
+.book-quote::before { margin-right: 4px; }
+.book-quote::after  { margin-left: 4px; }
+.book-desc {
+  font-size: 15px; line-height: 1.9; color: var(--muted);
+  font-weight: 300; max-width: 620px; margin: 0 auto;
+}
+/* ── SECRETS SECTION ── */
+.secrets-section {
+  padding: 100px 24px;
+  background: linear-gradient(180deg, transparent, rgba(107,26,42,0.06), transparent);
+}
+.secrets-inner {
+  max-width: 880px; margin: 0 auto;
+}
+.secrets-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 56px;
+}
+.secret-card {
+  background: linear-gradient(145deg, rgba(20,12,8,0.85), rgba(6,9,14,0.9));
+  border: 1px solid rgba(83,127,113,0.2);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.secret-card::before {
+  content: '';
+  position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,124,42,0.4), transparent);
+}
+.secret-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(83,127,113,0.4);
+}
+.secret-icon {
+  font-size: 32px; margin-bottom: 16px; display: block;
+}
+.secret-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-style: italic; font-weight: 400;
+  color: var(--cream); margin-bottom: 10px;
+}
+.secret-desc {
+  font-size: 12px; line-height: 1.7; color: var(--muted); font-weight: 300;
+}
+/* ── WINE PAIRINGS ── */
+.pairings-section {
+  padding: 100px 24px;
+  max-width: 800px; margin: 0 auto;
+}
+.pairings-intro {
+  font-size: 15px; line-height: 1.9; color: var(--muted);
+  font-weight: 300; text-align: center; margin-bottom: 60px;
+  max-width: 580px; margin-left: auto; margin-right: auto;
+}
+.pairing-list {
+  display: flex; flex-direction: column; gap: 0;
+  position: relative;
+}
+.pairing-list::before {
+  content: '';
+  position: absolute; left: 22px; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(180deg, var(--teal), rgba(83,127,113,0.1));
+}
+.pairing-item {
+  display: flex; gap: 24px; align-items: flex-start;
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(83,127,113,0.1);
+}
+.pairing-item:last-child { border-bottom: none; }
+.pairing-dot {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(83,127,113,0.1);
+  border: 1px solid rgba(83,127,113,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  position: relative; z-index: 1;
+}
+.pairing-content { flex: 1; padding-top: 8px; }
+.pairing-wine {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-style: italic; font-weight: 400;
+  color: var(--cream); margin-bottom: 4px;
+}
+.pairing-notes {
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 8px; font-weight: 500;
+}
+.pairing-secret {
+  font-size: 13px; line-height: 1.7; color: var(--muted); font-weight: 300;
+}
+.pairing-hint {
+  display: inline-block; margin-top: 8px;
+  background: rgba(184,124,42,0.1);
+  border: 1px solid rgba(184,124,42,0.25);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px; color: var(--amber-lt); letter-spacing: 0.5px;
+}
+/* ── DETAILS CARD ── */
+.details-section {
+  padding: 100px 24px;
+  max-width: 600px; margin: 0 auto; text-align: center;
+}
+.details-card {
+  background: linear-gradient(145deg, rgba(14,20,14,0.9), rgba(6,9,14,0.95));
+  border: 1px solid rgba(83,127,113,0.3);
+  border-radius: 24px;
+  padding: 48px 40px;
+  position: relative; overflow: hidden;
+}
+.details-card::before {
+  content: '';
+  position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+}
+.details-card::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 24px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(83,127,113,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.details-free {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px; font-weight: 300; line-height: 1;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.details-free-label {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 32px; font-weight: 500;
+}
+.details-list {
+  list-style: none; margin-bottom: 36px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.details-list li {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-size: 13px; color: var(--muted); font-weight: 300;
+}
+.details-list li span:first-child { font-size: 14px; }
+.details-dashes {
+  border: none; border-top: 2px dashed rgba(83,127,113,0.2);
+  margin: 28px 0;
+}
+.details-note {
+  font-size: 13px; color: var(--muted); font-weight: 300;
+  line-height: 1.7; margin-bottom: 24px;
+}
+.details-contact {
+  font-size: 11px; color: var(--muted); margin-top: 14px; font-weight: 300;
+}
+/* ── FOOTER ── */
+footer {
+  padding: 48px 24px;
+  text-align: center;
+  border-top: 1px solid rgba(83,127,113,0.1);
+}
+.footer-stamp {
+  width: 90px; height: auto;
+  display: block; margin: 0 auto 20px;
+  opacity: 0.3;
+  filter: brightness(0) invert(1);
+}
+.footer-logo {
+  height: 24px; filter: brightness(0) invert(1); opacity: 0.4;
+  margin-bottom: 16px; display: block; margin-left: auto; margin-right: auto;
+}
+.footer-address {
+  font-size: 11px; color: var(--muted); letter-spacing: 1px; line-height: 2;
+}
+.footer-links {
+  display: flex; gap: 24px; justify-content: center; margin-top: 20px;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(83,127,113,0.5); text-decoration: none; font-weight: 500;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--teal-lt); }
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+/* ── RESPONSIVE ── */
+@media (max-width: 767px) {
+  nav { padding: 12px 20px; }
+  .nav-press { height: 36px; }
+  .nav-logo { height: 22px; }
+  .hero { padding: 100px 20px 60px; }
+  .secrets-grid { grid-template-columns: 1fr; gap: 16px; }
+  .details-card { padding: 36px 24px; }
+  .details-free { font-size: 56px; }
+  .book-section,
+  .secrets-section,
+  .pairings-section,
+  .details-section { padding: 70px 20px; }
+  .hero-date-badge { padding: 16px 28px; }
+  .badge-date { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+<canvas id="starCanvas"></canvas>
+<div class="page">
+  <!-- Nav -->
+  <nav>
+    <a class="nav-brand" href="../index.html">
+      <img class="nav-press" src="../public/images/FR_WinePress.png" alt="">
+      <img class="nav-logo" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+    </a>
+    <a class="nav-back" href="events-calendar.html">
+      ← All Events
+    </a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">Free Run Cellars · Book Discussion</div>
+
+    <!-- Grape cluster SVG illustration -->
+    <div class="hero-visual">
+      <svg viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g1" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#9b3a50"/>
+            <stop offset="100%" stop-color="#4a0f1e"/>
+          </radialGradient>
+          <radialGradient id="g2" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#7a2a40"/>
+            <stop offset="100%" stop-color="#380b18"/>
+          </radialGradient>
+          <filter id="grapeGlow">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="softGlow">
+            <feGaussianBlur stdDeviation="6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Vine stem -->
+        <path d="M80,8 Q84,20 80,34 Q76,48 80,56" fill="none" stroke="#537f71" stroke-width="3" stroke-linecap="round"/>
+        <!-- Tendril left -->
+        <path d="M78,22 Q60,14 52,22 Q44,30 52,36" fill="none" stroke="#537f71" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        <!-- Tendril right -->
+        <path d="M82,30 Q100,22 108,30 Q116,38 108,44" fill="none" stroke="#537f71" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        <!-- Leaf -->
+        <path d="M74,14 Q60,2 48,8 Q36,14 44,26 Q52,36 68,28 Q78,22 74,14 Z" fill="#3d6155" opacity="0.8"/>
+        <path d="M74,14 Q60,8 52,18" fill="none" stroke="#537f71" stroke-width="1" opacity="0.5"/>
+        <path d="M62,8 Q58,20 66,26" fill="none" stroke="#537f71" stroke-width="0.8" opacity="0.4"/>
+
+        <!-- Grape cluster — row 1 (top, 2) -->
+        <circle cx="68" cy="68" r="14" fill="url(#g1)" filter="url(#grapeGlow)"/>
+        <circle cx="92" cy="68" r="14" fill="url(#g2)" filter="url(#grapeGlow)"/>
+        <!-- Grape highlights row 1 -->
+        <circle cx="64" cy="63" r="4" fill="rgba(200,140,160,0.25)"/>
+        <circle cx="88" cy="63" r="4" fill="rgba(200,140,160,0.2)"/>
+
+        <!-- Grape cluster — row 2 (3) -->
+        <circle cx="56" cy="94" r="14" fill="url(#g2)" filter="url(#grapeGlow)"/>
+        <circle cx="80" cy="94" r="14" fill="url(#g1)" filter="url(#grapeGlow)"/>
+        <circle cx="104" cy="94" r="14" fill="url(#g2)" filter="url(#grapeGlow)"/>
+        <circle cx="52" cy="89" r="4" fill="rgba(200,140,160,0.2)"/>
+        <circle cx="76" cy="89" r="4" fill="rgba(200,140,160,0.25)"/>
+        <circle cx="100" cy="89" r="4" fill="rgba(200,140,160,0.2)"/>
+
+        <!-- Grape cluster — row 3 (3) -->
+        <circle cx="56" cy="120" r="13" fill="url(#g1)" filter="url(#grapeGlow)"/>
+        <circle cx="80" cy="120" r="13" fill="url(#g2)" filter="url(#grapeGlow)"/>
+        <circle cx="104" cy="120" r="13" fill="url(#g1)" filter="url(#grapeGlow)"/>
+        <circle cx="52" cy="115" r="3.5" fill="rgba(200,140,160,0.2)"/>
+        <circle cx="76" cy="115" r="3.5" fill="rgba(200,140,160,0.22)"/>
+
+        <!-- Grape cluster — row 4 (2) -->
+        <circle cx="68" cy="145" r="12" fill="url(#g2)" filter="url(#grapeGlow)"/>
+        <circle cx="92" cy="145" r="12" fill="url(#g1)" filter="url(#grapeGlow)"/>
+        <circle cx="64" cy="140" r="3" fill="rgba(200,140,160,0.2)"/>
+        <circle cx="88" cy="140" r="3" fill="rgba(200,140,160,0.18)"/>
+
+        <!-- Grape cluster — row 5 (1, tip) -->
+        <circle cx="80" cy="168" r="11" fill="url(#g1)" filter="url(#grapeGlow)"/>
+        <circle cx="76" cy="163" r="3" fill="rgba(200,140,160,0.22)"/>
+
+        <!-- Glow beneath cluster -->
+        <ellipse cx="80" cy="185" rx="36" ry="10" fill="rgba(107,26,42,0.25)" filter="url(#softGlow)"/>
+      </svg>
+    </div>
+
+    <div class="hero-title">Eight Hundred Grapes</div>
+    <div class="hero-subtitle">A Book Discussion</div>
+    <div class="hero-author">by Laura Dave</div>
+    <div class="hero-date-badge">
+      <div class="badge-date">Friday, April 17th</div>
+      <div class="badge-detail">6:00 PM · Free Run Cellars</div>
+    </div>
+    <div class="hero-free-badge">Free Admission</div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- About the Book -->
+  <section class="book-section">
+    <div class="section-label reveal">About the Book</div>
+    <div class="section-heading reveal">There are secrets you share,<br>and secrets you hide</div>
+    <div class="book-quote reveal">
+      Growing up on her family's Sonoma vineyard, Georgia Ford learned some important secrets. The secret number of grapes it takes to make a bottle of wine: eight hundred.
+    </div>
+    <p class="book-desc reveal">
+      From the #1 New York Times bestselling author of <em>The Last Thing He Told Me</em> comes a gripping family drama set in the Sonoma hills. On the eve of her wedding, Georgia discovers a devastating secret about her fiancé — and flees to the only place she's ever felt safe: the family vineyard. What she finds there changes everything she thought she knew.
+    </p>
+  </section>
+
+  <div class="section-divider reveal"></div>
+
+  <!-- Three Secrets -->
+  <section class="secrets-section">
+    <div class="secrets-inner">
+      <div class="section-label reveal" style="text-align:center;">The Theme</div>
+      <div class="section-heading reveal">The secrets at the heart<br>of every bottle</div>
+      <div class="secrets-grid">
+        <div class="secret-card reveal">
+          <span class="secret-icon">📖</span>
+          <div class="secret-title">Family Secrets</div>
+          <p class="secret-desc">The Fords protect their vineyard — and each other — with truths never spoken aloud. Georgia's homecoming forces the hidden into the light. What do we keep, and what do we owe each other?</p>
+        </div>
+        <div class="secret-card reveal">
+          <span class="secret-icon">🍇</span>
+          <div class="secret-title">Eight Hundred Grapes</div>
+          <p class="secret-desc">It takes roughly 800 grapes to fill a single bottle of wine. A quiet, beautiful secret — the kind of knowledge passed hand to hand, generation to generation, that you only learn by being there.</p>
+        </div>
+        <div class="secret-card reveal">
+          <span class="secret-icon">🍷</span>
+          <div class="secret-title">Secret Ingredients</div>
+          <p class="secret-desc">Every winemaker has them — small choices that never appear on the label. A touch of chocolate in the lasagna. A surprise pairing that shouldn't work but does. We'll explore a few of our own that evening.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider reveal"></div>
+
+  <!-- Wine Pairings / Secret Pairings -->
+  <section class="pairings-section">
+    <div class="section-label reveal" style="text-align:center;">That Evening</div>
+    <div class="section-heading reveal">Surprise pairings &amp;<br>secret flavors to explore</div>
+    <p class="pairings-intro reveal">
+      Inspired by the book's hidden ingredients and unexpected connections, we'll taste a few wines alongside some surprising food pairings — the kind you might not expect, but won't soon forget.
+    </p>
+    <div class="pairing-list">
+      <div class="pairing-item reveal">
+        <div class="pairing-dot">🍫</div>
+        <div class="pairing-content">
+          <div class="pairing-wine">The Chocolate Secret</div>
+          <div class="pairing-notes">Georgia's Mother's Lasagna</div>
+          <p class="pairing-secret">The book's most disarming secret: a pinch of chocolate in the lasagna sauce. We'll recreate that spirit — pairing a rich red with a chocolate-inflected bite that has no business being this good.</p>
+        </div>
+      </div>
+      <div class="pairing-item reveal">
+        <div class="pairing-dot">🍑</div>
+        <div class="pairing-content">
+          <div class="pairing-wine">Surprise White Pairing</div>
+          <div class="pairing-notes">Something unexpected on the table</div>
+          <p class="pairing-secret">We'll bring out one of our whites — estate Pinot Gris or Fusion — and pair it with something that shouldn't work on paper. Spoiler: it does.</p>
+          <span class="pairing-hint">✦ The best pairings are always a little surprising</span>
+        </div>
+      </div>
+      <div class="pairing-item reveal">
+        <div class="pairing-dot">🌿</div>
+        <div class="pairing-content">
+          <div class="pairing-wine">The Vineyard's Own Secret</div>
+          <div class="pairing-notes">What we never put on the label</div>
+          <p class="pairing-secret">Every wine we make carries small decisions that never appear on a label — the timing, the judgment call, the thing Trish and Prashanth just knew. That evening we'll share a few of ours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider reveal"></div>
+
+  <!-- Event Details -->
+  <section class="details-section" id="details">
+    <div class="section-label reveal" style="margin-bottom:32px;">Event Details</div>
+    <div class="details-card reveal">
+      <div class="details-free">Free</div>
+      <div class="details-free-label">No Ticket Required · All Are Welcome</div>
+      <ul class="details-list">
+        <li><span>📚</span> <span>Book discussion of <em>Eight Hundred Grapes</em></span></li>
+        <li><span>🍷</span> <span>Surprise wine pairings &amp; secret ingredients</span></li>
+        <li><span>📅</span> <span>Friday, April 17th · 6:00 PM</span></li>
+        <li><span>📍</span> <span>10062 Burgoyne Rd, Berrien Springs, MI</span></li>
+        <li><span>💰</span> <span>Wine available for purchase by glass &amp; bottle</span></li>
+      </ul>
+      <hr class="details-dashes">
+      <p class="details-note">
+        No reservation needed — just show up. We do recommend reading <em>Eight Hundred Grapes</em> beforehand, but come even if you haven't. The conversation is open to everyone.
+      </p>
+      <p class="details-contact">Questions? Call us at (269) 815-6885 or email <a href="mailto:contact@frcwine.com" style="color:var(--teal-lt);text-decoration:none;">contact@frcwine.com</a></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <img class="footer-stamp" src="../public/images/FR_WinePress.png" alt="">
+    <img class="footer-logo"
+      src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
+      alt="Free Run Cellars">
+    <div class="footer-address">
+      10062 Burgoyne Road · Berrien Springs, MI 49103<br>
+      (269) 815-6885 · contact@frcwine.com
+    </div>
+    <div class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="events-calendar.html">All Events</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://www.facebook.com/FreRunCellars">Facebook</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ── Starfield canvas ──────────────────────────────────────────────
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 140; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      a: Math.random() * 0.6 + 0.1,
+      speed: Math.random() * 0.007 + 0.003,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars();
+requestAnimationFrame(drawStars);
+// ── Scroll reveal ─────────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

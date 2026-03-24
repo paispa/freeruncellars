@@ -477,30 +477,33 @@ Security hardening across all three API handlers (issues #38, #39, #42, #43):
 
 ## Recent Additions (March 2026 — part 5)
 
-- **Events calendar — ticketed event support**: `parseNotes` now reads `type: ticketed` and `status: sold-out` from Outlook event descriptions. Setting `type: ticketed` marks the event as ticketed (shows "Ticketed" admission badge; changes URL button label to "Get Tickets"). Setting `status: sold-out` replaces the action button with a greyed-out "Sold Out" pill and shows a red "Sold Out" badge on the event image thumbnail.
-- **Events calendar — HTML description parsing**: Outlook exports calendar descriptions as HTML (`<p>type: ticketed</p>`). `parseNotes` now strips HTML block elements (converting to newlines) and inline tags before parsing `key: value` fields, so all metadata fields work regardless of Outlook's formatting.
+- **Events calendar — type/admission/status via title pipe syntax**: The iCal feed does **not** return the Outlook Description/Notes field, so metadata is set in the event **title** using a pipe separator, or auto-detected from title keywords.
+- **Events calendar — "Learn More" button for free events**: Events with a URL in the Location field but no admission badge now show a teal "Learn More" button (previously no button was rendered at all). Events with both a URL and an admission badge show "Get Tickets".
 
-### Events Calendar — Supported Description Fields
+### Events Calendar — How to Configure an Event in Outlook
 
-Add these in the Outlook event's Notes/Description field (one per line):
+**The Description/Notes field is not available** — the iCal API only returns the title, date/time, and location.
+
+**To set type, admission, or status**, append pipe-separated tags to the event title:
 
 ```
-image: https://yourphoto.com/artist.jpg
-desc: Soulful acoustic duo from Kalamazoo.
-type: live-music
-admission: Free
-url: https://tickets.example.com
-status: sold-out
+Event Name | type: special | admission: Free | status: sold-out
 ```
 
-| Field | Values | Effect |
-|-------|--------|--------|
-| `type` | `live-music` · `tasting` · `special` · `ticketed` | Sets filter category and type tag |
-| `admission` | Any text (e.g. `Free`, `$15`, `Ticketed`) | Shows admission badge on event card |
-| `url` | Full URL | Shows "Get Tickets" (if ticketed) or "Learn More" button |
-| `status` | `sold-out` | Replaces button with greyed "Sold Out" pill; adds red badge on image |
-| `image` | Full URL | Event thumbnail photo |
-| `desc` | Plain text | Short event description on card |
+**To link to an event page or ticket URL**, put the full URL in the **Location** field:
+
+```
+https://freeruncellars.com/pages/my-event-page
+```
+
+| Where | Field | Values | Effect |
+|-------|-------|--------|--------|
+| Title (pipe) | `type` | `live-music` · `tasting` · `special` | Sets filter category and type tag |
+| Title (pipe) | `admission` | Any text (e.g. `Free`, `$15 · Ticketed`) | Shows admission badge on event card |
+| Title (pipe) | `status` | `sold-out` | Replaces button with greyed "Sold Out" pill |
+| Location | URL (`https://…`) | Full URL | Shows "Get Tickets" (if admission set) or "Learn More" button |
+
+If `type` is omitted, it is auto-detected from title keywords (`tast`/`release`/`pairing` → tasting; `ticket`/`special`/`day` → special; everything else → live-music).
 
 ## Recent Additions (March 2026 — part 4)
 
