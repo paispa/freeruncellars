@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Starry Night Paint &amp; Sip — Free Run Cellars Signage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  background: #04090f;
+  font-family: 'Jost', sans-serif;
+  color: #f0ece2;
+  overflow: hidden;
+}
+canvas#bg {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+.screen {
+  position: relative; z-index: 1;
+  width: 100vw; height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  align-items: center;
+  padding: 60px 80px;
+}
+.divider {
+  width: 1px; height: 60%;
+  background: linear-gradient(180deg, transparent, rgba(40,85,200,0.4), transparent);
+  justify-self: center;
+}
+/* ── Left ── */
+.left {
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding-right: 72px;
+}
+.eyebrow {
+  font-size: 13px; letter-spacing: 5px; text-transform: uppercase;
+  color: #537f71; font-weight: 500; margin-bottom: 24px;
+}
+.title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(64px, 7vw, 100px);
+  font-weight: 300; font-style: italic;
+  line-height: 1.0; color: #f0ece2;
+  margin-bottom: 12px;
+  text-shadow: 0 0 60px rgba(40,80,200,0.2);
+}
+.subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 300; letter-spacing: 3px;
+  color: #7aab9a; margin-bottom: 52px;
+}
+.date-badge {
+  display: inline-flex; flex-direction: column;
+  background: rgba(40,85,200,0.08);
+  border: 1px solid rgba(40,85,200,0.3);
+  border-radius: 16px;
+  padding: 24px 44px;
+  align-self: flex-start;
+}
+.date-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 3.5vw, 52px);
+  font-weight: 300; font-style: italic;
+  color: #f0ece2; line-height: 1;
+}
+.date-sub {
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: #3d70e0; margin-top: 6px; font-weight: 500;
+}
+/* ── Right ── */
+.right {
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding-left: 72px;
+  gap: 32px;
+}
+.glass-wrap {
+  display: flex; justify-content: center;
+}
+.price-pill {
+  align-self: center;
+  display: inline-block;
+  background: rgba(200,148,14,0.1);
+  border: 1px solid rgba(200,148,14,0.35);
+  border-radius: 50px;
+  padding: 12px 40px;
+  font-size: 13px; letter-spacing: 4px; text-transform: uppercase;
+  color: #e8b830; font-weight: 500;
+}
+.details {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 18px;
+}
+.details li {
+  display: flex; align-items: center; gap: 18px;
+  font-size: clamp(15px, 1.6vw, 20px);
+  color: rgba(240,236,226,0.7); font-weight: 300;
+  line-height: 1.4;
+}
+.details li .icon { font-size: 1.2em; flex-shrink: 0; }
+.seats-note {
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: #e8b830; font-weight: 500; text-align: center;
+}
+/* ── Logo bar ── */
+.logo-bar {
+  position: fixed; bottom: 36px; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; z-index: 2;
+}
+.logo-bar img.press    { height: 38px; filter: brightness(0) invert(1); opacity: 0.3; margin-top: 4px; }
+.logo-bar img.wordmark { height: 20px; filter: brightness(0) invert(1); opacity: 0.3; }
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div class="screen">
+  <!-- Left -->
+  <div class="left">
+    <div class="eyebrow">Free Run Cellars · Paint &amp; Sip Evening</div>
+    <div class="title">Starry Night</div>
+    <div class="subtitle">Paint &amp; Sip Evening</div>
+    <div class="date-badge">
+      <div class="date-main">Thursday, May 8th</div>
+      <div class="date-sub">6:00 PM · $35 Per Person</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Right -->
+  <div class="right">
+    <!-- Wine glass with Starry Night painting -->
+    <div class="glass-wrap">
+      <svg viewBox="0 0 200 192" width="200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="gc">
+            <path d="M30,8 L170,8 Q172,8 172,10 L160,162 Q158,175 135,179 L65,179 Q42,175 40,162 L28,10 Q28,8 30,8 Z"/>
+          </clipPath>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="sg"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <radialGradient id="mg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fffde0"/>
+            <stop offset="35%" stop-color="#f5e070" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#c8a000" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <path d="M30,8 L170,8 Q172,8 172,10 L160,162 Q158,175 135,179 L65,179 Q42,175 40,162 L28,10 Q28,8 30,8 Z"
+              fill="rgba(8,16,40,0.18)" stroke="rgba(180,210,255,0.22)" stroke-width="1.5"/>
+        <g clip-path="url(#gc)">
+          <rect x="26" y="6" width="148" height="122" fill="#080e1e"/>
+          <!-- Sky currents -->
+          <path d="M30,28 Q58,18 85,28 Q112,38 140,22 Q160,12 170,22" fill="none" stroke="#1a3a8a" stroke-width="4.5" stroke-linecap="round" opacity="0.8"/>
+          <path d="M30,28 Q58,18 85,28 Q112,38 140,22 Q160,12 170,22" fill="none" stroke="#2a55cc" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+          <path d="M30,44 Q60,32 90,42 Q118,52 146,36 Q164,26 170,36" fill="none" stroke="#1a3a8a" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+          <path d="M30,60 Q64,48 96,58 Q126,68 154,52 L170,56" fill="none" stroke="#152e6e" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
+          <path d="M30,76 Q68,64 104,74 Q138,84 166,68 L170,72" fill="none" stroke="#112460" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+          <!-- Large swirl -->
+          <g filter="url(#glow)">
+            <circle cx="90" cy="46" r="26" fill="none" stroke="#1e3f9a" stroke-width="6" opacity="0.8"/>
+            <circle cx="90" cy="46" r="19" fill="none" stroke="#2a55cc" stroke-width="4.5" opacity="0.7"/>
+            <circle cx="90" cy="46" r="13" fill="none" stroke="#3d70e0" stroke-width="3" opacity="0.65"/>
+            <circle cx="90" cy="46" r="7"  fill="none" stroke="#5588ee" stroke-width="2" opacity="0.6"/>
+            <circle cx="90" cy="46" r="3"  fill="#4470cc" opacity="0.5"/>
+          </g>
+          <!-- Moon -->
+          <circle cx="152" cy="22" r="18" fill="url(#mg)" filter="url(#sg)"/>
+          <circle cx="152" cy="22" r="12" fill="#fffde8"/>
+          <!-- Stars -->
+          <circle cx="38"  cy="13" r="2.2" fill="#fff" filter="url(#glow)" opacity="0.95"/>
+          <circle cx="54"  cy="9"  r="1.6" fill="#fff" filter="url(#glow)" opacity="0.85"/>
+          <circle cx="112" cy="10" r="2"   fill="#fff" filter="url(#glow)" opacity="0.9"/>
+          <circle cx="166" cy="40" r="1.5" fill="#fff" filter="url(#glow)" opacity="0.8"/>
+          <circle cx="34"  cy="54" r="1"   fill="#fff" opacity="0.6"/>
+          <!-- Hills -->
+          <path d="M26,94 Q56,76 84,88 Q110,100 136,82 Q156,68 172,84 L172,122 L26,122 Z" fill="#0b1f12"/>
+          <path d="M26,108 Q60,90 94,104 Q124,116 154,96 L172,102 L172,130 L26,130 Z" fill="#0d2416"/>
+          <!-- Water -->
+          <path d="M26,120 Q62,106 98,118 Q132,130 164,112 L172,118 L172,150 L26,150 Z" fill="#0c3d38"/>
+          <path d="M26,134 Q66,120 104,132 Q140,144 170,126 L172,132 L172,160 L26,160 Z" fill="#0e4540"/>
+          <!-- Gold outlines -->
+          <path d="M26,94 Q58,76 86,90 Q114,104 142,86 Q160,72 172,88" fill="none" stroke="#c8940e" stroke-width="1.8" opacity="0.8"/>
+          <path d="M26,108 Q62,90 96,104 Q128,118 158,98 L172,104" fill="none" stroke="#d4a010" stroke-width="1.5" opacity="0.7"/>
+          <path d="M26,120 Q64,106 100,118 Q134,130 166,112 L172,118" fill="none" stroke="#c8940e" stroke-width="1.4" opacity="0.65"/>
+        </g>
+        <line x1="30" y1="8" x2="170" y2="8" stroke="rgba(200,220,255,0.32)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="30" y1="8" x2="170" y2="8" stroke="#c8940e" stroke-width="0.8" opacity="0.45"/>
+        <path d="M30,8 L40,162 Q42,175 65,179" fill="none" stroke="rgba(200,220,255,0.1)" stroke-width="1"/>
+        <path d="M170,8 L160,162 Q158,175 135,179" fill="none" stroke="rgba(200,220,255,0.07)" stroke-width="1"/>
+        <path d="M40,179 Q42,186 65,188 L135,188 Q158,186 160,179" fill="rgba(160,190,255,0.06)" stroke="rgba(200,220,255,0.16)" stroke-width="1"/>
+        <ellipse cx="100" cy="188" rx="60" ry="4" fill="rgba(160,190,255,0.05)" stroke="rgba(200,220,255,0.12)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="price-pill">$35 Per Person · Only 20 Seats</div>
+
+    <ul class="details">
+      <li><span class="icon">🎨</span><span>Guided Starry Night glass painting — no experience needed</span></li>
+      <li><span class="icon">🌙</span><span>One Starry Night cocktail included (Mezzo · blueberry · sparkling)</span></li>
+      <li><span class="icon">🥂</span><span>Hand-painted stemless glass yours to take home</span></li>
+      <li><span class="icon">📍</span><span>10062 Burgoyne Road · Berrien Springs, MI</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="logo-bar">
+  <img class="press" src="../public/images/FR_WinePress.png" alt="">
+  <img class="wordmark" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+</div>
+
+<script>
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 140; i++) stars.push({
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.3, a: Math.random() * 0.6 + 0.1,
+    speed: Math.random() * 0.007 + 0.002, phase: Math.random() * Math.PI * 2,
+  });
+}
+function draw(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`; ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars(); requestAnimationFrame(draw);
+</script>
+</body>
+</html>

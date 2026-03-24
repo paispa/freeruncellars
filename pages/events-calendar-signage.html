@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Upcoming Events — Free Run Cellars Signage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  background: #06090e;
+  font-family: 'Jost', sans-serif;
+  color: #f0ece2;
+  overflow: hidden;
+}
+canvas#bg {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+.screen {
+  position: relative; z-index: 1;
+  width: 100vw; height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 52px 80px 100px;
+}
+/* ── Header ── */
+header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(83,127,113,0.2);
+  margin-bottom: 48px;
+}
+.header-left .heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 5.5vw, 72px);
+  font-weight: 300; font-style: italic;
+  line-height: 1; color: #f0ece2;
+}
+.header-left .subheading {
+  font-size: 12px; letter-spacing: 4px; text-transform: uppercase;
+  color: #537f71; font-weight: 500; margin-top: 8px;
+}
+.header-right {
+  display: flex; align-items: center; gap: 14px;
+}
+.header-right img.press    { height: 44px; filter: brightness(0) invert(1); opacity: 0.5; margin-top: 4px; }
+.header-right img.wordmark { height: 26px; filter: brightness(0) invert(1); opacity: 0.5; }
+/* ── Events grid ── */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-content: start;
+}
+.event-card {
+  background: linear-gradient(145deg, rgba(14,22,14,0.85), rgba(6,9,14,0.9));
+  border: 1px solid rgba(83,127,113,0.18);
+  border-radius: 20px;
+  padding: 32px 28px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.4s;
+}
+.event-card::before {
+  content: '';
+  position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(83,127,113,0.35), transparent);
+}
+.event-card.next {
+  border-color: rgba(83,127,113,0.45);
+  background: linear-gradient(145deg, rgba(20,36,24,0.9), rgba(8,14,10,0.95));
+}
+.event-card.next::before {
+  background: linear-gradient(90deg, transparent, rgba(83,127,113,0.6), transparent);
+}
+.next-label {
+  display: none;
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: #537f71; font-weight: 600; margin-bottom: 14px;
+}
+.event-card.next .next-label { display: block; }
+.event-date-row {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 14px;
+}
+.event-dow {
+  font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #537f71; font-weight: 500;
+}
+.event-date-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 300; font-style: italic;
+  color: #f0ece2; line-height: 1;
+}
+.event-month {
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(240,236,226,0.5); font-weight: 400;
+}
+.event-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 400; font-style: italic;
+  color: #f0ece2; line-height: 1.2;
+  margin-bottom: 10px;
+}
+.event-meta {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.event-time {
+  font-size: 12px; color: rgba(240,236,226,0.5); font-weight: 300;
+  letter-spacing: 0.5px;
+}
+.event-type {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: #537f71; font-weight: 500;
+}
+.event-admission {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(212,160,80,0.8); font-weight: 500;
+  background: rgba(212,160,80,0.08);
+  border: 1px solid rgba(212,160,80,0.2);
+  border-radius: 4px; padding: 3px 8px;
+}
+/* Loading / empty states */
+.state-box {
+  grid-column: 1 / -1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 20px; padding: 60px; color: rgba(240,236,226,0.35);
+  font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+}
+.spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid rgba(83,127,113,0.2);
+  border-top-color: #537f71;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+/* ── Footer bar ── */
+footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 64px;
+  display: flex; align-items: center; justify-content: center; gap: 40px;
+  border-top: 1px solid rgba(83,127,113,0.12);
+  background: rgba(6,9,14,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+footer span {
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(240,236,226,0.3); font-weight: 400;
+}
+footer .sep {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: rgba(83,127,113,0.4);
+}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div class="screen">
+  <header>
+    <div class="header-left">
+      <div class="heading">Upcoming Events</div>
+      <div class="subheading">Free Run Cellars · Berrien Springs, Michigan</div>
+    </div>
+    <div class="header-right">
+      <img class="press" src="../public/images/FR_WinePress.png" alt="">
+      <img class="wordmark" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+    </div>
+  </header>
+
+  <div class="events-grid" id="eventsGrid">
+    <div class="state-box"><div class="spinner"></div><span>Loading events…</span></div>
+  </div>
+</div>
+
+<footer>
+  <span>Fri 2–6 PM</span><div class="sep"></div>
+  <span>Sat 12–7 PM</span><div class="sep"></div>
+  <span>Sun 2–6 PM · Live Music 3–5</span><div class="sep"></div>
+  <span>(269) 815-6885</span>
+</footer>
+
+<script>
+// ── Starfield ─────────────────────────────────────────────────────
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 100; i++) stars.push({
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    r: Math.random() * 1.3 + 0.2, a: Math.random() * 0.45 + 0.08,
+    speed: Math.random() * 0.006 + 0.002, phase: Math.random() * Math.PI * 2,
+  });
+}
+function draw(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`; ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars(); requestAnimationFrame(draw);
+
+// ── ICS parsing ───────────────────────────────────────────────────
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS_SHORT   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const TYPE_LABELS  = { 'live-music': 'Live Music', 'tasting': 'Wine Tasting', 'special': 'Special Event' };
+
+function getField(block, key) {
+  const m = block.match(new RegExp('(?:^|\\n)' + key + '[^:]*:([\\s\\S]*?)(?=\\n[A-Z]|$)'));
+  return m ? m[1].replace(/\r?\n[ \t]/g, '').trim() : '';
+}
+
+function parseICSDate(s) {
+  const val = s.includes(':') ? s.split(':').pop() : s;
+  const y = +val.slice(0,4), mo = +val.slice(4,6)-1, d = +val.slice(6,8);
+  const h = +val.slice(9,11)||0, mi = +val.slice(11,13)||0;
+  return new Date(y, mo, d, h, mi);
+}
+
+function formatTime(date) {
+  let h = date.getHours(), m = date.getMinutes(), ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}${m ? ':' + String(m).padStart(2,'0') : ''} ${ap}`;
+}
+
+function guessType(title) {
+  const t = title.toLowerCase();
+  if (t.includes('tast') || t.includes('release') || t.includes('pairing')) return 'tasting';
+  if (t.includes('ticket') || t.includes('celebrat') || t.includes('day') || t.includes('special')) return 'special';
+  return 'live-music';
+}
+
+function parseICS(text) {
+  const events = [];
+  const blocks = text.split('BEGIN:VEVENT').slice(1);
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (const block of blocks) {
+    const rawSummary = getField(block, 'SUMMARY').replace(/\\,/g,',' ).replace(/\\;/g,';');
+    const dtstart    = getField(block, 'DTSTART');
+    const location   = getField(block, 'LOCATION').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\/g,'');
+    if (!rawSummary || !dtstart) continue;
+
+    const startDate = parseICSDate(dtstart);
+    const d = new Date(startDate); d.setHours(0,0,0,0);
+    if (d < today) continue;
+
+    const titleParts = rawSummary.split('|');
+    const cleanName  = titleParts[0].trim();
+    const tags = {};
+    for (let j = 1; j < titleParts.length; j++) {
+      const m = titleParts[j].trim().match(/^(type|admission|status)\s*:\s*(.+)/i);
+      if (m) tags[m[1].toLowerCase()] = m[2].trim();
+    }
+    events.push({
+      name: cleanName,
+      date: startDate,
+      time: formatTime(startDate),
+      type: tags.type || guessType(rawSummary),
+      admission: tags.admission || '',
+      status: (tags.status || '').toLowerCase(),
+    });
+  }
+  events.sort((a, b) => a.date - b.date);
+  return events.slice(0, 6); // show up to 6 upcoming
+}
+
+// ── Render ────────────────────────────────────────────────────────
+function render(events) {
+  const grid = document.getElementById('eventsGrid');
+  if (!events.length) {
+    grid.innerHTML = '<div class="state-box"><span>No upcoming events</span></div>';
+    return;
+  }
+  grid.innerHTML = events.map((ev, i) => {
+    const d = ev.date;
+    const admHtml = ev.admission
+      ? `<span class="event-admission">${ev.admission}</span>` : '';
+    return `
+      <div class="event-card${i === 0 ? ' next' : ''}">
+        <div class="next-label">Next Up</div>
+        <div class="event-date-row">
+          <span class="event-dow">${DAYS_SHORT[d.getDay()]}</span>
+          <span class="event-date-num">${d.getDate()}</span>
+          <span class="event-month">${MONTHS_SHORT[d.getMonth()]}</span>
+        </div>
+        <div class="event-name">${ev.name}</div>
+        <div class="event-meta">
+          <span class="event-time">◷ ${ev.time}</span>
+          <span class="event-type">${TYPE_LABELS[ev.type] || 'Event'}</span>
+          ${admHtml}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Fetch with auto-refresh ───────────────────────────────────────
+async function load() {
+  try {
+    const res = await fetch('/api/calendar');
+    if (!res.ok) throw new Error();
+    const text = await res.text();
+    render(parseICS(text));
+  } catch {
+    document.getElementById('eventsGrid').innerHTML =
+      '<div class="state-box"><span>Could not load calendar</span></div>';
+  }
+}
+
+load();
+setInterval(load, 5 * 60 * 1000); // refresh every 5 minutes
+</script>
+</body>
+</html>

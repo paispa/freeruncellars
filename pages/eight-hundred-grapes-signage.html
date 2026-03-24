@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Eight Hundred Grapes — Free Run Cellars Signage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  background: #06090e;
+  font-family: 'Jost', sans-serif;
+  color: #f0ece2;
+  overflow: hidden;
+}
+canvas#bg {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+.screen {
+  position: relative; z-index: 1;
+  width: 100vw; height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  align-items: center;
+  padding: 60px 80px;
+  gap: 0;
+}
+/* ── Divider ── */
+.divider {
+  width: 1px; height: 60%;
+  background: linear-gradient(180deg, transparent, rgba(83,127,113,0.5), transparent);
+  justify-self: center;
+}
+/* ── Left panel ── */
+.left {
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding-right: 72px;
+}
+.eyebrow {
+  font-size: 13px; letter-spacing: 5px; text-transform: uppercase;
+  color: #537f71; font-weight: 500; margin-bottom: 24px;
+}
+.title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(64px, 7vw, 100px);
+  font-weight: 300; font-style: italic;
+  line-height: 1.0; color: #f0ece2;
+  margin-bottom: 12px;
+}
+.subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 300; letter-spacing: 3px;
+  color: #7aab9a; margin-bottom: 8px;
+}
+.author {
+  font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(212,160,80,0.85); font-weight: 400;
+  margin-bottom: 52px;
+}
+/* Date badge */
+.date-badge {
+  display: inline-flex; flex-direction: column;
+  background: rgba(83,127,113,0.1);
+  border: 1px solid rgba(83,127,113,0.35);
+  border-radius: 16px;
+  padding: 24px 44px;
+  align-self: flex-start;
+}
+.date-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 3.5vw, 52px);
+  font-weight: 300; font-style: italic;
+  color: #f0ece2; line-height: 1;
+}
+.date-sub {
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: #537f71; margin-top: 6px; font-weight: 500;
+}
+/* ── Right panel ── */
+.right {
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding-left: 72px;
+  gap: 32px;
+}
+/* Grape SVG */
+.grape-wrap {
+  display: flex; justify-content: center;
+  margin-bottom: 8px;
+}
+/* Free badge */
+.free-pill {
+  align-self: center;
+  display: inline-block;
+  background: rgba(83,127,113,0.15);
+  border: 1px solid rgba(83,127,113,0.45);
+  border-radius: 50px;
+  padding: 12px 40px;
+  font-size: 13px; letter-spacing: 4px; text-transform: uppercase;
+  color: #7aab9a; font-weight: 500;
+}
+/* Details list */
+.details {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 18px;
+}
+.details li {
+  display: flex; align-items: center; gap: 18px;
+  font-size: clamp(15px, 1.6vw, 20px);
+  color: rgba(240,236,226,0.7); font-weight: 300;
+  line-height: 1.4;
+}
+.details li .icon { font-size: 1.2em; flex-shrink: 0; }
+/* Quote */
+.quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px, 1.9vw, 26px);
+  font-style: italic; font-weight: 300;
+  color: rgba(212,160,80,0.75);
+  line-height: 1.55;
+  border-left: 2px solid rgba(83,127,113,0.4);
+  padding-left: 24px;
+}
+/* ── Logo bar ── */
+.logo-bar {
+  position: fixed; bottom: 36px; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; z-index: 2;
+}
+.logo-bar img.press {
+  height: 38px; filter: brightness(0) invert(1); opacity: 0.35;
+  margin-top: 4px;
+}
+.logo-bar img.wordmark {
+  height: 20px; filter: brightness(0) invert(1); opacity: 0.35;
+}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div class="screen">
+  <!-- Left -->
+  <div class="left">
+    <div class="eyebrow">Free Run Cellars · Book Discussion</div>
+    <div class="title">Eight Hundred<br>Grapes</div>
+    <div class="subtitle">A Book Discussion</div>
+    <div class="author">by Laura Dave</div>
+    <div class="date-badge">
+      <div class="date-main">Friday, April 17th</div>
+      <div class="date-sub">6:00 PM · Free Admission</div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider"></div>
+
+  <!-- Right -->
+  <div class="right">
+    <div class="grape-wrap">
+      <svg viewBox="0 0 140 175" width="140" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="ga" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#9b3a50"/>
+            <stop offset="100%" stop-color="#4a0f1e"/>
+          </radialGradient>
+          <radialGradient id="gb" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#7a2a40"/>
+            <stop offset="100%" stop-color="#380b18"/>
+          </radialGradient>
+          <filter id="gg"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <path d="M70,6 Q74,16 70,28 Q66,40 70,48" fill="none" stroke="#537f71" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M68,16 Q52,8 44,16 Q38,24 44,30" fill="none" stroke="#537f71" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+        <path d="M72,24 Q88,16 96,24 Q102,32 96,38" fill="none" stroke="#537f71" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+        <path d="M66,8 Q52,0 42,6 Q32,12 40,22 Q48,30 62,24 Q70,18 66,8 Z" fill="#3d6155" opacity="0.75"/>
+        <!-- row 1 -->
+        <circle cx="58" cy="58" r="12" fill="url(#ga)" filter="url(#gg)"/>
+        <circle cx="82" cy="58" r="12" fill="url(#gb)" filter="url(#gg)"/>
+        <circle cx="54" cy="53" r="3.5" fill="rgba(200,140,160,0.25)"/>
+        <circle cx="78" cy="53" r="3.5" fill="rgba(200,140,160,0.2)"/>
+        <!-- row 2 -->
+        <circle cx="46" cy="82" r="12" fill="url(#gb)" filter="url(#gg)"/>
+        <circle cx="70" cy="82" r="12" fill="url(#ga)" filter="url(#gg)"/>
+        <circle cx="94" cy="82" r="12" fill="url(#gb)" filter="url(#gg)"/>
+        <circle cx="42" cy="77" r="3.5" fill="rgba(200,140,160,0.2)"/>
+        <circle cx="66" cy="77" r="3.5" fill="rgba(200,140,160,0.22)"/>
+        <!-- row 3 -->
+        <circle cx="46" cy="106" r="11" fill="url(#ga)" filter="url(#gg)"/>
+        <circle cx="70" cy="106" r="11" fill="url(#gb)" filter="url(#gg)"/>
+        <circle cx="94" cy="106" r="11" fill="url(#ga)" filter="url(#gg)"/>
+        <!-- row 4 -->
+        <circle cx="58" cy="129" r="10" fill="url(#gb)" filter="url(#gg)"/>
+        <circle cx="82" cy="129" r="10" fill="url(#ga)" filter="url(#gg)"/>
+        <!-- tip -->
+        <circle cx="70" cy="150" r="9" fill="url(#gb)" filter="url(#gg)"/>
+        <ellipse cx="70" cy="166" rx="30" ry="8" fill="rgba(107,26,42,0.2)" filter="url(#gg)"/>
+      </svg>
+    </div>
+
+    <div class="free-pill">Free Admission · All Welcome</div>
+
+    <ul class="details">
+      <li><span class="icon">📚</span><span>Book discussion of <em>Eight Hundred Grapes</em> by Laura Dave</span></li>
+      <li><span class="icon">🍷</span><span>Wine available by the glass — surprise pairings on the table</span></li>
+      <li><span class="icon">📍</span><span>10062 Burgoyne Road · Berrien Springs, MI</span></li>
+    </ul>
+
+    <div class="quote">
+      There are secrets you share,<br>and secrets you hide…
+    </div>
+  </div>
+</div>
+
+<!-- Logo -->
+<div class="logo-bar">
+  <img class="press" src="../public/images/FR_WinePress.png" alt="">
+  <img class="wordmark" src="../public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+</div>
+
+<script>
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 120; i++) stars.push({
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    r: Math.random() * 1.4 + 0.2, a: Math.random() * 0.5 + 0.1,
+    speed: Math.random() * 0.006 + 0.002, phase: Math.random() * Math.PI * 2,
+  });
+}
+function draw(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`; ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars(); requestAnimationFrame(draw);
+</script>
+</body>
+</html>
