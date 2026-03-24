@@ -32,23 +32,29 @@ freeruncellars/
 ├── test-api-handlers.js        ← Unit tests for api/_helpers.js (run: node test-api-handlers.js)
 ├── api/
 │   ├── _helpers.js             ← Shared: CORS allowlist, rate limiting, escapeHtml, upload/signup constants
+│   ├── brevo.js                ← Unified Brevo endpoint — routes by type: circle, contact, lead, wifi
 │   ├── chat.js                 ← AI chat (Anthropic Claude Haiku) — CORS restricted, rate limited
-│   ├── calendar.js             ← Outlook ICS calendar proxy
+│   ├── calendar.js             ← Outlook ICS calendar proxy (5 min cache)
 │   ├── upload-photo.js         ← Photo booth storage (Vercel Blob) — MIME + size validated
-│   ├── circle-signup.js        ← Owners Circle form → Brevo list + email notification
-│   ├── contact.js              ← Contact page inquiry form → Brevo email to contact@frcwine.com
-│   └── lead.js                 ← Chat widget lead capture → Brevo email to contact@frcwine.com
+│   ├── generate-post.js        ← AI Facebook post generator backend
+│   ├── poynt-auth.js           ← Poynt OAuth2 token (RS256 JWT, cached)
+│   └── poynt-sales.js          ← Poynt POS sales data, flight allocation, inventory predictions
 ├── pages/
-│   ├── about.html              ← Our Story
-│   ├── wines.html              ← Full wine menu + seasonal cocktails
-│   ├── events-calendar.html    ← Live ICS calendar (Outlook)
-│   ├── live-music-sundays.html ← Live Music SEO page
-│   ├── event-packages.html     ← Private events & pricing
-│   ├── gallery.html            ← Photo gallery with lightbox
-│   ├── contact.html            ← Visit Us / Hours / Map
-│   ├── reviews.html            ← Review landing (Google, Yelp, Facebook)
-│   └── circle.html             ← ⚠️ Owners Circle — private, not linked publicly
+│   ├── about.html                          ← Our Story
+│   ├── wines.html                          ← Full wine menu + seasonal cocktails
+│   ├── events-calendar.html                ← Live ICS calendar (Outlook)
+│   ├── live-music-sundays.html             ← Live Music SEO page
+│   ├── event-packages.html                 ← Private events & pricing
+│   ├── gallery.html                        ← Photo gallery with lightbox
+│   ├── contact.html                        ← Visit Us / Hours / Map
+│   ├── reviews.html                        ← Review landing (Google, Yelp, Facebook)
+│   ├── circle.html                         ← ⚠️ Owners Circle — private, not linked publicly
+│   ├── starry-night-paint-sip.html         ← Event page: Starry Night Paint & Sip (May 8)
+│   ├── starry-night-signage.html           ← TV signage: Starry Night (noindex, no GA, no links)
+│   ├── eight-hundred-grapes-book-discussion.html  ← Event page: book club (Apr 17, free)
+│   └── eight-hundred-grapes-signage.html   ← TV signage: book club (noindex, no GA, no links)
 ├── tools/
+│   ├── dashboard.html               ← Internal: sales dashboard (Poynt POS, password-protected)
 │   ├── post-generator.html          ← Internal: AI Facebook post generator
 │   ├── photobooth.html              ← Photo booth with EmailJS + Vercel Blob
 │   ├── email-template-single.html   ← EmailJS template: single photo
@@ -70,13 +76,19 @@ freeruncellars/
 | Our Story | `pages/about.html` | ✅ Live |
 | Wines | `pages/wines.html` | ✅ Live |
 | Events Calendar | `pages/events-calendar.html` | ✅ Live — pulls live Outlook ICS |
+| Events Calendar Signage | `pages/events-calendar-signage.html` | ✅ TV display — noindex, no GA, no links, auto-refreshes |
 | Live Music Sundays | `pages/live-music-sundays.html` | ✅ Live |
 | Private Events | `pages/event-packages.html` | ✅ Live |
 | Gallery | `pages/gallery.html` | ✅ Live |
-| Visit Us | `pages/contact.html` | ✅ Live |
+| Visit & Contact | `pages/contact.html` | ✅ Live |
 | Reviews | `pages/reviews.html` | ✅ Live |
 | Owners Circle | `pages/circle.html` | ✅ Live — private URL, not linked from site |
-| Post Generator | `tools/post-generator.html` | ✅ Internal tool — AI Facebook post generator with weather, model selector, post type |
+| Starry Night Paint & Sip | `pages/starry-night-paint-sip.html` | ✅ Live — event page (May 8, $35) |
+| Starry Night Signage | `pages/starry-night-signage.html` | ✅ TV display — noindex, no GA, no links |
+| Eight Hundred Grapes | `pages/eight-hundred-grapes-book-discussion.html` | ✅ Live — event page (Apr 17, free) |
+| Eight Hundred Grapes Signage | `pages/eight-hundred-grapes-signage.html` | ✅ TV display — noindex, no GA, no links |
+| Sales Dashboard | `tools/dashboard.html` | ✅ Internal — Poynt POS, password-protected |
+| Post Generator | `tools/post-generator.html` | ✅ Internal — AI Facebook post generator |
 | Photo Booth | `tools/photobooth.html` | ✅ Live — EmailJS + Vercel Blob |
 
 ---
@@ -126,25 +138,27 @@ await emailjs.send('YOUR_SERVICE_ID', 'YOUR_NEWSLETTER_TEMPLATE', {
 
 ## Events Calendar ICS Feed
 
-Pulls from Outlook. Uses a 3-proxy fallback chain for CORS:
-1. `api.allorigins.win`
-2. `corsproxy.io`
-3. `api.codetabs.com`
+Pulls from Outlook via `api/calendar.js` (5-minute cache). The iCal API **does not return the Description/Notes field** — only the title, date/time, and location are available.
 
-To add images/descriptions to events, add these to the event Notes field in Outlook:
+**To set metadata**, append pipe-separated tags to the event title in Outlook:
 
 ```
-image: https://yourphoto.com/artist.jpg
-desc: Soulful acoustic duo from Kalamazoo.
-type: live-music
-admission: Free
-url: https://tickets.example.com
-status: sold-out
+Event Name | type: special | admission: Free | status: sold-out
 ```
 
-**Supported types:** `live-music` · `tasting` · `special` · `ticketed`
+| Tag | Values | Effect |
+|-----|--------|--------|
+| `type` | `live-music` · `tasting` · `special` | Filter category. Auto-detected from title keywords if omitted. |
+| `admission` | Any text e.g. `Free`, `$15 · Ticketed` | Shows admission badge. Text containing `$` or `ticket` → "Get Tickets" button; otherwise → "Learn More" button. |
+| `status` | `sold-out` | Replaces button with greyed "Sold Out" pill. |
 
-**Supported status values:** `sold-out` — replaces the action button with a greyed-out "Sold Out" pill and adds a red "Sold Out" badge on the event image. Omit the field (or leave blank) for normal display.
+**To link to an event page or tickets**, put the full URL in the Outlook **Location** field (not the address):
+
+```
+https://freeruncellars.com/pages/my-event-page
+```
+
+**TV signage** — `pages/events-calendar-signage.html` pulls the same feed, shows up to 6 upcoming events in a 3-column grid, and auto-refreshes every 5 minutes. Point AbleSign at `/pages/events-calendar-signage`.
 
 ---
 
@@ -308,4 +322,4 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 
 ---
 
-*Last updated: March 19, 2026 (Nav rename, event date field, mailing list opt-in on contact form)*
+*Last updated: March 24, 2026 (Event pages + TV signage; events calendar ICS docs corrected; Brevo API consolidated)*
