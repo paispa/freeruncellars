@@ -407,6 +407,17 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 13)
+
+Event pages, TV signage, and events calendar fix:
+
+- **Eight Hundred Grapes book discussion** (`pages/eight-hundred-grapes-book-discussion.html`): event page for the April 17 book club (free admission). Dark themed with grape cluster SVG, secrets/pairings sections, and no-reservation-needed CTA.
+- **TV signage pages** — three new pages designed for AbleSign / TV display. All share: `noindex, nofollow`, no Google Analytics tag, no active links, fixed `100vw × 100vh` single-screen layout:
+  - `pages/eight-hundred-grapes-signage.html` — book club event, two-column landscape layout
+  - `pages/starry-night-signage.html` — Starry Night Paint & Sip, night sky palette, wine glass SVG
+  - `pages/events-calendar-signage.html` — live calendar feed, 3-column event grid, "Next Up" highlight on first event, hours/phone footer bar, auto-refreshes every 5 minutes
+- **Events calendar button fix**: "Get Tickets" now only shown when admission contains `$` or `ticket`. Free events with a Location URL correctly show "Learn More" instead.
+
 ## Recent Additions (March 2026 — part 12)
 
 Consolidated four Brevo API handlers into a single `api/brevo.js` endpoint to stay under Vercel's free-plan limit of 12 serverless functions (was 13, now 10):
