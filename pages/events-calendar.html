@@ -614,6 +614,7 @@ async function fetchCalendar() {
 //
 //    type:      live-music (default) · tasting · special
 //    admission: any text, e.g. "Free", "Ticketed · $35"
+//              (contains "$" or "ticket" → button says "Get Tickets"; otherwise "Learn More")
 //    status:    sold-out   → replaces button with greyed "Sold Out" pill
 //
 //  Location field:
@@ -782,15 +783,16 @@ function renderEvents(events, filter) {
 
     const isSoldOut = ev.status === 'sold-out';
     const locationIsUrl = /^https?:\/\//i.test(ev.location);
+    const isPaid = ev.admission && /\$|ticket/i.test(ev.admission);
 
     let btnHtml = '';
     if (isSoldOut) {
       btnHtml = `<span class="sold-out-btn">Sold Out</span>`;
-    } else if (locationIsUrl && ev.admission) {
+    } else if (locationIsUrl && isPaid) {
       btnHtml = `<a class="event-url-btn" href="${ev.location}" target="_blank" rel="noopener noreferrer">Get Tickets</a>`;
     } else if (locationIsUrl) {
       btnHtml = `<a class="event-url-btn" href="${ev.location}" target="_blank" rel="noopener noreferrer">Learn More</a>`;
-    } else if (ev.admission) {
+    } else if (isPaid) {
       btnHtml = `<span class="sold-out-btn">Details Coming Soon</span>`;
     }
 
