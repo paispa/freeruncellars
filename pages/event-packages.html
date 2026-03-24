@@ -426,6 +426,46 @@ h1 em { font-style:normal; color:var(--teal-lt); }
   text-align:center; margin-top:12px; line-height:1.6;
 }
 
+/* ── PREFERRED PARTNERS ── */
+.partners { background:var(--teal-pale); padding:88px 56px; }
+.partners-inner { max-width:1100px; margin:0 auto; }
+.partners-header { text-align:center; max-width:520px; margin:0 auto 52px; }
+.partners-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:24px;
+}
+.partner-card {
+  background:#fff; border-radius:14px; padding:36px;
+  border:1px solid rgba(83,127,113,.15);
+  transition:transform .3s, box-shadow .3s;
+  display:flex; flex-direction:column;
+}
+.partner-card:hover { transform:translateY(-4px); box-shadow:0 12px 36px rgba(83,127,113,.12); }
+.partner-type {
+  font-size:9px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  color:var(--teal); margin-bottom:10px;
+}
+.partner-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px; font-style:italic; font-weight:300;
+  color:var(--black); margin-bottom:6px; line-height:1.2;
+}
+.partner-role {
+  font-size:12px; color:var(--teal); font-weight:500; margin-bottom:16px;
+}
+.partner-desc {
+  font-size:13.5px; color:var(--grey); line-height:1.75; font-weight:300;
+  margin-bottom:20px; flex:1;
+}
+.partner-contact { display:flex; flex-direction:column; gap:8px; }
+.partner-contact a {
+  font-size:12.5px; color:var(--text); font-weight:400;
+  display:flex; align-items:center; gap:8px;
+  transition:color .2s;
+}
+.partner-contact a:hover { color:var(--teal); }
+.partner-contact-icon { font-size:14px; flex-shrink:0; }
+
 /* ── FOOTER ── */
 .page-footer {
   background:var(--black); color:rgba(255,255,255,.35);
@@ -454,6 +494,8 @@ h1 em { font-style:normal; color:var(--teal-lt); }
   .caterer-inner { grid-template-columns:1fr; gap:32px; }
   .contact-section { padding:64px 24px; }
   .contact-inner { grid-template-columns:1fr; gap:40px; }
+  .partners { padding:60px 24px; }
+  .partners-grid { grid-template-columns:1fr; }
   .page-footer { padding:32px 20px 24px; }
   .footer-bottom { flex-direction:column; align-items:flex-start; gap:12px; }
   .footer-links { flex-wrap:wrap; }
@@ -800,6 +842,43 @@ nav.solid .hamburger span { background: #333; }
       </div>
       <a href="mailto:contact@frcwine.com">contact@frcwine.com</a>
       <p class="email-note">Opens your default mail app with the details pre-filled.<br>Or copy the address above and send from anywhere.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PREFERRED PARTNERS -->
+<section class="partners" id="partners">
+  <div class="partners-inner">
+    <div class="partners-header">
+      <p class="s-label center">Preferred Partners</p>
+      <h2 style="text-align:center;">People we <em>trust</em></h2>
+      <p class="body-copy" style="text-align:center;max-width:480px;margin:0 auto;">We work with a small circle of partners who know the winery, share our values, and make your event better.</p>
+    </div>
+    <div class="partners-grid">
+
+      <!-- Modern Table Cuisine -->
+      <div class="partner-card">
+        <p class="partner-type">Food &amp; Catering</p>
+        <p class="partner-name">Modern Table Cuisine</p>
+        <p class="partner-role">Executive Chef Joshua Bishop</p>
+        <p class="partner-desc">Fresh, seasonal ingredients. Available for weddings, corporate luncheons &amp; intimate gatherings at the winery.</p>
+        <div class="partner-contact">
+          <a href="mailto:moderntablejosh@gmail.com"><span class="partner-contact-icon">✉</span> moderntablejosh@gmail.com</a>
+          <a href="tel:+15748496049"><span class="partner-contact-icon">📞</span> 574-849-6049</a>
+        </div>
+      </div>
+
+      <!-- Fruitful Vine Tours -->
+      <div class="partner-card">
+        <p class="partner-type">Wine Country Tours</p>
+        <p class="partner-name">Fruitful Vine Tours</p>
+        <p class="partner-role">Southwest Michigan Wine Country</p>
+        <p class="partner-desc">Our friends at Fruitful Vine Tours run guided wine tours through Southwest Michigan wine country — including stops at Free Run Cellars. Sit back, enjoy the scenery, and let them handle the details. Tasting fees and the driving are all taken care of.</p>
+        <div class="partner-contact">
+          <a href="https://fruitfulvinetours.com/" target="_blank" rel="noopener"><span class="partner-contact-icon">🌐</span> fruitfulvinetours.com</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
