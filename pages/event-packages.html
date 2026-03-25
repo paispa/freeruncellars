@@ -341,32 +341,6 @@ h1 em { font-style:normal; color:var(--teal-lt); }
   color:rgba(255,255,255,.45); text-align:center;
 }
 
-/* ── CATERER ── */
-.caterer { background:var(--off-white); padding:80px 56px; }
-.caterer-inner {
-  max-width:900px; margin:0 auto;
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:64px; align-items:center;
-}
-.caterer-img {
-  position:relative; height:380px; border-radius:10px; overflow:hidden;
-}
-.caterer-img-bg {
-  position:absolute; inset:0;
-  background-image:url('../public/images/untitled-601.jpeg');
-  background-size:cover; background-position:center 30%;
-  transition:transform .6s ease;
-}
-.caterer-img:hover .caterer-img-bg { transform:scale(1.03); }
-.caterer-content .body-copy { margin-bottom:16px; }
-.caterer-tag {
-  display:inline-flex; align-items:center; gap:8px;
-  background:#fff; border:1px solid rgba(83,127,113,.2);
-  border-radius:6px; padding:12px 16px; margin-top:24px;
-  font-size:12px; color:var(--text); font-weight:400;
-}
-.caterer-tag strong { color:var(--teal); font-weight:600; }
-
 /* ── CONTACT ── */
 .contact-section { background:var(--black); padding:88px 56px; }
 .contact-inner {
@@ -490,9 +464,7 @@ h1 em { font-style:normal; color:var(--teal-lt); }
   .intro-imgs { grid-template-rows:auto; min-height:0; }
   .intro-img { height:280px; }
   .included { padding:60px 24px; }
-  .caterer { padding:60px 24px; }
-  .caterer-inner { grid-template-columns:1fr; gap:32px; }
-  .contact-section { padding:64px 24px; }
+.contact-section { padding:64px 24px; }
   .contact-inner { grid-template-columns:1fr; gap:40px; }
   .partners { padding:60px 24px; }
   .partners-grid { grid-template-columns:1fr; }
@@ -785,23 +757,6 @@ nav.solid .hamburger span { background: #333; }
   </div>
 </div>
 
-<!-- CATERER -->
-<section class="caterer">
-  <div class="caterer-inner">
-    <div class="caterer-img"><div class="caterer-img-bg"></div></div>
-    <div class="caterer-content">
-      <p class="s-label">Food & Catering</p>
-      <h2>Great food,<br><em>sorted</em></h2>
-      <p class="body-copy">Outside catering is welcome at Free Run — and we have a preferred partner who knows the venue, understands the vibe, and delivers food that matches the occasion.</p>
-      <p class="body-copy">Our preferred caterer, Josh Bishop, has worked with us across multiple events this season and has tasting events in the works too. We're happy to make the introduction when you enquire.</p>
-      <div class="caterer-tag">
-        <span>🍽</span>
-        <span><strong>Preferred caterer available</strong> — ask us for an introduction when you get in touch</span>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- CONTACT -->
 <section class="contact-section" id="contact">
   <div class="contact-inner">
@@ -850,9 +805,9 @@ nav.solid .hamburger span { background: #333; }
 <section class="partners" id="partners">
   <div class="partners-inner">
     <div class="partners-header">
-      <p class="s-label center">Preferred Partners</p>
-      <h2 style="text-align:center;">People we <em>trust</em></h2>
-      <p class="body-copy" style="text-align:center;max-width:480px;margin:0 auto;">We work with a small circle of partners who know the winery, share our values, and make your event better.</p>
+      <p class="s-label center">Food, Catering &amp; Tours</p>
+      <h2 style="text-align:center;">Preferred <em>partners</em></h2>
+      <p class="body-copy" style="text-align:center;max-width:520px;margin:0 auto;">Outside catering is welcome at Free Run. These are the people we trust — they know the venue, understand the vibe, and make your event better.</p>
     </div>
     <div class="partners-grid">
 
