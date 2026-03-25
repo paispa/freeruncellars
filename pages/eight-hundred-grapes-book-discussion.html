@@ -252,60 +252,6 @@ nav {
 .secret-desc {
   font-size: 12px; line-height: 1.7; color: var(--muted); font-weight: 300;
 }
-/* ── WINE PAIRINGS ── */
-.pairings-section {
-  padding: 100px 24px;
-  max-width: 800px; margin: 0 auto;
-}
-.pairings-intro {
-  font-size: 15px; line-height: 1.9; color: var(--muted);
-  font-weight: 300; text-align: center; margin-bottom: 60px;
-  max-width: 580px; margin-left: auto; margin-right: auto;
-}
-.pairing-list {
-  display: flex; flex-direction: column; gap: 0;
-  position: relative;
-}
-.pairing-list::before {
-  content: '';
-  position: absolute; left: 22px; top: 0; bottom: 0; width: 1px;
-  background: linear-gradient(180deg, var(--teal), rgba(83,127,113,0.1));
-}
-.pairing-item {
-  display: flex; gap: 24px; align-items: flex-start;
-  padding: 28px 0;
-  border-bottom: 1px solid rgba(83,127,113,0.1);
-}
-.pairing-item:last-child { border-bottom: none; }
-.pairing-dot {
-  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
-  background: rgba(83,127,113,0.1);
-  border: 1px solid rgba(83,127,113,0.35);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  position: relative; z-index: 1;
-}
-.pairing-content { flex: 1; padding-top: 8px; }
-.pairing-wine {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px; font-style: italic; font-weight: 400;
-  color: var(--cream); margin-bottom: 4px;
-}
-.pairing-notes {
-  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--teal); margin-bottom: 8px; font-weight: 500;
-}
-.pairing-secret {
-  font-size: 13px; line-height: 1.7; color: var(--muted); font-weight: 300;
-}
-.pairing-hint {
-  display: inline-block; margin-top: 8px;
-  background: rgba(184,124,42,0.1);
-  border: 1px solid rgba(184,124,42,0.25);
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 11px; color: var(--amber-lt); letter-spacing: 0.5px;
-}
 /* ── DETAILS CARD ── */
 .details-section {
   padding: 100px 24px;
@@ -409,7 +355,6 @@ footer {
   .details-free { font-size: 56px; }
   .book-section,
   .secrets-section,
-  .pairings-section,
   .details-section { padding: 70px 20px; }
   .hero-date-badge { padding: 16px 28px; }
   .badge-date { font-size: 28px; }
@@ -551,44 +496,6 @@ footer {
           <span class="secret-icon">🍷</span>
           <div class="secret-title">Secret Ingredients</div>
           <p class="secret-desc">Every winemaker has them — small choices that never appear on the label. A touch of chocolate in the lasagna. A surprise pairing that shouldn't work but does. We'll explore a few of our own that evening.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-divider reveal"></div>
-
-  <!-- Wine Pairings / Secret Pairings -->
-  <section class="pairings-section">
-    <div class="section-label reveal" style="text-align:center;">That Evening</div>
-    <div class="section-heading reveal">Surprise pairings &amp;<br>secret flavors to explore</div>
-    <p class="pairings-intro reveal">
-      Inspired by the book's hidden ingredients and unexpected connections, we'll taste a few wines alongside some surprising food pairings — the kind you might not expect, but won't soon forget.
-    </p>
-    <div class="pairing-list">
-      <div class="pairing-item reveal">
-        <div class="pairing-dot">🍫</div>
-        <div class="pairing-content">
-          <div class="pairing-wine">The Chocolate Secret</div>
-          <div class="pairing-notes">Georgia's Mother's Lasagna</div>
-          <p class="pairing-secret">The book's most disarming secret: a pinch of chocolate in the lasagna sauce. We'll recreate that spirit — pairing a rich red with a chocolate-inflected bite that has no business being this good.</p>
-        </div>
-      </div>
-      <div class="pairing-item reveal">
-        <div class="pairing-dot">🍑</div>
-        <div class="pairing-content">
-          <div class="pairing-wine">Surprise White Pairing</div>
-          <div class="pairing-notes">Something unexpected on the table</div>
-          <p class="pairing-secret">We'll bring out one of our whites — estate Pinot Gris or Fusion — and pair it with something that shouldn't work on paper. Spoiler: it does.</p>
-          <span class="pairing-hint">✦ The best pairings are always a little surprising</span>
-        </div>
-      </div>
-      <div class="pairing-item reveal">
-        <div class="pairing-dot">🌿</div>
-        <div class="pairing-content">
-          <div class="pairing-wine">The Vineyard's Own Secret</div>
-          <div class="pairing-notes">What we never put on the label</div>
-          <p class="pairing-secret">Every wine we make carries small decisions that never appear on a label — the timing, the judgment call, the thing Trish and Prashanth just knew. That evening we'll share a few of ours.</p>
         </div>
       </div>
     </div>
