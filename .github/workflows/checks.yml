@@ -16,15 +16,13 @@ jobs:
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
           root: .
-          # Exclude: snippets (chat-bubble), email templates (legacy table HTML + {{vars}})
-          blacklist: >-
-            chat-bubble.html
-            tools/email-template-single.html
-            tools/email-template-strip.html
-          # Ignore <style> in <body> (intentional mobile-nav pattern), warnings
+          # Each --blacklist and --ignore-re is a separate flag (no shell quoting issues)
           extra: >-
-            --ignore-re "Element .style. not allowed as child of element .body."
-            --ignore-re "W[0-9]+"
+            --blacklist chat-bubble.html
+            --blacklist tools/email-template-single.html
+            --blacklist tools/email-template-strip.html
+            --ignore-re style.*not.*allowed
+            --ignore-re W[0-9]+
 
       - name: Check for broken links
         uses: lycheeverse/lychee-action@v1
