@@ -36,7 +36,8 @@ jobs:
             --exclude "fonts.googleapis.com"
             --exclude "fonts.gstatic.com"
             --exclude "yelp.com"
-            --exclude-path "email-template"
+            --exclude "instagram.com"
+            --exclude-path "tools/email-template"
             ./**/*.html
           fail: true
 
