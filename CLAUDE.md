@@ -407,6 +407,14 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 15)
+
+Bug fixes and image updates on `pages/event-packages.html`:
+
+- **Hamburger menu fix**: Removed stray JS debris (broken backtick template-literal fragment, orphaned `setTimeout`, and unclosed `}`) sitting between the nav-scroll code and the mobile nav IIFE. The `SyntaxError` it caused silently prevented the hamburger listener from ever attaching.
+- **Photo break image**: Swapped the full-bleed "Exchange vows among the vines" banner from `untitled-985.jpeg` (wine bottles) to `untitled-601.jpeg` (catering/food spread).
+- **Intro bottom image**: Swapped the second stacked intro image from `untitled-985.jpeg` to `AS259847.jpeg` (copper mule cup with flowers).
+
 ## Recent Additions (March 2026 — part 14)
 
 Preferred Partners section on event-packages.html:

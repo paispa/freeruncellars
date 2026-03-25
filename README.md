@@ -316,10 +316,14 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 - [x] Josh Bishop (preferred caterer) — section live on event-packages.html
 - [x] Instagram handle confirmed — @freeruncellars live in nav, contact, and reviews pages
 - [x] AI chatbot / inquiry assistant — fully live (api/chat.js + embedded on all pages)
+- [x] Preferred Partners section added to event-packages.html — Modern Table Cuisine + Fruitful Vine Tours cards; homepage callout links to `#partners`
+- [x] event-packages.html hamburger menu fixed — removed stray JS fragment (broken template literal + orphaned brace) that caused SyntaxError blocking mobile nav IIFE
+- [x] event-packages.html photo break image swapped to `untitled-601.jpeg` (catering/food photo)
+- [x] event-packages.html intro bottom image swapped to `AS259847.jpeg` (copper mule cup & flowers)
 - [ ] Blog: Chikmagalur coffee terroir vs SW Michigan wine terroir
 - [ ] Partnership page for neighboring vineyards
 - [ ] Favicon — export `FR_WinePress.png` as 512×512 square transparent PNG, generate favicon.ico + apple-touch-icon
 
 ---
 
-*Last updated: March 24, 2026 (Event pages + TV signage; events calendar ICS docs corrected; Brevo API consolidated)*
+*Last updated: March 25, 2026 (Preferred Partners section; event-packages hamburger fix; image swaps)*
