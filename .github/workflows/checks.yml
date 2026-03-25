@@ -16,9 +16,15 @@ jobs:
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
           root: .
-          skip_pattern: "node_modules"
-          # Ignore warnings (W*) — only fail on errors (E*)
-          extra: "--ignore-re 'W[0-9]+'"
+          # Exclude: snippets (chat-bubble), email templates (legacy table HTML + {{vars}})
+          blacklist: >-
+            chat-bubble.html
+            tools/email-template-single.html
+            tools/email-template-strip.html
+          # Ignore <style> in <body> (intentional mobile-nav pattern), warnings
+          extra: >-
+            --ignore-re "Element .style. not allowed as child of element .body."
+            --ignore-re "W[0-9]+"
 
       - name: Check for broken links
         uses: lycheeverse/lychee-action@v1
