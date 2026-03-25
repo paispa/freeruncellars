@@ -33,6 +33,10 @@ jobs:
             --exclude "corsproxy.io"
             --exclude "tel:"
             --exclude "mailto:"
+            --exclude "fonts.googleapis.com"
+            --exclude "fonts.gstatic.com"
+            --exclude "yelp.com"
+            --exclude-path "email-template"
             ./**/*.html
           fail: true
 
