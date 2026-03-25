@@ -16,13 +16,13 @@ jobs:
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
           root: .
-          # Each --blacklist and --ignore-re is a separate flag (no shell quoting issues)
-          extra: >-
-            --blacklist chat-bubble.html
-            --blacklist tools/email-template-single.html
-            --blacklist tools/email-template-strip.html
-            --ignore-re style.*not.*allowed
-            --ignore-re W[0-9]+
+          # Blacklist matched against filename only (no path prefix)
+          blacklist: >-
+            chat-bubble.html
+            email-template-single.html
+            email-template-strip.html
+          # Dot-only regex (no * glob chars) to suppress intentional style-in-body
+          extra: --ignore-re not.allowed.as.child
 
       - name: Check for broken links
         uses: lycheeverse/lychee-action@v1
