@@ -164,9 +164,11 @@ https://freeruncellars.com/pages/my-event-page
 
 ## Image Swap Guide
 
-Images are CSS variables at the top of each HTML file. To swap: upload to GoDaddy Image Manager → copy CDN URL → paste in. GoDaddy CDN is used for large hero/gallery photos only; logos and brand assets are self-hosted in `/public/images/`.
+GoDaddy CDN is used for large hero/gallery photos only; logos and brand assets are self-hosted in `/public/images/`.
 
 CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/FILENAME.jpeg`
+
+### `index.html` — CSS variables (top of `<style>` block)
 
 | Variable | File | Description |
 |----------|------|-------------|
@@ -175,9 +177,20 @@ CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e
 | `--img-patio` | `R06A1556.jpeg` | Outdoor patio & umbrellas |
 | `--img-wine` | `R06A1589r.jpeg` | Pinot Gris bottle on rope swing |
 | `--img-events` | `untitled-31.jpeg` | Flutist performing live |
-| `--img-wedding` | `untitled-985.jpeg` | Wedding couple in vineyard |
+| `--img-wedding` | `untitled-985.jpeg` | Wine bottles close-up |
 | `--img-pond` | `IMG_4007.jpeg` | Spring-fed pond |
 | `--img-sign` | `AS259819.jpeg` | Exterior sign at dusk |
+
+### `pages/event-packages.html` — inline CSS class references
+
+| CSS Class | File | Description |
+|-----------|------|-------------|
+| `.intro-img-1` | `untitled-716.jpeg` | Champagne fountain table |
+| `.intro-img-2` | `AS259847.jpeg` | Copper mule cup with flowers |
+| `.pkg-img-1` | `R06A1556.jpeg` | Outdoor patio & umbrellas (Roped Off card) |
+| `.pkg-img-2` | `untitled-589.jpeg` | Evening wedding event with string lights (After Hours card) |
+| `.pkg-img-3` | `untitled-985.jpeg` | Wine bottles close-up (Wine All Day card) |
+| `.photo-break-bg` | `untitled-601.jpeg` | Catering food spread (full-bleed banner) |
 
 ---
 
