@@ -407,6 +407,24 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 
+## Recent Additions (March 2026 — part 15)
+
+Bug fixes and image updates on `pages/event-packages.html`:
+
+- **Hamburger menu fix**: Removed stray JS debris (broken backtick template-literal fragment, orphaned `setTimeout`, and unclosed `}`) sitting between the nav-scroll code and the mobile nav IIFE. The `SyntaxError` it caused silently prevented the hamburger listener from ever attaching.
+- **Photo break image**: Swapped the full-bleed "Exchange vows among the vines" banner from `untitled-985.jpeg` (wine bottles) to `untitled-601.jpeg` (catering/food spread).
+- **Intro bottom image**: Swapped the second stacked intro image from `untitled-985.jpeg` to `AS259847.jpeg` (copper mule cup with flowers).
+
+## Recent Additions (March 2026 — part 14)
+
+Preferred Partners section on event-packages.html:
+
+- **Preferred Partners section** (`pages/event-packages.html`): New `#partners` section added above the footer, with two side-by-side cards (stacked on mobile). Styled consistently with the page — pale teal background, white cards, Cormorant Garamond partner names, brand teal accents. Section is linked from the homepage callout.
+- **Modern Table Cuisine**: Executive Chef Joshua Bishop — fresh, seasonal catering for weddings, corporate luncheons & intimate gatherings. Contact: moderntablejosh@gmail.com, 574-849-6049.
+- **Fruitful Vine Tours**: Guided wine tours through Southwest Michigan wine country including Free Run Cellars. Website: fruitfulvinetours.com.
+- **index.html**: Replaced the full Fruitful Vine Tours promotional block (`.fruitful`) with a minimal one-line callout — "Planning a group visit? Meet our preferred partners →" — linking to `/pages/event-packages#partners`.
+- **api/chat.js**: Added `PREFERRED PARTNERS` section to the system prompt with both partners' names, descriptions, and contact details.
+
 ## Recent Additions (March 2026 — part 13)
 
 Event pages, TV signage, and events calendar fix:

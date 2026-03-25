@@ -85,6 +85,11 @@ THE EXPERIENCE
 - Wine tastings — guided flights or by-the-glass
 - Fruitful Vine Tours runs guided tours including Free Run: fruitfulvinetours.com
 
+PREFERRED PARTNERS
+Free Run Cellars works with two preferred partners for private events:
+(1) Modern Table Cuisine — Executive Chef Joshua Bishop, catering for weddings, luncheons & intimate gatherings at the winery. moderntablejosh@gmail.com, 574-849-6049.
+(2) Fruitful Vine Tours — guided wine tours through Southwest Michigan wine country including stops at Free Run Cellars. Sit back, enjoy the scenery, and let them handle the details — tasting fees and driving all taken care of. fruitfulvinetours.com.
+
 EVENTS CALENDAR
 - For specific upcoming events and live music artist lineups, guests should check the events calendar at freeruncellars.com/pages/events-calendar or call (269) 815-6885
 - You do not have access to the live events calendar — always direct guests there for up-to-date event listings

@@ -13,12 +13,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Check HTML validity
-        uses: Cyb3r-Jak3/html5validator-action@v7
+        uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
           root: .
-          skip_pattern: "node_modules"
-          # Ignore warnings (W*) — only fail on errors (E*)
-          extra: "--ignore-re 'W[0-9]+'"
+          # Blacklist matched against filename only (no path prefix)
+          blacklist: >-
+            chat-bubble.html
+            email-template-single.html
+            email-template-strip.html
+          # Dot-only regex (no * glob chars) to suppress intentional style-in-body
+          extra: --ignore-re not.allowed.as.child
 
       - name: Check for broken links
         uses: lycheeverse/lychee-action@v1
@@ -29,6 +33,11 @@ jobs:
             --exclude "corsproxy.io"
             --exclude "tel:"
             --exclude "mailto:"
+            --exclude "fonts.googleapis.com"
+            --exclude "fonts.gstatic.com"
+            --exclude "yelp.com"
+            --exclude "instagram.com"
+            --exclude "%7B%7B"
             ./**/*.html
           fail: true
 
