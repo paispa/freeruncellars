@@ -322,6 +322,19 @@ h2.on-dark em { color:var(--teal-lt); }
 .cm-arrow { font-size:16px; color:var(--grey); transition:transform .2s, color .2s; }
 .contact-method:hover .cm-arrow { transform:translateX(4px); color:var(--teal); }
 
+/* ── PRIVATE EVENT TIP ── */
+.event-tip {
+  padding:11px 16px;
+  background:var(--teal-pale);
+  border-left:3px solid var(--teal-lt);
+  border-radius:0 6px 6px 0;
+  font-size:13px; color:var(--grey);
+  line-height:1.55;
+  margin-bottom:12px;
+}
+.event-tip a { color:var(--teal-dk); text-decoration:underline; text-underline-offset:3px; }
+.event-tip a:hover { color:var(--teal); }
+
 /* ── CONTACT FORM CARD ── */
 .contact-form-card {
   padding:20px 22px;
@@ -740,6 +753,8 @@ nav.solid .hamburger span { background: #333; }
           </div>
           <div class="cm-arrow">→</div>
         </a>
+
+        <p class="event-tip">Planning a private event? See our <a href="/pages/event-packages">packages and pricing</a> first.</p>
 
         <div class="contact-form-card">
           <div class="cf-label">Send us a message</div>

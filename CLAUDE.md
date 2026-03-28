@@ -400,7 +400,7 @@ The "dividend into credits" language has a pending legal review flag visible on 
 ## Known Limitations & Pending Work
 
 - [ ] Newsletter signup uses `mailto:` fallback — needs Mailchimp or EmailJS integration
-- [ ] Reviews page has placeholder content — needs real Google/Facebook reviews
+- [x] Reviews page updated — real Google reviews now live
 - [x] `freeruncellars.com` DNS migrated to Vercel — `frcwine.com` and `www.frcwine.com` now permanently redirect to `freeruncellars.com`
 - [x] Instagram confirmed — `@freeruncellars` live in index, contact, and reviews pages
 - [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
