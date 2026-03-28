@@ -41,8 +41,17 @@ jobs:
             ./**/*.html
           fail: true
 
-      - name: JavaScript lint
+      - name: JavaScript lint (HTML-embedded)
         run: npx --yes jshint --extract=auto ./**/*.html
+
+      - name: Syntax-check serverless functions
+        run: |
+          for f in api/*.js; do
+            node --check "$f" && echo "OK: $f" || exit 1
+          done
+
+      - name: Unit tests
+        run: node test-api-handlers.js
 
   smoke-test:
     runs-on: ubuntu-latest
@@ -53,13 +62,18 @@ jobs:
       - name: Wait for Vercel deploy
         run: sleep 60
 
-      - name: Check key pages are live
+      - name: Smoke-test public pages
         run: |
           urls=(
             "https://freeruncellars.com"
             "https://freeruncellars.com/pages/wines"
             "https://freeruncellars.com/pages/events-calendar"
+            "https://freeruncellars.com/pages/about"
+            "https://freeruncellars.com/pages/gallery"
             "https://freeruncellars.com/pages/contact"
+            "https://freeruncellars.com/pages/event-packages"
+            "https://freeruncellars.com/pages/live-music-sundays"
+            "https://freeruncellars.com/pages/reviews"
           )
           for url in "${urls[@]}"; do
             status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
@@ -70,3 +84,43 @@ jobs:
               echo "OK: $url"
             fi
           done
+
+      - name: Smoke-test staff tools
+        run: |
+          urls=(
+            "https://freeruncellars.com/tools/dashboard"
+            "https://freeruncellars.com/tools/vineyard-season"
+            "https://freeruncellars.com/tools/healthcheck"
+          )
+          for url in "${urls[@]}"; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+            if [ "$status" != "200" ]; then
+              echo "FAIL: $url returned $status"
+              exit 1
+            else
+              echo "OK: $url"
+            fi
+          done
+
+      - name: Smoke-test API endpoints
+        run: |
+          BASE="https://freeruncellars.com"
+
+          # Calendar feed — GET, unauthenticated, should return 200
+          status=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/api/calendar")
+          [ "$status" = "200" ] || { echo "FAIL: /api/calendar returned $status (expected 200)"; exit 1; }
+          echo "OK: /api/calendar"
+
+          # frost-alert — POST without password must return 401 (auth gate)
+          status=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Content-Type: application/json" -d "{}" \
+            "$BASE/api/frost-alert")
+          [ "$status" = "401" ] || { echo "FAIL: /api/frost-alert auth gate returned $status (expected 401)"; exit 1; }
+          echo "OK: /api/frost-alert auth gate"
+
+          # poynt-sales — POST without password must return 401 (auth gate)
+          status=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Content-Type: application/json" -d "{}" \
+            "$BASE/api/poynt-sales")
+          [ "$status" = "401" ] || { echo "FAIL: /api/poynt-sales auth gate returned $status (expected 401)"; exit 1; }
+          echo "OK: /api/poynt-sales auth gate"

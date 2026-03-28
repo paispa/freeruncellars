@@ -12,6 +12,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://freeruncellars.com/">
 <title>Free Run Cellars – Boutique Winery in Berrien Springs, Michigan</title>
 <meta name="description" content="A boutique winery rooted in the philosophy of Atithidevo Bhav — the guest is akin to God. Small-batch wines, live music, and 10 acres of Michigan beauty in Berrien Springs, MI. 90 minutes from Chicago.">
 
@@ -77,6 +78,7 @@
   ═══════════════════════════════════════════════════════
 -->
 
+<link rel="preload" as="image" href="/public/images/AS259838.jpeg" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -94,15 +96,9 @@
   --text:      #2c2c2c;
   --nav-h:     74px;
 
-  /* ── GODADDY CDN IMAGES ── */
-  --img-hero:    url('/public/images/AS259838.jpeg');
-  --img-story:   url('/public/images/R06A2367.jpeg');
-  --img-patio:   url('/public/images/R06A1556.jpeg');
-  --img-wine:    url('/public/images/R06A1589r.jpeg');
-  --img-events:  url('/public/images/untitled-31.jpeg');
-  --img-wedding: url('/public/images/untitled-985.jpeg');
-  --img-pond:    url('/public/images/IMG_4007.jpeg');
-  --img-sign:    url('/public/images/AS259819.jpeg');
+  /* ── ABOVE-FOLD IMAGE (preloaded in <head>) ── */
+  --img-hero: url('/public/images/AS259838.jpeg');
+  /* Below-fold images are loaded lazily via IntersectionObserver (data-bg attributes) */
 }
 
 /* ── RESET ── */
@@ -285,7 +281,6 @@ h1 em { font-style:normal; color:#a8d4be; }
 }
 .story-img-inner {
   position:absolute; inset:0;
-  background-image:var(--img-story);
   background-size:cover; background-position:center 20%;
   transition:transform .7s ease;
 }
@@ -352,7 +347,6 @@ h1 em { font-style:normal; color:#a8d4be; }
 .photo-break { height:400px; position:relative; overflow:hidden; }
 .photo-break-bg {
   position:absolute; inset:0;
-  background-image:var(--img-patio);
   background-size:cover; background-position:center 50%;
 }
 .photo-break-scrim {
@@ -385,7 +379,6 @@ h1 em { font-style:normal; color:#a8d4be; }
 }
 .wines-img-bg {
   position:absolute; inset:0;
-  background-image:var(--img-wine);
   background-size:cover; background-position:center 40%;
 }
 .wines-tag {
@@ -412,7 +405,6 @@ h1 em { font-style:normal; color:#a8d4be; }
 }
 .eb-bg {
   position:absolute; inset:0;
-  background-image:var(--img-events);
   background-size:cover; background-position:center 25%;
 }
 .eb-scrim { position:absolute; inset:0; background:rgba(8,18,12,.68); }
@@ -437,7 +429,6 @@ h1 em { font-style:normal; color:#a8d4be; }
 }
 .private-img-bg {
   position:absolute; inset:0;
-  background-image:var(--img-wedding);
   background-size:cover; background-position:center 30%;
   transition:transform .7s ease;
 }
@@ -473,7 +464,6 @@ h1 em { font-style:normal; color:#a8d4be; }
 .grounds-img { position:relative; overflow:hidden; min-height:400px; }
 .grounds-img-bg {
   position:absolute; inset:0;
-  background-image:var(--img-pond);
   background-size:cover; background-position:center;
   transition:transform .7s ease;
 }
@@ -520,7 +510,6 @@ h1 em { font-style:normal; color:#a8d4be; }
 .visit-img { position:relative; min-height:480px; overflow:hidden; }
 .visit-img-bg {
   position:absolute; inset:0;
-  background-image:var(--img-sign);
   background-size:cover; background-position:center; opacity:.65;
 }
 .visit-content {
@@ -867,7 +856,7 @@ nav.solid .hamburger span { background: #333; }
 <nav id="nav">
   <a href="/" style="line-height:0;display:flex;align-items:center;gap:12px;">
     <img class="nav-press" src="/public/images/FR_WinePress.png" alt="">
-    <img class="nav-logo" src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars">
+    <img class="nav-logo" src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars" fetchpriority="high">
   </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="pages/about.html">Our Story</a></li>
@@ -919,7 +908,7 @@ nav.solid .hamburger span { background: #333; }
 <!-- OUR STORY -->
 <section class="story" id="story">
   <div class="story-img" role="img" aria-label="Prashanth and Trish raising Free Run wine glasses in a toast">
-    <div class="story-img-inner"></div>
+    <div class="story-img-inner" data-bg="/public/images/R06A2367.jpeg"></div>
   </div>
   <div class="story-content">
     <p class="s-label">Our Story</p>
@@ -1010,7 +999,7 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- PHOTO BREAK -->
 <div class="photo-break" aria-hidden="true">
-  <div class="photo-break-bg" role="img" aria-label="The outdoor patio at Free Run Cellars"></div>
+  <div class="photo-break-bg" role="img" aria-label="The outdoor patio at Free Run Cellars" data-bg="/public/images/R06A1556.jpeg"></div>
   <div class="photo-break-scrim">
     <p class="photo-break-text">"Your third home in Southwest Michigan"</p>
     <p class="photo-break-sub">Berrien Springs · 90 minutes from Chicago</p>
@@ -1021,7 +1010,7 @@ nav.solid .hamburger span { background: #333; }
 <section class="wines" id="wines">
   <div class="wines-inner">
     <div class="wines-img" role="img" aria-label="Bottle of Pinot Gris on a rope swing in the vineyard">
-      <div class="wines-img-bg"></div>
+      <div class="wines-img-bg" data-bg="/public/images/R06A1589r.jpeg"></div>
       <div class="wines-tag">Lake Michigan Shore &amp; Beyond</div>
     </div>
     <div class="wines-content">
@@ -1047,7 +1036,7 @@ nav.solid .hamburger span { background: #333; }
 
 <!-- EVENTS BANNER -->
 <section class="events-banner" id="events">
-  <div class="eb-bg" role="img" aria-label="Live musician performing at Free Run Cellars"></div>
+  <div class="eb-bg" role="img" aria-label="Live musician performing at Free Run Cellars" data-bg="/public/images/untitled-31.jpeg"></div>
   <div class="eb-scrim"></div>
   <div class="eb-body">
     <p class="s-label lt center">Live Music &amp; Events</p>
@@ -1055,7 +1044,7 @@ nav.solid .hamburger span { background: #333; }
     <p>From laid-back Sunday sessions to ticketed special events, Free Run brings the best of Southwest Michigan's music scene to the vineyard patio every week.</p>
     <figure style="margin:28px auto 32px;max-width:600px;width:100%;text-align:center;">
       <img src="/public/images/IMG_8852.jpeg" alt="Johnny performing live music at Free Run Cellars"
-        style="width:100%;border-radius:12px;display:block;">
+        loading="lazy" style="width:100%;border-radius:12px;display:block;">
       <figcaption style="margin-top:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);">Live Music Every Sunday</figcaption>
     </figure>
     <a href="pages/events-calendar.html" class="btn-fill">View Upcoming Events</a>
@@ -1067,7 +1056,7 @@ nav.solid .hamburger span { background: #333; }
   <div class="private-inner">
     <div class="private-split">
       <div class="private-img" role="img" aria-label="Wedding couple walking hand-in-hand through the vineyard at golden hour">
-        <div class="private-img-bg"></div>
+        <div class="private-img-bg" data-bg="/public/images/untitled-985.jpeg"></div>
       </div>
       <div>
         <p class="s-label">Private Events</p>
@@ -1111,7 +1100,7 @@ nav.solid .hamburger span { background: #333; }
 <section class="grounds" id="grounds">
   <div class="grounds-inner">
     <div class="grounds-img" role="img" aria-label="The spring-fed pond at Free Run Cellars on a sunny summer day">
-      <div class="grounds-img-bg"></div>
+      <div class="grounds-img-bg" data-bg="/public/images/IMG_4007.jpeg"></div>
     </div>
     <div class="grounds-content">
       <p class="s-label lt">The Property</p>
@@ -1176,7 +1165,7 @@ nav.solid .hamburger span { background: #333; }
 <!-- VISIT -->
 <section class="visit" id="visit">
   <div class="visit-img" role="img" aria-label="Free Run Cellars exterior sign lit up at dusk with flowers in bloom">
-    <div class="visit-img-bg"></div>
+    <div class="visit-img-bg" data-bg="/public/images/AS259819.jpeg"></div>
   </div>
   <div class="visit-content">
     <p class="s-label lt">Visit Us</p>
@@ -1234,7 +1223,7 @@ nav.solid .hamburger span { background: #333; }
     <div class="f-brand">
       <img class="f-brand-logo"
         src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp"
-        alt="Free Run Cellars">
+        alt="Free Run Cellars" loading="lazy">
       <p>A boutique winery in Berrien Springs, Michigan rooted in the belief that a guest is akin to God. Small-batch wines, open doors, and 10 acres to call your own for the afternoon.</p>
       <div class="f-social">
         <a href="https://www.facebook.com/FreRunCellars" target="_blank" rel="noopener"
@@ -1316,7 +1305,7 @@ nav.solid .hamburger span { background: #333; }
     </div>
   </div>
   <div class="f-stamp">
-    <img class="f-press" src="/public/images/FR_WinePress.png" alt="">
+    <img class="f-press" src="/public/images/FR_WinePress.png" alt="" loading="lazy">
   </div>
   <div class="f-bottom">
     <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
@@ -2013,6 +2002,32 @@ onScroll();
   }, 4000);
 
 })();
+</script>
+
+<script>
+// ── Lazy-load below-fold CSS background images ────────────────────────────────
+// Elements with data-bg get their background-image set when they approach the
+// viewport. Falls back to immediate load for browsers without IntersectionObserver.
+(function () {
+  var els = document.querySelectorAll('[data-bg]');
+  if (!els.length) return;
+  function load(el) {
+    el.style.backgroundImage = "url('" + el.dataset.bg + "')";
+  }
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(load);
+    return;
+  }
+  var io = new IntersectionObserver(function (entries, observer) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        load(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '200px 0px' });
+  els.forEach(function (el) { io.observe(el); });
+}());
 </script>
 
 </body>

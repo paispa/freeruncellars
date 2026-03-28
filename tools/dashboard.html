@@ -701,32 +701,28 @@
     $('loginBtn').disabled = true;
     $('loginBtn').innerHTML = '<span class="spinner"></span>';
 
-    // Test auth by calling the sales endpoint
+    // Verify password via auth_check — only unlock on explicit ok:true
     fetch('/api/poynt-sales', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: password, startDate: new Date().toISOString().slice(0, 10), endDate: new Date().toISOString().slice(0, 10) }),
+      body: JSON.stringify({ action: 'auth_check', password: password }),
     })
+    .then(function(r) { return r.json().then(function(d) { return { status: r.status, data: d }; }); })
     .then(function(r) {
-      if (r.status === 401) throw new Error('unauthorized');
-      // Any other response means password is correct (even 502 = Poynt not configured)
-      $('loginScreen').classList.add('hidden');
-      $('dashboard').classList.remove('hidden');
-      initQuickBtns();
-      initDates();
-      initInventory();
-    })
-    .catch(function(err) {
-      if (err.message === 'unauthorized') {
-        $('loginError').style.display = 'block';
-      } else {
-        // Password was accepted but Poynt may not be configured — still let them in
+      if (r.status === 200 && r.data.ok) {
         $('loginScreen').classList.add('hidden');
         $('dashboard').classList.remove('hidden');
         initQuickBtns();
         initDates();
         initInventory();
+      } else {
+        $('loginError').style.display = 'block';
+        $('loginBtn').disabled = false;
+        $('loginBtn').textContent = 'Enter Dashboard';
       }
+    })
+    .catch(function() {
+      $('loginError').style.display = 'block';
       $('loginBtn').disabled = false;
       $('loginBtn').textContent = 'Enter Dashboard';
     });
