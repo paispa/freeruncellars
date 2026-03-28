@@ -6,7 +6,6 @@ const ALLOWED_ORIGINS = [
   'https://freeruncellars.com',
   'https://www.freeruncellars.com',
   'https://freeruncellars.vercel.app',
-  'https://f-prashanths-projects-58faea9a.vercel.app',
 ];
 
 /**
