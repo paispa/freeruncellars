@@ -1,6 +1,6 @@
 User-agent: *
 Disallow: /tools/
 Disallow: /api/
-Disallow: /pages/wifi-welcome.html
+Disallow: /pages/wifi-welcome
 
 Sitemap: https://freeruncellars.com/sitemap.xml
