@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stories from the Vineyard – Free Run Cellars</title>
+  <meta name="description" content="Stories, updates, and behind-the-scenes moments from Free Run Cellars — a family winery in Berrien Springs, Michigan." />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-T51K1F9DVS');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <meta name="color-scheme" content="light only" />
+  <style>
+    :root { color-scheme: light only; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:       #537f71;
+      --teal-dark:  #3d6155;
+      --teal-light: #7aab9a;
+      --teal-pale:  #eef4f1;
+      --grey:       #707271;
+      --offwhite:   #faf9f7;
+      --dark:       #1a1a1a;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--offwhite);
+      color: var(--dark);
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #e8ede9;
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px; text-decoration: none;
+    }
+    .nav-press { height: 48px; margin-top: 4px; }
+    .nav-logo  { height: 36px; }
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; letter-spacing: .08em;
+      text-transform: uppercase; text-decoration: none;
+      color: var(--dark); transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-burger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
+    .nav-burger span { display: block; width: 24px; height: 2px; background: var(--dark); transition: all .3s; }
+
+    /* HERO */
+    .blog-hero {
+      background: var(--teal);
+      color: #fff;
+      padding: 80px 40px 72px;
+      text-align: center;
+    }
+    .blog-hero .eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: .18em;
+      text-transform: uppercase; opacity: .75; margin-bottom: 16px;
+    }
+    .blog-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.6rem, 5vw, 4rem);
+      font-weight: 300; line-height: 1.15;
+    }
+    .blog-hero p {
+      margin-top: 16px; font-size: 16px; font-weight: 300;
+      opacity: .85; max-width: 480px; margin-left: auto; margin-right: auto;
+    }
+
+    /* GRID */
+    .blog-grid {
+      max-width: 1080px; margin: 0 auto;
+      padding: 72px 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 36px;
+    }
+
+    .blog-card {
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      display: flex; flex-direction: column;
+      transition: transform .25s ease, box-shadow .25s ease;
+      text-decoration: none; color: inherit;
+    }
+    .blog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 28px rgba(0,0,0,.1);
+    }
+    .blog-card-img {
+      width: 100%; aspect-ratio: 16/9;
+      object-fit: cover; display: block;
+      background: var(--teal-pale);
+    }
+    .blog-card-img.placeholder {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 200px;
+    }
+    .blog-card-img.placeholder svg { opacity: .25; }
+    .blog-card-body { padding: 28px 28px 32px; flex: 1; display: flex; flex-direction: column; }
+    .blog-card-meta {
+      font-size: 11px; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+    }
+    .blog-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 400; line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .blog-card-excerpt {
+      font-size: 14px; color: var(--grey); line-height: 1.65;
+      flex: 1;
+    }
+    .blog-card-cta {
+      margin-top: 24px;
+      font-size: 12px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .blog-card-cta::after { content: '→'; }
+
+    /* FOOTER */
+    footer {
+      background: #1c2b26; color: rgba(255,255,255,.7);
+      padding: 56px 40px 32px;
+    }
+    .footer-grid {
+      max-width: 1080px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 40px;
+      padding-bottom: 48px;
+    }
+    .footer-grid h4 {
+      font-size: 11px; font-weight: 600; letter-spacing: .14em;
+      text-transform: uppercase; color: #fff; margin-bottom: 16px;
+    }
+    .footer-grid p, .footer-grid a {
+      font-size: 13px; line-height: 1.8; color: rgba(255,255,255,.65);
+      text-decoration: none;
+    }
+    .footer-grid a:hover { color: var(--teal-light); }
+    .f-stamp { text-align: center; padding: 16px 0 24px; opacity: .3; }
+    .f-stamp img { height: 90px; }
+    .f-bottom {
+      max-width: 1080px; margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: rgba(255,255,255,.4);
+    }
+
+    /* MOBILE */
+    @media (max-width: 767px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: #fff; padding: 20px; border-bottom: 1px solid #e8ede9; gap: 16px; }
+      .nav-links.open { display: flex; }
+      .nav-burger { display: flex; }
+      .blog-hero { padding: 56px 24px 48px; }
+      .blog-grid { padding: 48px 20px; gap: 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .f-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="/">
+    <img class="nav-press" src="/public/images/FR_WinePress.png" alt="" />
+    <img class="nav-logo" src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars" />
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Home</a></li>
+    <li><a href="/pages/wines">Wines</a></li>
+    <li><a href="/pages/events-calendar">Events</a></li>
+    <li><a href="/pages/about">About</a></li>
+    <li><a href="/pages/gallery">Gallery</a></li>
+    <li><a href="/pages/contact">Visit &amp; Contact</a></li>
+    <li><a href="/pages/event-packages">Private Events</a></li>
+  </ul>
+  <button class="nav-burger" id="navBurger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="blog-hero">
+  <p class="eyebrow">Free Run Cellars</p>
+  <h1>Stories from the Vineyard</h1>
+  <p>Behind-the-scenes moments, news, and the people who make this place what it is.</p>
+</section>
+
+<div class="blog-grid">
+
+  <!-- POST 1 -->
+  <a class="blog-card" href="/pages/blog-village">
+    <div class="blog-card-img placeholder">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#537f71" stroke-width="1.5">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </div>
+    <div class="blog-card-body">
+      <p class="blog-card-meta">March 2026 &nbsp;·&nbsp; Our People</p>
+      <h2 class="blog-card-title">It Takes a Village (And Ours is Pretty Great)</h2>
+      <p class="blog-card-excerpt">Meet the people behind Free Run Cellars — from the backbone of our tasting room to the craftsmen arriving home from Florida with guitars.</p>
+      <span class="blog-card-cta">Read the story</span>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Visit Us</h4>
+      <p>10062 Burgoyne Road<br>Berrien Springs, MI 49103<br><br>
+        Fri 2–6 PM · Sat 12–7 PM<br>Sun 2–6 PM ♪ Live Music
+      </p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <p>
+        <a href="/pages/wines">Our Wines</a><br>
+        <a href="/pages/events-calendar">Events Calendar</a><br>
+        <a href="/pages/event-packages">Private Events</a><br>
+        <a href="/pages/about">Our Story</a><br>
+        <a href="/pages/blog">Stories</a>
+      </p>
+    </div>
+    <div>
+      <h4>Get in Touch</h4>
+      <p>
+        <a href="tel:+12698156885">(269) 815-6885</a><br>
+        <a href="mailto:contact@frcwine.com">contact@frcwine.com</a><br><br>
+        <a href="https://instagram.com/freeruncellars" target="_blank">@freeruncellars</a><br>
+        <a href="https://facebook.com/FreRunCellars" target="_blank">Facebook</a>
+      </p>
+    </div>
+  </div>
+  <div class="f-stamp">
+    <img src="/public/images/FR_WinePress.png" alt="" />
+  </div>
+  <div class="f-bottom">
+    <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+    <span><a href="/" style="color:rgba(255,255,255,.4);text-decoration:none;">Home</a></span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    var burger = document.getElementById('navBurger');
+    var links  = document.getElementById('navLinks');
+    if (burger && links) {
+      burger.addEventListener('click', function() {
+        links.classList.toggle('open');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>It Takes a Village – Free Run Cellars</title>
+  <meta name="description" content="Meet the people behind Free Run Cellars — from the backbone of our tasting room to the craftsmen arriving home from Florida with guitars." />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T51K1F9DVS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-T51K1F9DVS');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <meta name="color-scheme" content="light only" />
+  <style>
+    :root { color-scheme: light only; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:       #537f71;
+      --teal-dark:  #3d6155;
+      --teal-light: #7aab9a;
+      --teal-pale:  #eef4f1;
+      --grey:       #707271;
+      --offwhite:   #faf9f7;
+      --dark:       #1a1a1a;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: #faf9f7 !important;
+      color: #1a1a1a !important;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body { background: #faf9f7 !important; color: #1a1a1a !important; }
+      .post-wrap { background: #faf9f7; }
+      .post-intro { color: #3a3a3a; }
+      .post-section p { color: #2e2e2e; }
+      .post-section h2 { color: #3d6155; }
+      .pull-quote { background: #eef4f1; }
+      .pull-quote p { color: #3d6155; }
+      .back-link { color: #537f71; }
+      nav { background: #fff; }
+      .nav-links a { color: #1a1a1a; }
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #e8ede9;
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px; text-decoration: none;
+    }
+    .nav-press { height: 48px; margin-top: 4px; }
+    .nav-logo  { height: 36px; }
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; letter-spacing: .08em;
+      text-transform: uppercase; text-decoration: none;
+      color: var(--dark); transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-burger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 4px; }
+    .nav-burger span { display: block; width: 24px; height: 2px; background: var(--dark); transition: all .3s; }
+
+    /* HERO */
+    .post-hero {
+      background: var(--teal-pale);
+      padding: 72px 40px 64px;
+      text-align: center;
+      border-bottom: 1px solid #dce8e2;
+    }
+    .post-hero .eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 20px;
+    }
+    .post-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 300; line-height: 1.15;
+      max-width: 720px; margin: 0 auto;
+    }
+    .post-hero .byline {
+      margin-top: 24px; font-size: 13px; color: var(--grey);
+      letter-spacing: .05em;
+    }
+    .post-hero .byline strong { color: var(--teal); font-weight: 500; }
+
+    /* ARTICLE */
+    .post-wrap {
+      max-width: 720px; margin: 0 auto;
+      padding: 64px 40px 80px;
+    }
+
+    .post-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 400; line-height: 1.75;
+      color: #3a3a3a; margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid #dce8e2;
+    }
+
+    .post-section { margin-bottom: 56px; }
+
+    .post-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem; font-weight: 500;
+      color: var(--teal-dark);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--teal-pale);
+    }
+
+    .post-section p {
+      font-size: 16px; line-height: 1.8;
+      color: #2e2e2e; margin-bottom: 18px;
+    }
+    .post-section p:last-child { margin-bottom: 0; }
+
+    .post-section p em { font-style: italic; }
+
+    /* Pull quote */
+    .pull-quote {
+      margin: 36px 0;
+      padding: 28px 36px;
+      background: var(--teal-pale);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 4px 4px 0;
+    }
+    .pull-quote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem; font-weight: 400;
+      font-style: italic; line-height: 1.6;
+      color: var(--teal-dark); margin: 0;
+    }
+
+    /* Spotlight box */
+    .spotlight {
+      background: var(--teal);
+      color: #fff;
+      border-radius: 4px;
+      padding: 32px 36px;
+      margin: 36px 0;
+    }
+    .spotlight p {
+      color: rgba(255,255,255,.9);
+      font-size: 15px; line-height: 1.75; margin-bottom: 12px;
+    }
+    .spotlight p:last-child { margin-bottom: 0; }
+    .spotlight strong { color: #fff; }
+
+    /* Sign-off */
+    .post-signoff {
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid #dce8e2;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-style: italic;
+      color: var(--teal-dark);
+    }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; text-decoration: none;
+      color: var(--teal); margin-bottom: 48px;
+      transition: gap .2s;
+    }
+    .back-link::before { content: '←'; }
+    .back-link:hover { gap: 10px; }
+
+    /* FOOTER */
+    footer {
+      background: #1c2b26; color: rgba(255,255,255,.7);
+      padding: 56px 40px 32px;
+    }
+    .footer-grid {
+      max-width: 1080px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 40px;
+      padding-bottom: 48px;
+    }
+    .footer-grid h4 {
+      font-size: 11px; font-weight: 600; letter-spacing: .14em;
+      text-transform: uppercase; color: #fff; margin-bottom: 16px;
+    }
+    .footer-grid p, .footer-grid a {
+      font-size: 13px; line-height: 1.8; color: rgba(255,255,255,.65);
+      text-decoration: none;
+    }
+    .footer-grid a:hover { color: var(--teal-light); }
+    .f-stamp { text-align: center; padding: 16px 0 24px; opacity: .3; }
+    .f-stamp img { height: 90px; }
+    .f-bottom {
+      max-width: 1080px; margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: rgba(255,255,255,.4);
+    }
+
+    /* MOBILE */
+    @media (max-width: 767px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: #fff; padding: 20px; border-bottom: 1px solid #e8ede9; gap: 16px; }
+      .nav-links.open { display: flex; }
+      .nav-burger { display: flex; }
+      .post-hero { padding: 56px 24px 48px; }
+      .post-wrap { padding: 48px 24px 64px; }
+      .pull-quote { padding: 20px 24px; }
+      .spotlight { padding: 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .f-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="/">
+    <img class="nav-press" src="/public/images/FR_WinePress.png" alt="" />
+    <img class="nav-logo" src="/public/images/free-run-cellars-logo-horizontal-black-323a89.webp" alt="Free Run Cellars" />
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Home</a></li>
+    <li><a href="/pages/wines">Wines</a></li>
+    <li><a href="/pages/events-calendar">Events</a></li>
+    <li><a href="/pages/about">About</a></li>
+    <li><a href="/pages/gallery">Gallery</a></li>
+    <li><a href="/pages/contact">Visit &amp; Contact</a></li>
+    <li><a href="/pages/event-packages">Private Events</a></li>
+  </ul>
+  <button class="nav-burger" id="navBurger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="post-hero">
+  <p class="eyebrow">Our People &nbsp;·&nbsp; March 2026</p>
+  <h1>It Takes a Village (And Ours is Pretty Great)</h1>
+  <p class="byline">Written by <strong>Trish Slevin</strong> · Co-owner, Free Run Cellars</p>
+</section>
+
+<article class="post-wrap">
+
+  <a class="back-link" href="/pages/blog">All Stories</a>
+
+  <p class="post-intro">
+    When Prashanth and I took over Free Run Cellars, we thought we were buying a winery. What we didn't realize was that we were also inheriting a family — and somehow, along the way, folding in our own.
+  </p>
+
+  <div class="post-section">
+    <h2>Robin — The Real Boss</h2>
+    <p>Every great operation has someone behind the scenes who actually keeps the lights on. At Free Run, that's Robin Garoutte.</p>
+    <p>Robin came over from the previous ownership and never left — and thank goodness for that. She handles wine orders, vendor management, staffing, event planning, and approximately twelve other things I didn't know needed handling. She also has a quiet gift for managing Prashanth and me, which frankly deserves its own award.</p>
+
+    <div class="pull-quote">
+      <p>She was right. She's always right. We've stopped fighting it.</p>
+    </div>
+
+    <p>Case in point: early on, we proudly announced we were cutting a bunch of third-party vendors we thought were overkill. Robin smiled, nodded, and very gently pointed out that unless we wanted to be doing laundry on dish cloths — both for our own sanity and the health department's — we might want to reconsider.</p>
+    <p>On weekends, Robin's husband Jim quietly shows up and tackles whatever has mysteriously appeared on his honey-do list. We're not entirely sure how it gets there. Robin would never say.</p>
+    <p>Robin is beloved by guests of every age — from our regulars who've been coming to this property for years, to the youngest visitors who know her for her legendary Gaga kiddie cocktails. She is, in every sense, the backbone of this place.</p>
+    <p>What makes it even better? Robin's daughter Katie and I played tennis together back in high school in New Carlisle. That small-town connection went from the tennis court to the tasting room — and Katie and her husband J have been an invaluable sounding board on branding and licensing as we've built Free Run into something new. Some friendships just have staying power.</p>
+  </div>
+
+  <div class="post-section">
+    <h2>Kara — The Best Friend Who Keeps Us Honest</h2>
+    <p>Every small business needs someone who will look you in the eye and tell you the truth — even when you don't want to hear it. For us, that's Kara, my best friend and our unofficial financial conscience.</p>
+    <p>Kara is a small business owner herself, which means she has exactly zero patience for fuzzy math or wishful thinking. She keeps our heads on straight, our numbers in check, and our ambitions grounded in reality. We are better operators because of her.</p>
+    <p>She also happens to be married to Johnny — the incredibly talented musician who has become a beloved regular on our Sunday live music lineup. Kara graciously manages his schedule, which mostly means making sure he shows up at Free Run as often as possible. We are not sorry about this arrangement at all.</p>
+
+    <div class="spotlight">
+      <p><strong>Mark your calendars.</strong> Johnny will be taking the stage for our one year anniversary celebration — and we cannot wait. Details coming soon. This is one worth raising a glass to.</p>
+    </div>
+  </div>
+
+  <div class="post-section">
+    <h2>Mimi, Papaw &amp; The Winter Collection</h2>
+    <p>And then there's Mimi and Papaw (Darla and Joe).</p>
+    <p>If Robin is the backbone of Free Run, Mimi and Papaw are its soul. From the moment we took over, something sparked in them — a creative energy that hasn't stopped since. What started with repurposing old wine bottles into candles and glassware quietly grew into a full cottage industry. Knitted scarves and wash cloths. Original artwork with Free Run branding. Hand-crafted pieces that carry the warmth of people who genuinely love this place.</p>
+    <p>This past winter, while Prashanth and I were navigating the chaos of a new season, Mimi and Papaw headed to Florida — and did not rest for a single second. They spent the winter dreaming up new creations, sourcing materials, and pushing their craft further than ever. Repurposed wine vats turned into art. And then — spoiler alert — guitars.</p>
+
+    <div class="pull-quote">
+      <p>Yes. Guitars. We are just as excited as you are.</p>
+    </div>
+
+    <p>This spring, their creations will be available for purchase right here at the tasting room. One-of-a-kind, handmade with love, and carrying a little piece of Free Run Cellars home with you. We cannot think of a better souvenir.</p>
+    <p>I will say — occasionally Mimi and Papaw's design vision and mine don't perfectly align. That's when I step in. Lovingly. With a firm hand. They are wonderful and I adore them completely and I also reserve the right to veto. It's a system that works.</p>
+  </div>
+
+  <div class="post-section">
+    <h2>Grandma, Grandpa &amp; Nana — The Unsung Heroes</h2>
+    <p>No village is complete without the people who make everything else possible. Grandma Terri and Grandpa Don are our secret weapon. Every time Prashanth and I have to disappear for one of those random events that come with running a small business, they show up without hesitation to help us with littles (a lot of our littles). We are endlessly grateful.</p>
+    <p>And then there is Nana Mercy — Prashanth's mom — who deserves a category all her own. She travels all the way from India to be with us, staying for weeks or months at a time depending on what life on both sides of the world will allow. While she's here, she quietly takes over in the best possible way — meal planning disappears from our to-do list, the landscaping gets loved back into shape, and the whole household just runs better. We are always a little in awe of how much she fits into however long we can get her for. We are so lucky she makes the journey.</p>
+  </div>
+
+  <div class="post-section">
+    <h2>The Honest Truth</h2>
+    <p>Free Run Cellars is ours on paper. But in every way that actually matters, it belongs to all of these people too. We are so grateful — and a little amazed — that this funny little winery on Burgoyne Road has brought so many of the people we love into the same orbit.</p>
+    <p>Come visit us soon. Robin will probably be here. There will definitely be new artwork on the wall. And if you're lucky, you might just get a first look at what came home from Florida.</p>
+    <p>There is always, always good wine.</p>
+  </div>
+
+  <p class="post-signoff">— Trish</p>
+
+</article>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Visit Us</h4>
+      <p>10062 Burgoyne Road<br>Berrien Springs, MI 49103<br><br>
+        Fri 2–6 PM · Sat 12–7 PM<br>Sun 2–6 PM ♪ Live Music
+      </p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <p>
+        <a href="/pages/wines">Our Wines</a><br>
+        <a href="/pages/events-calendar">Events Calendar</a><br>
+        <a href="/pages/event-packages">Private Events</a><br>
+        <a href="/pages/about">Our Story</a><br>
+        <a href="/pages/blog">Stories</a>
+      </p>
+    </div>
+    <div>
+      <h4>Get in Touch</h4>
+      <p>
+        <a href="tel:+12698156885">(269) 815-6885</a><br>
+        <a href="mailto:contact@frcwine.com">contact@frcwine.com</a><br><br>
+        <a href="https://instagram.com/freeruncellars" target="_blank">@freeruncellars</a><br>
+        <a href="https://facebook.com/FreRunCellars" target="_blank">Facebook</a>
+      </p>
+    </div>
+  </div>
+  <div class="f-stamp">
+    <img src="/public/images/FR_WinePress.png" alt="" />
+  </div>
+  <div class="f-bottom">
+    <span>© 2026 Free Run Cellars · Berrien Springs, MI · Must be 21+ to purchase alcohol</span>
+    <span><a href="/" style="color:rgba(255,255,255,.4);text-decoration:none;">Home</a></span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    var burger = document.getElementById('navBurger');
+    var links  = document.getElementById('navLinks');
+    if (burger && links) {
+      burger.addEventListener('click', function() {
+        links.classList.toggle('open');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
