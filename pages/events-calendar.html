@@ -317,6 +317,26 @@
     letter-spacing: 0.3px;
   }
 
+  /* ── Private Events Callout ── */
+  .private-callout {
+    margin-top: 40px;
+    padding: 18px 24px;
+    background: rgba(115,152,133,0.10);
+    border: 1px solid rgba(115,152,133,0.22);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 13px; font-weight: 400;
+    color: rgba(232,240,235,0.60);
+    line-height: 1.6;
+  }
+  .private-callout a {
+    color: var(--sage-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+  .private-callout a:hover { color: var(--sage); }
+
   /* ── Footer ── */
   .footer-note {
     text-align: center; margin-top: 52px; padding-top: 28px;
@@ -568,6 +588,10 @@ nav.solid .hamburger span { background: #333; }
   </div>
 
   <div id="eventsList"></div>
+
+  <div class="private-callout">
+    Want the whole place to yourself? Ask about <a href="/pages/event-packages">private events</a>.
+  </div>
 
   <div class="footer-note">
     <p>Events subject to change · Follow us on social for updates<br>

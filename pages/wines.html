@@ -514,7 +514,14 @@ h2.on-dark em { color:var(--teal-lt); }
 
 @media (max-width:768px) {
   .hero-body { padding:0 24px 60px; }
-  .filter-section { padding:0 20px; }
+  .filter-section {
+    padding:0 12px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .filter-section::-webkit-scrollbar { display:none; }
+  .filter-btn { white-space:nowrap; flex-shrink:0; padding:18px 16px; }
   .wine-section { padding:52px 24px; }
   .flights-section { padding:60px 24px; }
   .flights-grid { grid-template-columns:1fr; }
@@ -1205,6 +1212,12 @@ document.querySelectorAll('.wine-card, .flight-card').forEach((el, i) => {
     document.querySelectorAll('.wine-card').forEach(function(card) {
       var match = filter === 'all' || card.dataset.type === filter;
       card.style.display = match ? '' : 'none';
+    });
+    document.querySelectorAll('.wine-section').forEach(function(section) {
+      var hasVisible = Array.from(section.querySelectorAll('.wine-card')).some(function(c) {
+        return c.style.display !== 'none';
+      });
+      section.style.display = hasVisible ? '' : 'none';
     });
   });
 })();

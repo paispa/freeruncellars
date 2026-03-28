@@ -322,6 +322,32 @@ h2.on-dark em { color:var(--teal-lt); }
 .cm-arrow { font-size:16px; color:var(--grey); transition:transform .2s, color .2s; }
 .contact-method:hover .cm-arrow { transform:translateX(4px); color:var(--teal); }
 
+/* ── PROMINENT PHONE ── */
+.phone-prominent { margin-bottom:24px; }
+.phone-number-link {
+  display:block; font-size:28px; font-weight:500;
+  color:var(--teal); letter-spacing:0.5px; text-decoration:none;
+  line-height:1.2; transition:color .2s;
+}
+.phone-number-link:hover { color:var(--teal-dk); }
+.phone-tagline {
+  font-size:14px; color:var(--grey); font-weight:300;
+  margin-top:6px; line-height:1.5;
+}
+
+/* ── PRIVATE EVENT TIP ── */
+.event-tip {
+  padding:11px 16px;
+  background:var(--teal-pale);
+  border-left:3px solid var(--teal-lt);
+  border-radius:0 6px 6px 0;
+  font-size:13px; color:var(--grey);
+  line-height:1.55;
+  margin-bottom:12px;
+}
+.event-tip a { color:var(--teal-dk); text-decoration:underline; text-underline-offset:3px; }
+.event-tip a:hover { color:var(--teal); }
+
 /* ── CONTACT FORM CARD ── */
 .contact-form-card {
   padding:20px 22px;
@@ -730,16 +756,51 @@ nav.solid .hamburger span { background: #333; }
         <p class="body-copy" style="margin-bottom:24px;">Whether you're planning a visit, asking about a private event, or just want to say hello — reach out any time.</p>
       </div>
 
-      <div class="contact-methods">
-        <a href="tel:+12698156885" class="contact-method">
-          <div class="cm-icon phone">📞</div>
-          <div class="cm-text">
-            <div class="cm-label">Phone</div>
-            <div class="cm-value">(269) 815-6885</div>
-            <div class="cm-sub">Mon–Thu by appointment</div>
+      <!-- Before you arrive -->
+      <div class="before-arrive">
+        <div class="ba-header">
+          <div class="ba-title">Before you arrive</div>
+          <div class="ba-sub">A few things worth knowing</div>
+        </div>
+        <div class="ba-items">
+          <div class="ba-item">
+            <div class="ba-icon">🐾</div>
+            <div>
+              <div class="ba-item-title">Dogs &amp; families welcome</div>
+              <div class="ba-item-text">Well-behaved dogs are welcome on the patio and grounds. Kids are welcome too — we have a play structure and plenty of open space to run around in.</div>
+            </div>
           </div>
-          <div class="cm-arrow">→</div>
-        </a>
+          <div class="ba-item">
+            <div class="ba-icon">🍽</div>
+            <div>
+              <div class="ba-item-title">No outside food, please</div>
+              <div class="ba-item-text">We offer packaged snacks including crackers, cheese, meat sticks, chips, and kids' snacks. Non-alcoholic beverages are also available. Outside food is not permitted.</div>
+            </div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">🚗</div>
+            <div>
+              <div class="ba-item-title">Designated drivers</div>
+              <div class="ba-item-text">Non-alcoholic beverages are complimentary for designated drivers. We appreciate you looking out for your group.</div>
+            </div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">♪</div>
+            <div>
+              <div class="ba-item-title">Live music every Sunday</div>
+              <div class="ba-item-text">Live music runs 3:00–5:00 PM every Sunday, March through October. Half off glass pours from open bottles during the set. Always free admission.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-prominent">
+        <a href="tel:+12698156885" class="phone-number-link">(269) 815-6885</a>
+        <p class="phone-tagline">Prefer to talk? We'd love to hear from you.</p>
+      </div>
+
+      <div class="contact-methods">
+        <p class="event-tip">Planning a private event? See our <a href="/pages/event-packages">packages and pricing</a> first.</p>
 
         <div class="contact-form-card">
           <div class="cf-label">Send us a message</div>
@@ -809,43 +870,6 @@ nav.solid .hamburger span { background: #333; }
         </a>
       </div>
 
-      <!-- Before you arrive -->
-      <div class="before-arrive">
-        <div class="ba-header">
-          <div class="ba-title">Before you arrive</div>
-          <div class="ba-sub">A few things worth knowing</div>
-        </div>
-        <div class="ba-items">
-          <div class="ba-item">
-            <div class="ba-icon">🐾</div>
-            <div>
-              <div class="ba-item-title">Dogs &amp; families welcome</div>
-              <div class="ba-item-text">Well-behaved dogs are welcome on the patio and grounds. Kids are welcome too — we have a play structure and plenty of open space to run around in.</div>
-            </div>
-          </div>
-          <div class="ba-item">
-            <div class="ba-icon">🍽</div>
-            <div>
-              <div class="ba-item-title">No outside food, please</div>
-              <div class="ba-item-text">We offer packaged snacks including crackers, cheese, meat sticks, chips, and kids' snacks. Non-alcoholic beverages are also available. Outside food is not permitted.</div>
-            </div>
-          </div>
-          <div class="ba-item">
-            <div class="ba-icon">🚗</div>
-            <div>
-              <div class="ba-item-title">Designated drivers</div>
-              <div class="ba-item-text">Non-alcoholic beverages are complimentary for designated drivers. We appreciate you looking out for your group.</div>
-            </div>
-          </div>
-          <div class="ba-item">
-            <div class="ba-icon">♪</div>
-            <div>
-              <div class="ba-item-title">Live music every Sunday</div>
-              <div class="ba-item-text">Live music runs 3:00–5:00 PM every Sunday, March through October. Half off glass pours from open bottles during the set. Always free admission.</div>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </div>
   </div>
