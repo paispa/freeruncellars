@@ -170,6 +170,12 @@ module.exports = async function handler(req, res) {
       return res.status(401).json({ error: 'unauthorized' });
     }
 
+    // Auth check only (no side effects — used by dashboard login gate)
+    const { action } = req.body || {};
+    if (action === 'auth_check') {
+      return res.status(200).json({ ok: true });
+    }
+
     if (!POYNT_BUSINESS_ID) {
       return res.status(500).json({ error: 'poynt_not_configured', detail: 'POYNT_BUSINESS_ID env var is missing' });
     }
