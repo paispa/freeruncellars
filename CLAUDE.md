@@ -400,12 +400,13 @@ The "dividend into credits" language has a pending legal review flag visible on 
 ## Known Limitations & Pending Work
 
 - [ ] Newsletter signup uses `mailto:` fallback — needs Mailchimp or EmailJS integration
-- [x] Reviews page updated — real Google reviews now live
+- [x] Reviews page updated with real Google/Facebook reviews (March 2026)
 - [x] `freeruncellars.com` DNS migrated to Vercel — `frcwine.com` and `www.frcwine.com` now permanently redirect to `freeruncellars.com`
 - [x] Instagram confirmed — `@freeruncellars` live in index, contact, and reviews pages
 - [x] Facebook confirmed — `facebook.com/FreRunCellars` linked from contact page and reviews page
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
+- [ ] Page Design Notes section added to CLAUDE.md — expand as new UX decisions are made
 
 ## Recent Additions (March 2026 — part 15)
 
@@ -591,6 +592,61 @@ If `type` is omitted, it is auto-detected from title keywords (`tast`/`release`/
 | Outlook/Microsoft 365 | Events calendar (ICS feed) | Microsoft 365 calendar |
 | Poynt POS | Sales data for staff dashboard | `POYNT_APP_ID` + `POYNT_PRIVATE_KEY` + `POYNT_BUSINESS_ID` in Vercel env |
 | GitHub | Source control + CI/CD trigger | github.com/paispa/freeruncellars |
+
+---
+
+## Page Design Notes
+
+This section documents intentional design and UX decisions
+for each page. Read before suggesting layout or content
+changes.
+
+### index.html (Homepage)
+- CTA sections are intentionally lean — do not add
+  redundant event or private booking banners; these
+  are covered by the main nav and dedicated pages
+- The live music / events block is the primary
+  emotional hook — sections after it should not
+  compete with it
+
+### pages/contact.html
+- Section order is intentional: Hours & Location →
+  Before You Arrive → Get In Touch (form) → Social
+  cards → Photo strip
+- "Before You Arrive" appears before the form because
+  it is pre-visit information visitors need before
+  deciding to reach out
+- Phone number is displayed prominently above the form
+  as the primary contact method — do not bury it
+- "Planning a private event? See our packages and
+  pricing first." link appears above the form
+- Social cards (Instagram, Facebook) appear after the
+  form, not inside it — they are secondary actions
+
+### pages/event-packages.html
+- Linked contextually from: events calendar (callout
+  banner at bottom), contact page (tip above form),
+  and main nav
+- Do not add redundant links to homepage — already
+  has nav coverage
+
+### pages/events-calendar.html
+- Small pale teal callout at bottom links to
+  /pages/event-packages with text: "Want the whole
+  place to yourself? Ask about private events."
+- Callout is intentionally subtle — do not upgrade
+  it to a full banner
+
+### pages/reviews.html
+- Real Google/Facebook reviews are live as of
+  March 2026 — do not treat as placeholder content
+
+### tools/ (Staff pages)
+- photobooth.html, dashboard.html, post-generator.html
+  are staff-only — ensure noindex meta tag is present
+  on all tools pages
+- These pages should never appear as landing pages
+  in Google Analytics
 
 ---
 
