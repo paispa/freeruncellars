@@ -38,7 +38,9 @@ freeruncellars/
 │   ├── upload-photo.js         ← Photo booth storage (Vercel Blob) — MIME + size validated
 │   ├── generate-post.js        ← AI Facebook post generator backend
 │   ├── poynt-auth.js           ← Poynt OAuth2 token (RS256 JWT, cached)
-│   └── poynt-sales.js          ← Poynt POS sales data, flight allocation, inventory predictions
+│   ├── poynt-sales.js          ← Poynt POS sales data, flight allocation, inventory predictions
+│   ├── frost-alert.js          ← Vineyard frost alerts — password-protected, sends SMS/email
+│   └── frost-alert-cron.js     ← Cron job: checks weather forecast and triggers frost alerts
 ├── pages/
 │   ├── about.html                          ← Our Story
 │   ├── wines.html                          ← Full wine menu + seasonal cocktails
@@ -49,6 +51,7 @@ freeruncellars/
 │   ├── contact.html                        ← Visit Us / Hours / Map
 │   ├── reviews.html                        ← Review landing (Google, Yelp, Facebook)
 │   ├── circle.html                         ← ⚠️ Owners Circle — private, not linked publicly
+│   ├── wifi-welcome.html                   ← WiFi splash page — guest email/SMS signup via Brevo
 │   ├── starry-night-paint-sip.html         ← Event page: Starry Night Paint & Sip (May 8)
 │   ├── starry-night-signage.html           ← TV signage: Starry Night (noindex, no GA, no links)
 │   ├── eight-hundred-grapes-book-discussion.html  ← Event page: book club (Apr 17, free)
@@ -57,6 +60,8 @@ freeruncellars/
 │   ├── dashboard.html               ← Internal: sales dashboard (Poynt POS, password-protected)
 │   ├── post-generator.html          ← Internal: AI Facebook post generator
 │   ├── photobooth.html              ← Photo booth with EmailJS + Vercel Blob
+│   ├── vineyard-season.html         ← Internal: frost alert manager + bud break tracker (password-protected)
+│   ├── healthcheck.html             ← Internal: production API health monitor (password-protected)
 │   ├── email-template-single.html   ← EmailJS template: single photo
 │   └── email-template-strip.html    ← EmailJS template: 3-photo composited strip
 ├── assets/
@@ -90,6 +95,9 @@ freeruncellars/
 | Sales Dashboard | `tools/dashboard.html` | ✅ Internal — Poynt POS, password-protected |
 | Post Generator | `tools/post-generator.html` | ✅ Internal — AI Facebook post generator |
 | Photo Booth | `tools/photobooth.html` | ✅ Live — EmailJS + Vercel Blob |
+| WiFi Welcome | `pages/wifi-welcome.html` | ✅ Live — guest email/SMS signup (Brevo) |
+| Vineyard Season | `tools/vineyard-season.html` | ✅ Internal — frost alert manager, password-protected |
+| Health Check | `tools/healthcheck.html` | ✅ Internal — API health monitor, password-protected |
 
 ---
 
@@ -119,7 +127,7 @@ Private membership page at `/pages/circle` — shared by direct URL only, not li
 4. **Contacts → Settings → Contact Attributes** → add Text attributes: `INTERESTS`, `MEMBERSHIP_TYPE`, `CIRCLE_MESSAGE`
 5. Optional: build a welcome email automation in Brevo triggered when a contact is added to the Owners Circle list
 
-Signups POST to `api/circle-signup.js` which adds the contact to the Brevo list and sends a notification to `contact@frcwine.com`.
+Signups POST to `api/brevo` (type: `circle`) which adds the contact to the Brevo list and sends a notification to `contact@frcwine.com`.
 
 ---
 
@@ -168,18 +176,25 @@ GoDaddy CDN is used for large hero/gallery photos only; logos and brand assets a
 
 CDN format: `https://img1.wsimg.com/isteam/ip/e003f7b8-bd50-4872-a2d0-83a80d992e8e/FILENAME.jpeg`
 
-### `index.html` — CSS variables (top of `<style>` block)
+### `index.html` — background images
 
-| Variable | File | Description |
-|----------|------|-------------|
-| `--img-hero` | `AS259838.jpeg` | Vineyard rows at golden hour |
-| `--img-story` | `R06A2367.jpeg` | Trish & Prashanth toasting |
-| `--img-patio` | `R06A1556.jpeg` | Outdoor patio & umbrellas |
-| `--img-wine` | `R06A1589r.jpeg` | Pinot Gris bottle on rope swing |
-| `--img-events` | `untitled-31.jpeg` | Flutist performing live |
-| `--img-wedding` | `untitled-985.jpeg` | Wine bottles close-up |
-| `--img-pond` | `IMG_4007.jpeg` | Spring-fed pond |
-| `--img-sign` | `AS259819.jpeg` | Exterior sign at dusk |
+The LCP hero image is preloaded in `<head>`:
+```html
+<link rel="preload" as="image" href="/public/images/AS259838.jpeg" fetchpriority="high">
+```
+
+Below-fold background images are **lazy-loaded via `data-bg` attributes** (not CSS variables). An IntersectionObserver near `</body>` reads each element's `data-bg` value and sets `style.backgroundImage` as the element scrolls into view (200px rootMargin).
+
+| Element / CSS Class | File | Description |
+|---------------------|------|-------------|
+| `#hero` (above fold) | `AS259838.jpeg` | Vineyard rows at golden hour — preloaded, eager |
+| `.story-img-inner` | `R06A2367.jpeg` | Trish & Prashanth toasting |
+| `.photo-break-bg` | `R06A1556.jpeg` | Outdoor patio & umbrellas |
+| `.wines-img-bg` | `R06A1589r.jpeg` | Pinot Gris bottle on rope swing |
+| `.eb-bg` | `untitled-31.jpeg` | Flutist performing live |
+| `.private-img-bg` | `untitled-985.jpeg` | Wine bottles close-up |
+| `.grounds-img-bg` | `IMG_4007.jpeg` | Spring-fed pond |
+| `.visit-img-bg` | `AS259819.jpeg` | Exterior sign at dusk |
 
 ### `pages/event-packages.html` — inline CSS class references
 
@@ -333,10 +348,19 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 - [x] event-packages.html hamburger menu fixed — removed stray JS fragment (broken template literal + orphaned brace) that caused SyntaxError blocking mobile nav IIFE
 - [x] event-packages.html photo break image swapped to `untitled-601.jpeg` (catering/food photo)
 - [x] event-packages.html intro bottom image swapped to `AS259847.jpeg` (copper mule cup & flowers)
+- [x] Frost alert endpoint secured with `DASHBOARD_PASSWORD` server-side auth; `auth_check` action added
+- [x] Dashboard login bypass fixed — login gate now only unlocks on explicit `{ ok: true }` response, not on any non-401
+- [x] healthcheck.html protected behind password gate (validates via poynt-sales auth_check)
+- [x] CI expanded: `node --check` syntax validation for all api/*.js files + unit tests run in checks.yml
+- [x] CI smoke tests expanded: public pages, staff tools, API auth endpoints (frost-alert + poynt-sales return 401 unauthenticated)
+- [x] robots.txt: fixed `/pages/wifi-welcome.html` → `/pages/wifi-welcome` to match clean URL routing
+- [x] Canonical tags added to all 11 public pages (index.html + all pages/*.html)
+- [x] Homepage image performance: LCP hero preloaded; below-fold background images lazy-loaded via `data-bg` IntersectionObserver
+- [x] Stale CORS preview origin removed from `api/_helpers.js` (`f-prashanths-projects-58faea9a.vercel.app`)
 - [ ] Blog: Chikmagalur coffee terroir vs SW Michigan wine terroir
 - [ ] Partnership page for neighboring vineyards
 - [ ] Favicon — export `FR_WinePress.png` as 512×512 square transparent PNG, generate favicon.ico + apple-touch-icon
 
 ---
 
-*Last updated: March 25, 2026 (Preferred Partners section; event-packages hamburger fix; image swaps)*
+*Last updated: March 28, 2026 (Security hardening: frost-alert auth, dashboard login fix, healthcheck gate; CI expanded to api/ syntax + unit tests + smoke tests; robots.txt clean URL fix; canonical tags on all public pages; homepage image lazy-loading; stale CORS origin removed)*
