@@ -65,6 +65,8 @@ freeruncellars/
 │   ├── gallery.html              # Photo gallery with lightbox
 │   ├── contact.html              # Hours, map, contact form
 │   ├── reviews.html              # Links to Google/Yelp/Facebook reviews
+│   ├── blog.html                 # Blog index — "Stories from the Vineyard"
+│   ├── blog-village.html         # Blog post — "It Takes a Village"
 │   ├── circle.html               # ⚠️ Owners Circle — NOT linked publicly, share URL directly
 │   ├── wifi-welcome.html         # WiFi splash page — guest email/SMS signup via Brevo
 │   ├── starry-night-paint-sip.html         # Event page: Starry Night Paint & Sip (May 8, $35)
@@ -350,6 +352,7 @@ Primary nav links (clean URLs — no `.html` extension needed):
 - Wines (`/pages/wines`)
 - Events (`/pages/events-calendar`)
 - About (`/pages/about`)
+- Stories (`/pages/blog`)
 - Gallery (`/pages/gallery`)
 - Contact (`/pages/contact`)
 - Private Events (`/pages/event-packages`)
@@ -417,6 +420,15 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 - [ ] Page Design Notes section added to CLAUDE.md — expand as new UX decisions are made
+
+## Recent Additions (March 2026 — part 16)
+
+Blog feature launch:
+
+- **Blog index** (`pages/blog.html`): "Stories from the Vineyard" — teal hero, card grid (auto-fill, 320px min), GA4 tag, light-mode forced via `color-scheme` meta + `:root { color-scheme: light only }`.
+- **First blog post** (`pages/blog-village.html`): "It Takes a Village (And Ours is Pretty Great)" by Trish Slevin. Pull-quote and spotlight components. Explicit `@media (prefers-color-scheme: dark)` overrides ensure page always renders in light mode.
+- **Stories nav link**: added to all 11 HTML files that carry the global nav — placed between About and Gallery in both desktop and hamburger menus.
+- **sitemap.xml**: added `/pages/blog` (priority 0.7, monthly) and `/pages/blog-village` (priority 0.6, monthly).
 
 ## Recent Additions (March 28, 2026 — security, CI, SEO, performance)
 
@@ -671,6 +683,20 @@ changes.
 ### pages/reviews.html
 - Real Google/Facebook reviews are live as of
   March 2026 — do not treat as placeholder content
+
+### pages/blog.html and pages/blog-[slug].html (Blog)
+- Blog pages always render in light mode — do not
+  remove the `<meta name="color-scheme" content="light only">`
+  tag or the `:root { color-scheme: light only }` CSS rule
+- Post pages also include an explicit
+  `@media (prefers-color-scheme: dark)` block that
+  overrides background and text colors back to light —
+  do not remove these overrides
+- When adding a new post, follow the pattern in
+  `blog-village.html` — same nav, footer, pull-quote
+  (`.pull-quote`) and spotlight (`.spotlight`) components
+- Add a card to `blog.html` and a `<url>` entry to
+  `sitemap.xml` for every new post
 
 ### tools/ (Staff pages)
 - photobooth.html, dashboard.html, post-generator.html

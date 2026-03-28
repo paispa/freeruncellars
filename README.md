@@ -87,6 +87,8 @@ freeruncellars/
 | Gallery | `pages/gallery.html` | ✅ Live |
 | Visit & Contact | `pages/contact.html` | ✅ Live |
 | Reviews | `pages/reviews.html` | ✅ Live |
+| Blog Index | `pages/blog.html` | ✅ Live — "Stories from the Vineyard" |
+| Blog Post | `pages/blog-village.html` | ✅ Live — "It Takes a Village" |
 | Owners Circle | `pages/circle.html` | ✅ Live — private URL, not linked from site |
 | Starry Night Paint & Sip | `pages/starry-night-paint-sip.html` | ✅ Live — event page (May 8, $35) |
 | Starry Night Signage | `pages/starry-night-signage.html` | ✅ TV display — noindex, no GA, no links |
@@ -141,6 +143,18 @@ await emailjs.send('YOUR_SERVICE_ID', 'YOUR_NEWSLETTER_TEMPLATE', {
   to_email: 'contact@frcwine.com'
 });
 ```
+
+---
+
+## Blog / Stories
+
+The blog lives at `/pages/blog` (index) with individual posts at `/pages/blog-[slug].html`.
+
+**Adding a new post:**
+1. Create `pages/blog-[slug].html` — follow the pattern in `pages/blog-village.html` (same nav, footer, pull-quote and spotlight components; force light mode via `color-scheme` meta and explicit dark-mode overrides)
+2. Add a `.blog-card` entry to `pages/blog.html`
+3. Add a `<url>` entry to `sitemap.xml` (priority 0.6, changefreq monthly)
+4. Add the new file to the repo structure in `CLAUDE.md`
 
 ---
 
