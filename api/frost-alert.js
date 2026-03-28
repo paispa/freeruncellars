@@ -1,6 +1,6 @@
 // api/frost-alert.js
 // Manual frost alert trigger + bud break KV sync — called from the staff tool
-// Required env vars: BREVO_API_KEY, KV_REST_API_URL, KV_REST_API_TOKEN
+// Required env vars: BREVO_API_KEY, DASHBOARD_PASSWORD, KV_REST_API_URL, KV_REST_API_TOKEN
 
 const { applyCors, getClientIp, makeRateLimiter } = require('./_helpers');
 const {
@@ -28,6 +28,16 @@ module.exports = async function handler(req, res) {
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
   body = body || {};
+
+  // Auth — require staff password on all POST actions
+  if (!body.password || body.password !== process.env.DASHBOARD_PASSWORD) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  // ACTION 0: Auth check (no side effects — used by login gate)
+  if (body.action === 'auth_check') {
+    return res.status(200).json({ ok: true });
+  }
 
   // ACTION 2: Sync bud break status to Vercel KV
   if (body.action === 'set_bud_break') {

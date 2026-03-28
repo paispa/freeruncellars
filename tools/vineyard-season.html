@@ -414,6 +414,50 @@
     margin-top: 10px; min-height: 14px; text-align: center;
   }
 
+  /* ── Login ── */
+  .hidden { display: none !important; }
+
+  .login-wrap {
+    max-width: 380px;
+    margin: 80px auto;
+    text-align: center;
+  }
+  .login-wrap h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300; font-style: italic;
+    font-size: 28px; color: var(--cream);
+    margin-bottom: 24px;
+  }
+  .login-wrap input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(115,152,133,0.25);
+    border-radius: 8px;
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    margin-bottom: 12px;
+    outline: none;
+    text-align: center;
+  }
+  .login-wrap input:focus { border-color: var(--sage); }
+  .login-wrap .login-error {
+    color: #e05c5c; font-size: 12px;
+    margin-bottom: 12px; display: none;
+  }
+  .login-wrap .btn-login {
+    width: 100%;
+    padding: 14px;
+    background: var(--sage-dark);
+    border: none; border-radius: 8px;
+    color: #fff; font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 500; letter-spacing: 1px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .login-wrap .btn-login:hover { background: var(--sage); }
+  .login-wrap .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+
   /* ── Responsive ── */
   @media (max-width: 767px) {
     .page { padding: 32px 16px 60px; }
@@ -427,6 +471,15 @@
 </head>
 <body>
 <div class="ambient"></div>
+
+<div id="loginScreen" class="login-wrap">
+  <h2>Staff Access</h2>
+  <input type="password" id="passwordInput" placeholder="Enter staff password" autocomplete="off">
+  <div id="loginError" class="login-error">Incorrect password. Please try again.</div>
+  <button class="btn-login" id="loginBtn" onclick="handleLogin()">Enter</button>
+</div>
+
+<div id="mainContent" class="hidden">
 <div class="page">
 
   <!-- Header -->
@@ -517,8 +570,47 @@
   </div>
 
 </div><!-- /page -->
+</div><!-- /mainContent -->
 
 <script>
+// ─────────────────────────────────────────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────────────────────────────────────────
+let staffPassword = '';
+
+function handleLogin() {
+  const pw = document.getElementById('passwordInput').value.trim();
+  if (!pw) return;
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.textContent = '…';
+  fetch('/api/frost-alert', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'auth_check', password: pw }),
+  })
+  .then(r => {
+    if (r.status === 401) throw new Error('unauthorized');
+    staffPassword = pw;
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainContent').classList.remove('hidden');
+    init();
+  })
+  .catch(err => {
+    if (err.message === 'unauthorized') {
+      document.getElementById('loginError').style.display = 'block';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Enter';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleLogin();
+  });
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -736,7 +828,7 @@ async function onBudBreakToggle(e) {
     await fetch('/api/frost-alert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'set_bud_break', value: val }),
+      body: JSON.stringify({ action: 'set_bud_break', value: val, password: staffPassword }),
     });
     msg.textContent = val
       ? '✓ Bud break recorded — frost alerts upgraded'
@@ -843,6 +935,7 @@ async function onSendAlert() {
         action:     'send_alert',
         warnings:   state.warnings,
         currentGDD: state.currentGDD,
+        password:   staffPassword,
       }),
     });
     const data = await res.json();
@@ -1090,7 +1183,7 @@ async function onTestAlert() {
     const res = await fetch('/api/frost-alert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ test: true, currentGDD: state.currentGDD }),
+      body: JSON.stringify({ test: true, currentGDD: state.currentGDD, password: staffPassword }),
     });
     const data = await res.json();
     msg.textContent = data.ok
@@ -1183,8 +1276,6 @@ async function init() {
 
   enableActions();
 }
-
-init();
 </script>
 </body>
 </html>
