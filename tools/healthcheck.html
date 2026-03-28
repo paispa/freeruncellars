@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>Health Check Dashboard – Free Run Cellars</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -233,6 +234,50 @@
     text-align: right;
   }
 
+  /* ── Login ── */
+  .hidden { display: none !important; }
+
+  .login-wrap {
+    max-width: 380px;
+    margin: 80px auto;
+    text-align: center;
+  }
+  .login-wrap h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300; font-style: italic;
+    font-size: 28px; color: var(--cream);
+    margin-bottom: 24px;
+  }
+  .login-wrap input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(115,152,133,0.25);
+    border-radius: 8px;
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    margin-bottom: 12px;
+    outline: none;
+    text-align: center;
+  }
+  .login-wrap input:focus { border-color: var(--sage); }
+  .login-wrap .login-error {
+    color: var(--fail); font-size: 12px;
+    margin-bottom: 12px; display: none;
+  }
+  .login-wrap .btn-login {
+    width: 100%;
+    padding: 14px;
+    background: var(--sage-dark);
+    border: none; border-radius: 8px;
+    color: #fff; font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 500; letter-spacing: 1px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .login-wrap .btn-login:hover { background: var(--sage); }
+  .login-wrap .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+
   /* ── Responsive ── */
   @media (max-width: 540px) {
     .check-row {
@@ -250,6 +295,15 @@
 </head>
 <body>
 <div class="ambient"></div>
+
+<div id="loginScreen" class="login-wrap">
+  <h2>Staff Access</h2>
+  <input type="password" id="passwordInput" placeholder="Enter staff password" autocomplete="off">
+  <div id="loginError" class="login-error">Incorrect password. Please try again.</div>
+  <button class="btn-login" id="loginBtn" onclick="handleLogin()">Enter</button>
+</div>
+
+<div id="mainContent" class="hidden">
 <div class="page">
 
   <!-- Header -->
@@ -307,8 +361,48 @@
   </div>
 
 </div>
+</div><!-- /mainContent -->
 
 <script>
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+
+function handleLogin() {
+  const pw = document.getElementById('passwordInput').value.trim();
+  if (!pw) return;
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.textContent = '…';
+  fetch('/api/poynt-sales', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'auth_check', password: pw }),
+  })
+  .then(function(r) { return r.json().then(function(d) { return { status: r.status, data: d }; }); })
+  .then(function(r) {
+    if (r.status === 200 && r.data.ok) {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('hidden');
+      renderAll();
+      runAll();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+    }
+  })
+  .catch(function() {
+    document.getElementById('loginError').style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Enter';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleLogin();
+  });
+});
+
 // ─── Config ─────────────────────────────────────────────────────────────────
 
 const TIMEOUT_MS = 8000;
@@ -650,12 +744,6 @@ async function runAll() {
   btn.textContent = '⟳  Run All Checks';
 }
 
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-
-// Build skeleton rows first
-renderAll();
-// Then run checks automatically
-runAll();
 </script>
 </body>
 </html>
