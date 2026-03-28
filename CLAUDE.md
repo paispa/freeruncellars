@@ -50,8 +50,11 @@ freeruncellars/
 │   ├── chat.js                   # AI chat assistant (Anthropic Claude Haiku)
 │   ├── calendar.js               # Outlook ICS calendar proxy (CORS workaround)
 │   ├── upload-photo.js           # Photo booth image storage (Vercel Blob)
+│   ├── generate-post.js          # AI Facebook post generator backend (proxies Anthropic calls)
 │   ├── poynt-auth.js             # Poynt OAuth2 token management (JWT signing + caching)
-│   └── poynt-sales.js            # Poynt POS sales data, flight allocation, inventory predictions
+│   ├── poynt-sales.js            # Poynt POS sales data, flight allocation, inventory predictions
+│   ├── frost-alert.js            # Vineyard frost alerts — password-protected; bud break + SMS/email alerts
+│   └── frost-alert-cron.js       # Cron: polls weather forecast and auto-triggers frost alerts
 │
 ├── pages/                        # All public content pages
 │   ├── about.html                # Our Story / owner bios
@@ -62,12 +65,19 @@ freeruncellars/
 │   ├── gallery.html              # Photo gallery with lightbox
 │   ├── contact.html              # Hours, map, contact form
 │   ├── reviews.html              # Links to Google/Yelp/Facebook reviews
-│   └── circle.html               # ⚠️ Owners Circle — NOT linked publicly, share URL directly
+│   ├── circle.html               # ⚠️ Owners Circle — NOT linked publicly, share URL directly
+│   ├── wifi-welcome.html         # WiFi splash page — guest email/SMS signup via Brevo
+│   ├── starry-night-paint-sip.html         # Event page: Starry Night Paint & Sip (May 8, $35)
+│   ├── starry-night-signage.html           # TV signage — noindex, no GA, no links
+│   ├── eight-hundred-grapes-book-discussion.html  # Event page: book club (Apr 17, free)
+│   └── eight-hundred-grapes-signage.html   # TV signage — noindex, no GA, no links
 │
 ├── tools/                        # Internal staff utilities (not linked publicly)
 │   ├── dashboard.html            # Sales dashboard (Poynt POS integration, password-protected)
 │   ├── post-generator.html       # AI-powered Facebook post generator
 │   ├── photobooth.html           # Event photo booth (camera + email via EmailJS)
+│   ├── vineyard-season.html      # Frost alert manager + bud break tracker (password-protected)
+│   ├── healthcheck.html          # Production API health monitor (password-protected)
 │   ├── email-template-single.html  # EmailJS template — single photo
 │   └── email-template-strip.html   # EmailJS template — 3-photo composited strip
 │
@@ -170,7 +180,7 @@ const CONFIG = {
 | `POYNT_APP_ID` | `api/poynt-auth.js` | Poynt application ID (from Poynt Developer Portal) |
 | `POYNT_PRIVATE_KEY` | `api/poynt-auth.js` | PEM-encoded RSA private key with `\n`-escaped newlines |
 | `POYNT_BUSINESS_ID` | `api/poynt-sales.js` | Poynt business UUID (from HQ dashboard or terminal) |
-| `DASHBOARD_PASSWORD` | `api/poynt-sales.js` | Staff password for the sales dashboard |
+| `DASHBOARD_PASSWORD` | `api/poynt-sales.js`, `api/frost-alert.js` | Staff password for the sales dashboard and vineyard tools |
 
 Set these in **Vercel project settings**, not in the repo.
 
@@ -407,6 +417,27 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 - [ ] Page Design Notes section added to CLAUDE.md — expand as new UX decisions are made
+
+## Recent Additions (March 28, 2026 — security, CI, SEO, performance)
+
+Security hardening, CI improvements, SEO fixes, and homepage image performance:
+
+- **Frost alert auth** (`api/frost-alert.js`): endpoint now requires `DASHBOARD_PASSWORD` in the POST body before processing any action. Added `auth_check` action (returns `{ ok: true }` after password validation) used by the login gate.
+- **Vineyard season tool** (`tools/vineyard-season.html`): added password-protected login gate. `init()` defers until auth succeeds. All three fetch calls (set_bud_break, send_alert, test alert) now include `password` in the body.
+- **Dashboard login fix** (`tools/dashboard.html`): replaced "unlock on any non-401" logic with explicit `{ ok: true }` check via the new `auth_check` action on poynt-sales. Backend misconfigurations (502, etc.) no longer bypass the gate.
+- **poynt-sales auth_check** (`api/poynt-sales.js`): added `auth_check` action after password validation — returns `{ ok: true }` without hitting the Poynt API. Used by both dashboard.html and healthcheck.html login gates.
+- **Healthcheck tool protected** (`tools/healthcheck.html`): added `noindex, nofollow` meta tag and a login gate (validates via poynt-sales `auth_check`). `renderAll()` and `runAll()` deferred until after successful login.
+- **CI expanded** (`.github/workflows/checks.yml`):
+  - Added `node --check` syntax validation for every `api/*.js` file
+  - Added `node test-api-handlers.js` unit test step
+  - Smoke tests expanded to cover public pages (9 routes), staff tools (3 routes), and API auth endpoints (`/api/frost-alert` + `/api/poynt-sales` POST → 401 unauthenticated)
+- **robots.txt fix**: changed `Disallow: /pages/wifi-welcome.html` to `Disallow: /pages/wifi-welcome` to match Vercel's `cleanUrls: true` routing
+- **Canonical tags**: added `<link rel="canonical">` to all 11 public pages (index.html + all pages/*.html) to prevent duplicate-content signals from alternate hostnames/redirects
+- **Homepage image performance** (`index.html`):
+  - LCP hero (`AS259838.jpeg`) preloaded with `<link rel="preload" as="image" fetchpriority="high">` in `<head>`
+  - 7 below-fold background images moved out of CSS into `data-bg` HTML attributes; loaded on scroll via IntersectionObserver (200px rootMargin) — CSS `--img-*` variables removed
+  - Nav logo, footer logos: `loading="lazy"` added; nav logo gets `fetchpriority="high"`
+- **CORS cleanup** (`api/_helpers.js`): removed stale personal preview origin `f-prashanths-projects-58faea9a.vercel.app` from `ALLOWED_ORIGINS`. All 69 unit tests pass.
 
 ## Recent Additions (March 2026 — part 15)
 
