@@ -149,6 +149,7 @@ Password-protected staff sales dashboard (noindex, not linked from site). Dark-t
 - **Revenue timeline**: SVG line chart with daily data points
 - **Sales by wine table**: glasses, bottles, flight shares, and revenue per wine
 - **Inventory tracker**: enter starting case counts (persisted in localStorage), see bottles used, remaining cases, and depletion runway predictions with velocity (btl/day)
+- **Ramato Launch Planner** (section 6): countdown to June 28, 2026 launch, menu health pill, depletion timeline table, replacement recommendation cards, and menu gap warning banner — see Recent Additions (March 29, 2026) for full details
 
 ### `tools/photobooth.html`
 CONFIG is filled in at the top of the file (keys committed to repo). For a 3-photo session the browser composites all three frames into one vertical film-strip canvas (dark background, FRC logo centred at the bottom) before uploading — so only a single image is stored and emailed.
@@ -417,6 +418,19 @@ The "dividend into credits" language has a pending legal review flag visible on 
 - [ ] WordPress migration planned (2-phase: host selection → theme conversion)
 - [ ] Wine sales handled externally via Drink Michigan (https://drinkmichigan.com/collections/freeruncellars#/) — no e-commerce on this site
 - [ ] Page Design Notes section added to CLAUDE.md — expand as new UX decisions are made
+
+## Recent Additions (March 29, 2026 — Ramato Launch Planner)
+
+New section (#6) added to `tools/dashboard.html` between the inventory tracker and the footer. Password gate unchanged — the planner is only visible after login.
+
+- **Header bar**: countdown in days to the Orange Ramato launch date (June 28, 2026) + a "X of 12–14 wines active" menu health pill. Pill is green when active count ≥ 12, amber when below. Active count is computed from the 16-wine hardcoded inventory list, preferring any localStorage value already saved by the inventory tracker.
+- **Hardcoded wine list** (`RAMATO_WINES`): FR Sangiovese 21 · FR Pinot Gris · FR Pinot Noir 18 · FR Meritage 18 · FR Semi-Dry Albariño 23 · FR Syrah 21 · FR Valvin Muscat 18 · FR Lemberger 18 · FR Lemberger 20 · FR Fusion 22 · FR Rosé · FR Mezzo · FR Dry Riesling 22 · FR Rosso 22 · FR Dry Gewurztraminer 22 · FR Sur Lie Albariño. Each entry includes category, default case count (as of March 19, 2026), and an `lsKey` mapping to the inventory tracker's localStorage key where one exists.
+- **Depletion timeline table**: one row per active wine showing remaining cases, velocity (btl/day), projected depletion date, and status. Status logic: **Critical** (red) if depletes ≤ 30 days; **Replace before launch** (amber) if depletes between now and June 28; **OK** (green) if depletes after June 28; **No velocity data** (grey) if `bottlesPerDay` is 0 or missing.
+- **Replacement recommendations panel**: one card per Critical/Replace wine. Each card shows wine name, category, replacement deadline, a category-specific sourcing suggestion, and a footer noting wmwa.org and glintcap.org for Michigan producer leads.
+- **Menu gap warning banner**: fires when projected depletions would reduce the active wine count below 12 at any point before June 28, showing the earliest gap date.
+- **Data wiring**: velocity and remaining cases come from the existing `salesData` (no second API call). Wines with a matching `lsKey` are looked up directly in `salesData.inventory`; wines without one (FR Sangiovese 21, FR Lemberger 18/20, FR Dry Gewurztraminer 22) use fuzzy name matching. The planner recomputes whenever the date range loads fresh data or an inventory case count input changes.
+
+---
 
 ## Recent Additions (March 28, 2026 — security, CI, SEO, performance)
 
