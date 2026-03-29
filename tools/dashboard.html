@@ -793,8 +793,30 @@
     'Sur Lie Albariño', 'Dry Riesling', 'Pinot Gris', 'Fusion',
     'Pinot Blanc', 'Semi-Dry Albariño', 'Mezzo', 'Valvin Muscat',
     'Rosé', 'Pinot Noir', 'Syrah', 'Lemberger', 'Meritage',
-    'Sangiovese Reserve', 'Rosso'
+    'Sangiovese Reserve', 'Rosso', 'Dry Gewurztraminer'
   ];
+
+  // Starting case counts as of March 19, 2026 — used to pre-seed the
+  // inventory tracker on first load if localStorage has no value yet.
+  // Lemberger combines two vintages (18: 66 cases + 20: 46 cases = 112).
+  var INVENTORY_DEFAULTS = {
+    'Sur Lie Albariño':   15,
+    'Dry Riesling':       75,
+    'Pinot Gris':          6,
+    'Fusion':            111,
+    'Pinot Blanc':         0,  // excluded — owner decision not to purchase
+    'Semi-Dry Albariño':   4,
+    'Mezzo':             112,
+    'Valvin Muscat':      19,
+    'Rosé':               17,
+    'Pinot Noir':         48,
+    'Syrah':              18,
+    'Lemberger':         112,  // 66 (Lemberger 18) + 46 (Lemberger 20)
+    'Meritage':           50,
+    'Sangiovese Reserve':  0,
+    'Rosso':              80,
+    'Dry Gewurztraminer':  79,
+  };
 
   // ─── DOM refs ───────────────────────────────────────────────────
 
@@ -870,6 +892,17 @@
 
   function initInventory() {
     var saved = loadSavedInventory();
+    // Seed defaults for any wine not yet stored in localStorage
+    var needsSave = false;
+    for (var dw in INVENTORY_DEFAULTS) {
+      if (saved[dw] === undefined) {
+        saved[dw] = INVENTORY_DEFAULTS[dw];
+        needsSave = true;
+      }
+    }
+    if (needsSave) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch(e) {}
+    }
     var tbody = $('invBody');
     tbody.innerHTML = '';
     for (var i = 0; i < ALL_WINES.length; i++) {
@@ -1202,7 +1235,7 @@
     { name: 'FR Mezzo',                 cat: 'sweet white',    def: 112, lsKey: 'Mezzo' },
     { name: 'FR Dry Riesling 22',        cat: 'dry white',      def: 75,  lsKey: 'Dry Riesling' },
     { name: 'FR Rosso 22',              cat: 'semi-sweet red', def: 80,  lsKey: 'Rosso' },
-    { name: 'FR Dry Gewurztraminer 22',  cat: 'dry white',      def: 79,  lsKey: null },
+    { name: 'FR Dry Gewurztraminer 22',  cat: 'dry white',      def: 79,  lsKey: 'Dry Gewurztraminer' },
     { name: 'FR Sur Lie Albariño',       cat: 'dry white',      def: 15,  lsKey: 'Sur Lie Albariño' },
   ];
 

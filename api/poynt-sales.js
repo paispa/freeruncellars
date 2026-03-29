@@ -202,12 +202,13 @@ module.exports = async function handler(req, res) {
     const endMs = new Date(endAt).getTime();
 
     const orders = rawOrders.filter(function(order) {
-      // Filter by createdAt within our date range
+      // Poynt queries by updatedAt, not createdAt, so old orders that were
+      // recently touched (refunds, status changes) appear in results. Exclude
+      // any order with no createdAt — it cannot be placed in the date range.
       const created = order.createdAt;
-      if (created) {
-        const createdMs = typeof created === 'number' ? created : new Date(created).getTime();
-        if (createdMs < startMs || createdMs > endMs) return false;
-      }
+      if (!created) return false;
+      const createdMs = typeof created === 'number' ? created : new Date(created).getTime();
+      if (createdMs < startMs || createdMs > endMs) return false;
       // Exclude non-completed orders
       var status = (order.statuses && order.statuses.status) || '';
       if (status === 'CANCELLED' || status === 'VOIDED') return false;
