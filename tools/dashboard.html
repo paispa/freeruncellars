@@ -461,7 +461,174 @@
     .sales-table, .inv-table { font-size: 12px; }
     .quick-btns { gap: 6px; }
     .quick-btn { padding: 5px 10px; font-size: 10px; }
+    .ramato-rec-grid { grid-template-columns: 1fr; }
+    .ramato-header-bar { flex-direction: column; gap: 10px; }
+    .ramato-table { font-size: 12px; }
   }
+
+  /* ─── Ramato Launch Planner ──────────────────────────────────────── */
+
+  .ramato-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(115,152,133,0.15);
+  }
+
+  .ramato-countdown {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+
+  .ramato-countdown-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--sage);
+    display: block;
+    margin-top: 3px;
+  }
+
+  .ramato-pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .ramato-pill-ok {
+    background: rgba(16,185,129,0.15);
+    color: #10b981;
+    border: 1px solid rgba(16,185,129,0.3);
+  }
+
+  .ramato-pill-warn {
+    background: rgba(245,158,11,0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245,158,11,0.3);
+  }
+
+  .ramato-gap-banner {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #f59e0b;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .status-ok    { color: #10b981; font-weight: 500; }
+  .status-amber { color: #f59e0b; font-weight: 600; }
+  .status-red   { color: #ef4444; font-weight: 600; }
+  .status-grey  { color: #6b7280; }
+
+  .ramato-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .ramato-table th {
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sage);
+    padding: 10px 8px;
+    border-bottom: 1px solid rgba(115,152,133,0.2);
+    font-weight: 500;
+  }
+
+  .ramato-table th.num, .ramato-table td.num { text-align: right; }
+
+  .ramato-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid rgba(115,152,133,0.08);
+    color: var(--text);
+  }
+
+  .ramato-table tr:hover td { background: rgba(115,152,133,0.04); }
+
+  .ramato-section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--sage);
+    margin: 20px 0 14px;
+  }
+
+  .ramato-rec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .ramato-rec-card {
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid rgba(115,152,133,0.12);
+  }
+
+  .ramato-rec-card.is-red {
+    border-color: rgba(239,68,68,0.35);
+    background: rgba(239,68,68,0.05);
+  }
+
+  .ramato-rec-card.is-amber {
+    border-color: rgba(245,158,11,0.35);
+    background: rgba(245,158,11,0.05);
+  }
+
+  .ramato-rec-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--cream);
+    margin-bottom: 3px;
+  }
+
+  .ramato-rec-cat {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sage);
+    margin-bottom: 10px;
+  }
+
+  .ramato-rec-deadline {
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .ramato-rec-suggestion {
+    font-size: 11px;
+    color: var(--sage-light);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .ramato-rec-footer {
+    font-size: 10px;
+    color: var(--muted);
+    border-top: 1px solid rgba(115,152,133,0.15);
+    padding-top: 8px;
+  }
+
+  .ramato-rec-footer a { color: var(--sage-light); text-decoration: none; }
+  .ramato-rec-footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -572,6 +739,39 @@
           </thead>
           <tbody id="invBody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Ramato Launch Planner -->
+    <div id="ramatoCard" class="card">
+      <div class="card-title"><span class="num">6</span> Ramato Launch Planner</div>
+      <div class="ramato-header-bar">
+        <div>
+          <div id="ramatoCountdown" class="ramato-countdown">—</div>
+          <span class="ramato-countdown-label">days until Ramato launch · June 28, 2026</span>
+        </div>
+        <div id="ramatoMenuPill" class="ramato-pill ramato-pill-ok">— of 12–14 wines active</div>
+      </div>
+      <div id="ramatoGapBanner" class="ramato-gap-banner hidden"></div>
+      <p id="ramatoPlaceholder" style="font-size:12px;color:var(--muted);padding:4px 0 8px;">
+        Load sales data above to see depletion projections.
+      </p>
+      <div id="ramatoContent" class="hidden">
+        <div style="overflow-x:auto">
+          <table class="ramato-table">
+            <thead>
+              <tr>
+                <th>Wine</th>
+                <th class="num">Remaining Cases</th>
+                <th class="num">Velocity (btl/day)</th>
+                <th>Projected Depletion</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ramatoTableBody"></tbody>
+          </table>
+        </div>
+        <div id="ramatoRecs"></div>
       </div>
     </div>
 
@@ -690,6 +890,9 @@
     tbody.addEventListener('input', function(e) {
       if (e.target.tagName === 'INPUT') saveInventory();
     });
+
+    // Recompute Ramato planner when case counts change
+    tbody.addEventListener('input', function() { renderRamatoPlanner(); });
   }
 
   // ─── Login ──────────────────────────────────────────────────────
@@ -715,6 +918,7 @@
         initQuickBtns();
         initDates();
         initInventory();
+        renderRamatoPlanner();
       } else {
         $('loginError').style.display = 'block';
         $('loginBtn').disabled = false;
@@ -786,6 +990,7 @@
       renderChart(data.timeline);
       renderInventory(data.wines, data.inventory);
       renderPeriod(data.period);
+      renderRamatoPlanner();
     })
     .catch(function(err) {
       alert('Failed to load sales data: ' + err.message);
@@ -975,6 +1180,219 @@
       msg += '  ·  ' + period.afterFilter + ' orders used (filtered from ' + period.totalFromApi + ' returned by Poynt)';
     }
     $('periodInfo').textContent = msg;
+  }
+
+
+  // ─── Ramato Launch Planner ─────────────────────────────────────────
+
+  var RAMATO_LAUNCH_DATE = new Date('2026-06-28T00:00:00');
+
+  var RAMATO_WINES = [
+    { name: 'FR Sangiovese 21',         cat: 'dry red',        def: 31,  lsKey: null },
+    { name: 'FR Pinot Gris',             cat: 'off-dry white',  def: 6,   lsKey: 'Pinot Gris' },
+    { name: 'FR Pinot Noir 18',          cat: 'dry red',        def: 48,  lsKey: 'Pinot Noir' },
+    { name: 'FR Meritage 18',            cat: 'dry red',        def: 50,  lsKey: 'Meritage' },
+    { name: 'FR Semi-Dry Albariño 23',   cat: 'off-dry white',  def: 4,   lsKey: 'Semi-Dry Albariño' },
+    { name: 'FR Syrah 21',               cat: 'dry red',        def: 18,  lsKey: 'Syrah' },
+    { name: 'FR Valvin Muscat 18',       cat: 'sweet white',    def: 19,  lsKey: 'Valvin Muscat' },
+    { name: 'FR Lemberger 18',           cat: 'dry red',        def: 66,  lsKey: null },
+    { name: 'FR Lemberger 20',           cat: 'dry red',        def: 46,  lsKey: null },
+    { name: 'FR Fusion 22',              cat: 'off-dry white',  def: 111, lsKey: 'Fusion' },
+    { name: 'FR Rosé',                  cat: 'rosé',           def: 17,  lsKey: 'Rosé' },
+    { name: 'FR Mezzo',                 cat: 'sweet white',    def: 112, lsKey: 'Mezzo' },
+    { name: 'FR Dry Riesling 22',        cat: 'dry white',      def: 75,  lsKey: 'Dry Riesling' },
+    { name: 'FR Rosso 22',              cat: 'semi-sweet red', def: 80,  lsKey: 'Rosso' },
+    { name: 'FR Dry Gewurztraminer 22',  cat: 'dry white',      def: 79,  lsKey: null },
+    { name: 'FR Sur Lie Albariño',       cat: 'dry white',      def: 15,  lsKey: 'Sur Lie Albariño' },
+  ];
+
+  var RAMATO_SOURCING = {
+    'dry white':      'Source a dry white: Lake Michigan AVA Riesling, Pinot Gris, or Albariño from a regional supplier, or a dry white from a West Coast or European importer',
+    'off-dry white':  'Source an off-dry white: Gewurztraminer, Pinot Gris, or Riesling with residual sugar',
+    'sweet white':    'Source a sweet wine: Muscat, late harvest Riesling, or ice wine style',
+    'dry red':        'Source a dry red: Pinot Noir, Syrah, or Cabernet from a Michigan or West Coast producer',
+    'semi-sweet red': 'Source a semi-sweet red: Baco Noir, Chambourcin, or a fruit-forward blend',
+    'rosé':           'Source a rosé: dry to off-dry, Pinot Noir or Sangiovese base preferred',
+  };
+
+  function ramatoGetCases(wine, saved) {
+    if (wine.lsKey && saved[wine.lsKey] !== undefined) return saved[wine.lsKey];
+    return wine.def;
+  }
+
+  function ramatoGetInvData(wine) {
+    if (!salesData || !salesData.inventory) return null;
+    var inv = salesData.inventory;
+    if (wine.lsKey && inv[wine.lsKey]) return inv[wine.lsKey];
+    // Fuzzy match for wines without a direct localStorage key
+    var keys = Object.keys(inv);
+    var norm = wine.name.replace(/^FR\s+/, '').replace(/\s+\d{2,4}$/, '').toLowerCase();
+    for (var i = 0; i < keys.length; i++) {
+      var k = keys[i].toLowerCase();
+      if (k.indexOf(norm) !== -1 || norm.indexOf(k) !== -1) return inv[keys[i]];
+    }
+    return null;
+  }
+
+  function ramatoAddDays(date, days) {
+    var d = new Date(date.getTime());
+    d.setDate(d.getDate() + Math.round(days));
+    return d;
+  }
+
+  function ramatoFmtDate(d) {
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function renderRamatoPlanner() {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var saved = loadSavedInventory();
+
+    // ── Countdown
+    var daysLeft = Math.ceil((RAMATO_LAUNCH_DATE - today) / 86400000);
+    $('ramatoCountdown').textContent = daysLeft >= 0 ? daysLeft : 0;
+
+    // ── Menu health pill
+    var activeCount = 0;
+    for (var wi = 0; wi < RAMATO_WINES.length; wi++) {
+      if (ramatoGetCases(RAMATO_WINES[wi], saved) > 0) activeCount++;
+    }
+    var pill = $('ramatoMenuPill');
+    pill.textContent = activeCount + ' of 12\u201314 wines active';
+    pill.className = 'ramato-pill ' + (activeCount >= 12 ? 'ramato-pill-ok' : 'ramato-pill-warn');
+
+    // ── Placeholder vs content
+    if (!salesData || !salesData.inventory) {
+      $('ramatoPlaceholder').classList.remove('hidden');
+      $('ramatoContent').classList.add('hidden');
+      $('ramatoGapBanner').classList.add('hidden');
+      return;
+    }
+    $('ramatoPlaceholder').classList.add('hidden');
+    $('ramatoContent').classList.remove('hidden');
+
+    // ── Build per-wine data
+    var wineRows = [];
+    var depletionEvents = [];
+    var totalActive = 0;
+
+    for (var w = 0; w < RAMATO_WINES.length; w++) {
+      var wine = RAMATO_WINES[w];
+      var cases = ramatoGetCases(wine, saved);
+      if (cases <= 0) continue;
+      totalActive++;
+
+      var invData = ramatoGetInvData(wine);
+      var btlDay = (invData && invData.bottlesPerDay) ? invData.bottlesPerDay : 0;
+
+      var remainingCases, runwayDays;
+      if (invData && invData.remainingCases != null) {
+        remainingCases = invData.remainingCases;
+        runwayDays = invData.runwayDays != null ? invData.runwayDays : (btlDay > 0 ? Math.ceil((remainingCases * 12) / btlDay) : null);
+      } else {
+        remainingCases = cases;
+        runwayDays = (btlDay > 0) ? Math.ceil((remainingCases * 12) / btlDay) : null;
+      }
+
+      var status, depDate = null;
+      if (btlDay === 0 || runwayDays === null) {
+        status = 'no-velocity';
+      } else {
+        depDate = ramatoAddDays(today, runwayDays);
+        if (runwayDays <= 30) {
+          status = 'critical';
+        } else if (depDate <= RAMATO_LAUNCH_DATE) {
+          status = 'replace';
+        } else {
+          status = 'ok';
+        }
+      }
+
+      if (status === 'critical' || status === 'replace') {
+        depletionEvents.push({ date: depDate, wine: wine });
+      }
+
+      wineRows.push({ wine: wine, remainingCases: remainingCases, btlDay: btlDay, depDate: depDate, status: status });
+    }
+
+    // ── Render table
+    var tbody = $('ramatoTableBody');
+    tbody.innerHTML = '';
+    for (var ri = 0; ri < wineRows.length; ri++) {
+      var row = wineRows[ri];
+      var statusHtml, depDateStr;
+
+      if (row.status === 'ok') {
+        statusHtml = '<span class="status-ok">OK</span>';
+      } else if (row.status === 'replace') {
+        statusHtml = '<span class="status-amber">Replace before launch</span>';
+      } else if (row.status === 'critical') {
+        statusHtml = '<span class="status-red">Critical</span>';
+      } else {
+        statusHtml = '<span class="status-grey">No velocity data</span>';
+      }
+
+      depDateStr = row.depDate ? ramatoFmtDate(row.depDate) : '—';
+
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + row.wine.name + '</td>' +
+        '<td class="num">' + (row.remainingCases !== null ? row.remainingCases : '—') + '</td>' +
+        '<td class="num">' + (row.btlDay > 0 ? row.btlDay : '—') + '</td>' +
+        '<td>' + depDateStr + '</td>' +
+        '<td>' + statusHtml + '</td>';
+      tbody.appendChild(tr);
+    }
+
+    // ── Replacement recommendations
+    var recsEl = $('ramatoRecs');
+    var flagged = wineRows.filter(function(r) { return r.status === 'replace' || r.status === 'critical'; });
+
+    if (flagged.length === 0) {
+      recsEl.innerHTML = '';
+    } else {
+      var html = '<div class="ramato-section-label">Replacement Recommendations</div><div class="ramato-rec-grid">';
+      for (var fi = 0; fi < flagged.length; fi++) {
+        var fr = flagged[fi];
+        var cardCls = fr.status === 'critical' ? 'is-red' : 'is-amber';
+        var deadlineStr = fr.depDate ? ramatoFmtDate(fr.depDate) : '—';
+        var suggestion = RAMATO_SOURCING[fr.wine.cat] || '';
+        html +=
+          '<div class="ramato-rec-card ' + cardCls + '">' +
+            '<div class="ramato-rec-name">' + fr.wine.name + '</div>' +
+            '<div class="ramato-rec-cat">' + fr.wine.cat + '</div>' +
+            '<div class="ramato-rec-deadline">Replacement needed by: <strong>' + deadlineStr + '</strong></div>' +
+            '<div class="ramato-rec-suggestion">' + suggestion + '</div>' +
+            '<div class="ramato-rec-footer">For Michigan producer leads visit ' +
+              '<a href="https://wmwa.org" target="_blank" rel="noopener">wmwa.org</a> or ' +
+              '<a href="https://glintcap.org" target="_blank" rel="noopener">glintcap.org</a>' +
+            '</div>' +
+          '</div>';
+      }
+      html += '</div>';
+      recsEl.innerHTML = html;
+    }
+
+    // ── Menu gap warning
+    var gapBanner = $('ramatoGapBanner');
+    if (depletionEvents.length === 0) {
+      gapBanner.classList.add('hidden');
+    } else {
+      depletionEvents.sort(function(a, b) { return a.date - b.date; });
+      var count = totalActive;
+      var gapDate = null;
+      for (var ei = 0; ei < depletionEvents.length; ei++) {
+        count--;
+        if (count < 12) { gapDate = depletionEvents[ei].date; break; }
+      }
+      if (gapDate) {
+        gapBanner.classList.remove('hidden');
+        gapBanner.textContent = 'Your menu will drop below 12 wines around ' + ramatoFmtDate(gapDate) + '. Plan to onboard a replacement by then.';
+      } else {
+        gapBanner.classList.add('hidden');
+      }
+    }
   }
 
 })();

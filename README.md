@@ -57,7 +57,7 @@ freeruncellars/
 │   ├── eight-hundred-grapes-book-discussion.html  ← Event page: book club (Apr 17, free)
 │   └── eight-hundred-grapes-signage.html   ← TV signage: book club (noindex, no GA, no links)
 ├── tools/
-│   ├── dashboard.html               ← Internal: sales dashboard (Poynt POS, password-protected)
+│   ├── dashboard.html               ← Internal: sales dashboard (Poynt POS, password-protected) + Ramato Launch Planner
 │   ├── post-generator.html          ← Internal: AI Facebook post generator
 │   ├── photobooth.html              ← Photo booth with EmailJS + Vercel Blob
 │   ├── vineyard-season.html         ← Internal: frost alert manager + bud break tracker (password-protected)
@@ -92,7 +92,7 @@ freeruncellars/
 | Starry Night Signage | `pages/starry-night-signage.html` | ✅ TV display — noindex, no GA, no links |
 | Eight Hundred Grapes | `pages/eight-hundred-grapes-book-discussion.html` | ✅ Live — event page (Apr 17, free) |
 | Eight Hundred Grapes Signage | `pages/eight-hundred-grapes-signage.html` | ✅ TV display — noindex, no GA, no links |
-| Sales Dashboard | `tools/dashboard.html` | ✅ Internal — Poynt POS, password-protected |
+| Sales Dashboard | `tools/dashboard.html` | ✅ Internal — Poynt POS, password-protected; includes Ramato Launch Planner |
 | Post Generator | `tools/post-generator.html` | ✅ Internal — AI Facebook post generator |
 | Photo Booth | `tools/photobooth.html` | ✅ Live — EmailJS + Vercel Blob |
 | WiFi Welcome | `pages/wifi-welcome.html` | ✅ Live — guest email/SMS signup (Brevo) |
@@ -357,10 +357,11 @@ Wine currently sold online via Drink Michigan (https://drinkmichigan.com/collect
 - [x] Canonical tags added to all 11 public pages (index.html + all pages/*.html)
 - [x] Homepage image performance: LCP hero preloaded; below-fold background images lazy-loaded via `data-bg` IntersectionObserver
 - [x] Stale CORS preview origin removed from `api/_helpers.js` (`f-prashanths-projects-58faea9a.vercel.app`)
+- [x] Ramato Launch Planner added to sales dashboard — countdown to June 28, 2026 launch, depletion timeline table, replacement recommendations, and menu gap warning; wires to existing Poynt velocity data
 - [ ] Blog: Chikmagalur coffee terroir vs SW Michigan wine terroir
 - [ ] Partnership page for neighboring vineyards
 - [ ] Favicon — export `FR_WinePress.png` as 512×512 square transparent PNG, generate favicon.ico + apple-touch-icon
 
 ---
 
-*Last updated: March 28, 2026 (Security hardening: frost-alert auth, dashboard login fix, healthcheck gate; CI expanded to api/ syntax + unit tests + smoke tests; robots.txt clean URL fix; canonical tags on all public pages; homepage image lazy-loading; stale CORS origin removed)*
+*Last updated: March 29, 2026 (Ramato Launch Planner added to sales dashboard: depletion timeline, replacement recommendations, menu gap warning)*
